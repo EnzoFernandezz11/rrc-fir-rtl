@@ -1,0 +1,12 @@
+build/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.vcd
+*.fst
+*.out
+*.log
+.pytest_cache/
+.coverage
+.DS_Store

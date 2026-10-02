@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "confirmed": {
+    "modulation": "QPSK",
+    "complex_data": true,
+    "filter_family": "RRCOS",
+    "coefficient_count": 8,
+    "rolloff": 0.5,
+    "samples_per_symbol": 2,
+    "minimum_sqnr_db": 40,
+    "clock_targets_mhz": {
+      "fast": 100,
+      "slow": 10
+    }
+  },
+  "decisions": {
+    "coefficients": null,
+    "coefficient_normalization": null,
+    "frequency_method": null,
+    "fixed_point_format": null,
+    "rtl_interface": null,
+    "target_technology": null,
+    "power_method": null
+  }
+}

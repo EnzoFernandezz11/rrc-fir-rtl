@@ -1,0 +1,70 @@
+name: RTL CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rtl-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Instalar Icarus si ya hay RTL registrado
+        run: |
+          if python scripts/ci.py has-targets; then
+            sudo apt-get update
+            sudo apt-get install -y iverilog
+          fi
+      - name: Validar contrato, pruebas Python y vector matching registrado
+        run: make smoke
+      - name: Guardar diagnóstico cuando falla
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: smoke-diagnostico
+          path: build/ci-logs/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  full:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Instalar Yosys si ya hay síntesis registrada
+        run: |
+          if python scripts/ci.py has-synth; then
+            sudo apt-get update
+            sudo apt-get install -y yosys
+          fi
+      - name: Sintetizar variantes registradas
+        run: make full
+      - name: Guardar reportes
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: rtl-reportes
+          path: build/ci-logs/
+          if-no-files-found: ignore
+          retention-days: 14
