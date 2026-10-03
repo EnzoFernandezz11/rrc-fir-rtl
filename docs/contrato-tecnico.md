@@ -37,70 +37,19 @@ Estados permitidos: **abierto**, **provisional**, **confirmado por consigna**, *
 | D07 | ¿Cuál es la definición de SQNR: referencia, muestras descartadas, tratamiento de I/Q y casos usados? | abierto | A | Pendiente. |
 | D08 | ¿Qué arquitectura se elige para cada variante optimizada y qué eje PPA intenta mejorar? | abierto | B/C | Después de las seriales. |
 
-## 3. Coeficientes y señales
+## 3. Detalle por tema
 
-| Parámetro | Valor | Estado/fuente |
+Las tablas de cada tema viven en un solo lugar, el contrato de trabajo correspondiente. Este documento solo registra el estado de la decisión (sección 2) y los cambios (sección 4).
+
+| Tema | Decisiones | Contrato |
 |---|---|---|
-| Modulación | QPSK | Consigna. |
-| Sobremuestreo | 2 muestras/símbolo | Consigna. |
-| Número de coeficientes | 8 | Consigna. |
-| Roll-off | 0,5 | Consigna. |
-| Coeficientes `h[0]…h[7]` | Por definir | D02. |
-| Normalización de energía/ganancia | Por definir | D02. |
-| Mapeo de símbolos y amplitud I/Q | Por definir | D03. |
+| Coeficientes, QPSK, I/Q y punto fijo | D02, D03, D04 | [Señales y formatos](contratos/senales-y-formatos.md) |
+| Filtro en frecuencia | D01 | [Método en frecuencia](contratos/frecuencia.md) |
+| Puertos, `valid`, reset y latencia | D03 | [Interfaz RTL](contratos/interfaz-rtl.md) |
+| Vector matching, SQNR y PPA | D05, D06, D07 | [Verificación y PPA](contratos/verificacion-y-ppa.md) |
+| Arquitecturas optimizadas | D08 | Nota en el PR de B03/C03 y fila D08 de la sección 2. |
 
-Al cerrar D02, pegar aquí la tabla de coeficientes **con precisión suficiente para reproducirla**, fórmula o script que la generó, y dos ejemplos de salida (impulso y secuencia corta). Los archivos `vectors/` deberán derivarse de la misma configuración.
-
-## 4. Método en frecuencia
-
-| Aspecto | Decisión |
-|---|---|
-| Transformada y tamaño | Por definir. |
-| Organización de bloques | Por definir. |
-| Solapamiento/descarte | Por definir. |
-| Orden y escala de FFT/IFFT | Por definir. |
-| Alineación con salida temporal | Por definir. |
-| Latencia y throughput | Por definir. |
-
-Antes de C01/C02 debe haber un modelo flotante que muestre cómo se corresponden las salidas temporal y en frecuencia para impulso, QPSK y límites de bloque. Si el docente espera otra definición, registrar la respuesta y cambiar los modelos antes del RTL.
-
-## 5. Contrato de punto fijo
-
-| Señal/nodo | Signo | Bits totales | Bits fraccionarios | Redondeo | Saturación/overflow |
-|---|---|---:|---:|---|---|
-| Entrada I/Q | Por definir | — | — | — | — |
-| Coeficientes | Por definir | — | — | — | — |
-| Producto | Por definir | — | — | — | — |
-| Acumulador | Por definir | — | — | — | — |
-| Salida I/Q | Por definir | — | — | — | — |
-
-El barrido de A04 debe fijar estos valores con evidencia SQNR ≥ 40 dB y registrar casos de saturación. El SQNR no se reportará sin indicar señal de referencia, intervalo de muestras y fórmula exacta.
-
-## 6. Interfaz RTL y verificación
-
-| Puerto o regla | Definición |
-|---|---|
-| Reloj y reset | Por definir. |
-| Entrada I/Q y formato | Por definir. |
-| Entrada/salida `valid` o handshake | Por definir. |
-| Inicio/fin de bloque | Por definir. |
-| Orden de salida y latencia | Por definir para cada arquitectura. |
-| Casos mínimos | Impulso, ceros, QPSK determinista, extremos numéricos y límites de bloque. |
-
-El testbench de cada variante debe comparar por **índice de muestra válido** con su modelo fijo. Las diferencias entre dominios pueden necesitar tolerancia numérica por distintos puntos de redondeo; registrar la tolerancia, no ocultar discrepancias. El banco común debe informar muestra, I/Q, esperado y obtenido al fallar.
-
-## 7. Comparación PPA
-
-| Métrica | Condición de comparación |
-|---|---|
-| Área | Misma tecnología, biblioteca o FPGA y flujo de síntesis. Reportar celdas/recursos y fuente del log. |
-| Performance | Reloj objetivo, Fmax/timing **medido tras implementación**, latencia en ciclos y throughput en muestras/s. |
-| Potencia | Método, frecuencia, actividad de entrada y herramienta por definir en D06. |
-| Precisión | Mismo conjunto de vectores y definición de SQNR. |
-
-Yosys sin place-and-route permite comparar recursos de síntesis; no prueba por sí solo que un diseño alcance 100 o 10 MHz. La comparación final debe distinguir datos medidos de estimaciones.
-
-## 8. Cambios y consultas al docente
+## 4. Cambios y consultas al docente
 
 | Fecha | ID | Pregunta o cambio | Respuesta/fuente | Efecto en modelo, RTL y pruebas | PR |
 |---|---|---|---|---|---|

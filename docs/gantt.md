@@ -1,59 +1,78 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Responsables:** A = modelos/precisión, B = tiempo, C = frecuencia. Las fechas son una estimación para organizar el trabajo; la presentación será en una fecha acordada con el profesor antes de fin de 2026. Anotar el inicio y fin reales cuando ocurran, sin borrar las fechas previstas. Los IDs corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Responsables:** A = modelos/precisión, B = tiempo, C = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); la presentación será en una fecha acordada con el profesor antes de fin de 2026. Los IDs y dependencias corresponden al [backlog](backlog.md).
+
+## Plan
+
+Cada tarea arranca con `after` sobre sus dependencias **para empezar**, de modo que no puede comenzar antes que ellas; al cambiar una duración, las tareas siguientes se corren solas. Las dependencias **para cerrar** no se dibujan: la duración de cada barra se eligió para terminar después de ellas, y `tests/test_plan.py` falla si alguna regla se rompe. En Mermaid el fin es exclusivo: una barra que termina el 07/10 libera a la siguiente ese mismo día.
 
 ```mermaid
 gantt
-    title Plan inicial (ajustar con datos reales)
+    title Plan con dependencias (ajustar con datos reales)
     dateFormat YYYY-MM-DD
     axisFormat %d/%m
     section Contrato y planificación
-    E00-E03 :2026-10-05, 4d
-    G01 inicial :2026-10-05, 3d
+    E00 Consigna             :e00, 2026-10-05, 1d
+    E01 Método frecuencia    :e01, 2026-10-05, 2d
+    E02 Coeficientes         :e02, 2026-10-05, 3d
+    E03 Interfaz y PPA       :e03, after e02, 3d
+    G01 Gantt                :g01, 2026-10-05, 32d
     section Modelos y precisión (A)
-    A01-A03 :2026-10-06, 5d
-    A04-A05 :2026-10-09, 5d
-    section RTL serial (B/C)
-    B01-B02 :2026-10-07, 7d
-    C01-C02 :2026-10-07, 10d
-    section Verificación y optimización
-    A06 :2026-10-12, 5d
-    B03-B04 :2026-10-13, 11d
-    C03-C04 :2026-10-19, 12d
-    A07 :2026-10-14, 17d
+    A01 QPSK y RRCOS         :a01, 2026-10-05, 2d
+    A02 Flotante tiempo      :a02, after a01, 2d
+    A03 Flotante frecuencia  :a03, after a02, 3d
+    A04 Punto fijo           :a04, after a02, 4d
+    A05 Vectores             :a05, after a04, 2d
+    A06 Banco común          :a06, after a05 e03, 5d
+    A07 Tabla PPA            :a07, after e03, 22d
+    section Filtro temporal (B)
+    B01 Diseño serial        :b01, after e02, 3d
+    B02 RTL serial           :b02, after b01, 5d
+    B03 Elegir optimización  :b03, after b02, 3d
+    B04 RTL optimizado       :b04, after b03, 9d
+    section Filtro en frecuencia (C)
+    C01 Diseño serial        :c01, after e01, 5d
+    C02 RTL serial           :c02, after c01, 8d
+    C03 Elegir optimización  :c03, after c02, 2d
+    C04 RTL optimizado       :c04, after c03, 11d
     section Integración y presentación
-    I01-I02 :2026-11-02, 4d
-    I03 borrador :2026-11-05, 2d
+    I01 Comparación          :i01, after b04 c04 a07, 2d
+    I02 Informe              :i02, 2026-10-14, 23d
+    I03 Filminas borrador    :i03, after i01, 2d
 ```
 
-El diagrama resume grupos de tareas. La tabla siguiente registra **cada tarea y su responsable**, que es lo exigido para explicar el reparto real. El final de G01 e I03 se completará cuando se confirme la fecha de presentación.
+G01, I02 e I03 terminan con la versión borrador para la presentación; se extienden cuando se confirme la fecha.
 
-| ID | Responsable | Inicio previsto | Fin previsto | Inicio real | Fin real | Estado/notas |
-|---|---|---|---|---|---|---|
-| [E00](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/1) | A, B, C | 05/10 | 05/10 | — | — | — |
-| [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | C; A/B revisan | 05/10 | 06/10 | — | — | Consulta docente si hace falta. |
-| [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | A; B/C revisan | 05/10 | 07/10 | — | — | — |
-| [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | B/C; A revisa | 06/10 | 08/10 | — | — | — |
-| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | A; B/C actualizan | 05/10 | Presentación | — | — | Actualizar semanalmente. |
-| [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | A | 06/10 | 07/10 | — | — | — |
-| [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | A | 07/10 | 08/10 | — | — | — |
-| [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | A; C revisa | 07/10 | 09/10 | — | — | Depende de E01. |
-| [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | A | 09/10 | 12/10 | — | — | — |
-| [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | A | 12/10 | 13/10 | — | — | Corte para RTL. |
-| [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | B | 07/10 | 09/10 | — | — | — |
-| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | B | 09/10 | 13/10 | — | — | — |
-| [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | C | 07/10 | 09/10 | — | — | — |
-| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | C | 09/10 | 16/10 | — | — | Puede seguir en curso al 16/10. |
-| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | A; B/C colaboran | 12/10 | 16/10 | — | — | — |
-| [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | B | 13/10 | 15/10 | — | — | — |
-| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | B | 15/10 | 23/10 | — | — | — |
-| [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | C | 19/10 | 20/10 | — | — | Depende de C02 correcto. |
-| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | C | 20/10 | 30/10 | — | — | — |
-| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | A; B/C colaboran | 14/10 | 30/10 | — | — | Empieza con variantes disponibles. |
-| [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | A, B, C | 02/11 | 03/11 | — | — | — |
-| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | A; B/C redactan | 14/10 | 05/11 | — | — | Borrador temprano; conclusiones tras I01. |
-| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | A, B, C | 05/11 | Presentación | — | — | Fecha final pendiente de acordar. |
+## Avance real
+
+Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
+
+| ID | Responsable real | Inicio real | Fin real | Estado/notas |
+|---|---|---|---|---|
+| [E00](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/1) | — | — | — | — |
+| [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | — | — | — | Consulta docente si hace falta. |
+| [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | — | — | — | — |
+| [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | — | — | — | — |
+| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | — | — | — | Actualizar semanalmente. |
+| [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | — | — | — | — |
+| [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | — | — | — | — |
+| [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | — | — | — | — |
+| [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | — | — | — | — |
+| [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | — | — | — | Corte para cerrar B02/C02. |
+| [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | — | — | — | — |
+| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | — | — | — | — |
+| [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | — | — | — | — |
+| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | — | — | — | — |
+| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | — | — | — | — |
+| [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | — |
+| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | — |
+| [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | — | — | — | — |
+| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | — | — | — | Camino crítico hasta I01. |
+| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | — | — | — | Empieza con variantes disponibles. |
+| [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
+| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | — | — | — | Borrador temprano; conclusiones tras I01. |
+| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Fecha final pendiente de acordar. |
 
 ## Corte del viernes 16/10
 
-Meta **optimista**: 19 de 23 tareas con evidencia de inicio (83 %). El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C03 para mejorar el porcentaje.
+Meta: 18 de 23 tareas con evidencia de inicio (78 %). Es el máximo que permite el plan sin violar dependencias; la versión anterior apuntaba a 19 porque varias tareas empezaban antes que sus predecesoras. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C03 para mejorar el porcentaje.
