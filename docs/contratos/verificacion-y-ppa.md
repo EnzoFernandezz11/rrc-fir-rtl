@@ -16,6 +16,8 @@
 | Alineación por índice y descarte de transitorios | Por definir. |
 | Mensaje de falla | Variante, índice, I/Q esperado/obtenido, formato y semilla. |
 
+Cada testbench compara por **índice de muestra válido** con su modelo fijo. Las diferencias entre dominios pueden necesitar tolerancia numérica por distintos puntos de redondeo: registrar la tolerancia, no ocultar discrepancias.
+
 ## SQNR
 
 La meta formal es **≥ 40 dB**. Antes de reportarla, fijar si la referencia es la salida flotante del filtro temporal o una referencia por dominio, la escala aplicada, el tramo de muestras y el tratamiento de I/Q. Una fórmula candidata para revisar es `10·log10(Σ|y_ref|² / Σ|y_fxp−y_ref|²)` sobre muestras válidas alineadas. No registrar un número aislado sin su configuración y vectores.

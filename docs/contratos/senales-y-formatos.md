@@ -35,7 +35,7 @@ QPSK, filtro complejo con 8 coeficientes RRCOS, roll-off 0,5 y sobremuestreo 2×
 ## Ejemplos obligatorios antes de aprobar
 
 1. Una secuencia QPSK breve con los símbolos complejos y las muestras 2× exactas.
-2. Respuesta al impulso de los ocho coeficientes, con índice de muestra.
+2. Tabla de los ocho coeficientes con precisión suficiente para reproducirla, la fórmula o script que la genera y la respuesta al impulso con índice de muestra.
 3. Un ejemplo de multiplicación/acumulación en punto fijo que muestre signo, redondeo y saturación.
 4. Archivo de configuración/semilla que regenere los vectores, y evidencia SQNR ≥ 40 dB con la definición acordada.
 

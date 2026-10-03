@@ -7,6 +7,7 @@ Somos tres personas: A lleva modelos, precisión, vectores y automatización; B 
 - `main` debe poder ejecutar `make smoke` en todo momento. Una rama sale de `main`, cubre una issue y vuelve por PR. Ejemplos: `spec/e02-formatos`, `a/a05-vectores`, `b/b02-serial-tiempo`, `c/c02-serial-frecuencia`.
 - Usar el ID del backlog en título de rama, PR y commits cuando sea útil. Abrir un PR en borrador temprano si hay una decisión que afecte a otra persona.
 - Mantener una tarea técnica principal en curso por persona. Los PR pequeños facilitan revisión; separar contrato/modelo, RTL, testbench y PPA si son cambios independientes.
+- Una tarea puede empezar cuando están cerradas sus dependencias **para empezar** del [backlog](docs/backlog.md), y solo se cierra cuando también lo están las de **para cerrar**. Si cambian dependencias o duraciones, actualizar backlog y [Gantt](docs/gantt.md) en el mismo PR; `make smoke` comprueba que sigan siendo consistentes.
 - Antes de avanzar una tarea dependiente, verificar que la decisión de la que depende esté registrada en `docs/contrato-tecnico.md`.
 
 ## Contrato compartido
@@ -22,6 +23,12 @@ Somos tres personas: A lleva modelos, precisión, vectores y automatización; B 
 - Preguntas concretas para el revisor y riesgos conocidos.
 
 Una aprobación de otro integrante alcanza para cambios ordinarios. Los cambios del contrato numérico o del algoritmo requieren acuerdo de los tres. No integrar si falla `smoke`; si el problema es de la CI, corregirlo en un PR. No aceptar una prueba que pase por omitir silenciosamente una variante registrada.
+
+## Reglas de `main`
+
+- Integrar solo por PR, con una revisión de otra persona cuando ya haya colaboradores.
+- El check requerido es `smoke` de `RTL CI`, sin filtros por rutas: los PR de documentación también lo ejecutan. El job `full` es informativo al integrar o al ejecutarlo manualmente.
+- Sin push directo ni force push a `main` una vez configuradas las reglas. No guardar tokens en el repositorio.
 
 ## Archivos generados
 
