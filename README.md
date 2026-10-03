@@ -8,11 +8,11 @@ Este repositorio contiene el **andamiaje de trabajo**. Aún no hay coeficientes 
 
 Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en el [Project del equipo](https://github.com/users/EnzoFernandezz11/projects/4) con estados, responsables asignados y fechas previstas. [Andrés (@andres332271)](https://github.com/andres332271) lleva modelos y precisión; [Julián (@moreyrajulian)](https://github.com/moreyrajulian), el filtro temporal; y [Enzo (@EnzoFernandezz11)](https://github.com/EnzoFernandezz11), el filtro en frecuencia. Cada integrante puede filtrar sus tareas por asignado en las [issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) o en la vista correspondiente del Project.
 
-| Integrante | Issues asignadas |
-|---|---|
-| @andres332271 | [Ver tareas de Andrés](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3Aandres332271) |
-| @moreyrajulian | [Ver tareas de Julián](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3Amoreyrajulian) |
-| @EnzoFernandezz11 | [Ver tareas de Enzo](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3AEnzoFernandezz11) |
+| Integrante | Issues asignadas | Vista del Project |
+|---|---|---|
+| @andres332271 | [Ver issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3Aandres332271) | [Andrés](https://github.com/users/EnzoFernandezz11/projects/4/views/5) |
+| @moreyrajulian | [Ver issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3Amoreyrajulian) | [Julián](https://github.com/users/EnzoFernandezz11/projects/4/views/6) |
+| @EnzoFernandezz11 | [Ver issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3AEnzoFernandezz11) | [Enzo](https://github.com/users/EnzoFernandezz11/projects/4/views/7) |
 
 ## Primeros pasos
 
