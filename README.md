@@ -6,7 +6,13 @@ Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, un
 
 Este repositorio contiene el **andamiaje de trabajo**. Aún no hay coeficientes definitivos, modelo Python del filtro ni RTL. Esos resultados corresponden a las tareas del [backlog](docs/backlog.md). La [consigna original](docs/consigna-original.md) se conserva tal como fue recibida. Los parámetros confirmados y las decisiones pendientes se registran en el [contrato técnico](docs/contrato-tecnico.md) y los [contratos de trabajo](docs/contratos/README.md); nadie debe deducir coeficientes o formatos a partir del nombre de un archivo.
 
-Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en el [Project del equipo](https://github.com/users/EnzoFernandezz11/projects/4) con estados, rol responsable y fechas previstas. A/B/C son roles por ahora; las cuentas se asignarán cuando los compañeros se sumen.
+Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en el [Project del equipo](https://github.com/users/EnzoFernandezz11/projects/4) con estados, responsables asignados y fechas previstas. [Andrés (@andres332271)](https://github.com/andres332271) lleva modelos y precisión; [Julián (@moreyrajulian)](https://github.com/moreyrajulian), el filtro temporal; y [Enzo (@EnzoFernandezz11)](https://github.com/EnzoFernandezz11), el filtro en frecuencia. Cada integrante puede filtrar sus tareas por asignado en las [issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) o en la vista correspondiente del Project.
+
+| Integrante | Issues asignadas |
+|---|---|
+| @andres332271 | [Ver tareas de Andrés](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3Aandres332271) |
+| @moreyrajulian | [Ver tareas de Julián](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3Amoreyrajulian) |
+| @EnzoFernandezz11 | [Ver tareas de Enzo](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues?q=is%3Aissue+assignee%3AEnzoFernandezz11) |
 
 ## Primeros pasos
 

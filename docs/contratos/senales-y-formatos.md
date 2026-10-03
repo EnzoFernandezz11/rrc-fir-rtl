@@ -1,8 +1,8 @@
 # Contrato: señales, coeficientes y punto fijo
 
 **Estado:** Abierto
-**Prepara:** A
-**Revisan:** B y C
+**Prepara:** @andres332271
+**Revisan:** @moreyrajulian y @EnzoFernandezz11
 **Issues:** E02, A01, A04, A05
 **Fuente:** [consigna original](../consigna-original.md) y decisiones D02–D04 del [contrato técnico](../contrato-tecnico.md).
 

@@ -1,10 +1,10 @@
 # Guía de trabajo
 
-Somos tres personas: A lleva modelos, precisión, vectores y automatización; B lleva el filtro temporal; C lleva el filtro en frecuencia. Cada persona revisa trabajo de las otras. La [lista de tareas](docs/backlog.md) define entregables y dependencias.
+Somos tres personas: @andres332271 lleva modelos, precisión, vectores y automatización; @moreyrajulian lleva el filtro temporal; @EnzoFernandezz11 lleva el filtro en frecuencia. Cada persona revisa trabajo de las otras. La [lista de tareas](docs/backlog.md) define entregables y dependencias.
 
 ## Ramas e issues
 
-- `main` debe poder ejecutar `make smoke` en todo momento. Una rama sale de `main`, cubre una issue y vuelve por PR. Ejemplos: `spec/e02-formatos`, `a/a05-vectores`, `b/b02-serial-tiempo`, `c/c02-serial-frecuencia`.
+- `main` debe poder ejecutar `make smoke` en todo momento. Una rama sale de `main`, cubre una issue y vuelve por PR. Ejemplos: `spec/e02-formatos`, `andres332271/a05-vectores`, `moreyrajulian/b02-serial-tiempo`, `EnzoFernandezz11/c02-serial-frecuencia`.
 - Usar el ID del backlog en título de rama, PR y commits cuando sea útil. Abrir un PR en borrador temprano si hay una decisión que afecte a otra persona.
 - Mantener una tarea técnica principal en curso por persona. Los PR pequeños facilitan revisión; separar contrato/modelo, RTL, testbench y PPA si son cambios independientes.
 - Una tarea puede empezar cuando están cerradas sus dependencias **para empezar** del [backlog](docs/backlog.md), y solo se cierra cuando también lo están las de **para cerrar**. Si cambian dependencias o duraciones, actualizar backlog y [Gantt](docs/gantt.md) en el mismo PR; `make smoke` comprueba que sigan siendo consistentes.
@@ -12,7 +12,7 @@ Somos tres personas: A lleva modelos, precisión, vectores y automatización; B 
 
 ## Contrato compartido
 
-`docs/contrato-tecnico.md` explica las decisiones; `config/project.json` guarda los valores que consumen scripts. Si cambian coeficientes, escala, interfaz o método en frecuencia, actualizar ambos en el mismo PR y enumerar qué vectores/modelos/RTL se ven afectados. Una decisión provisional no se vuelve confirmada por usarla en código. E00–E03 requieren revisión de A, B y C.
+`docs/contrato-tecnico.md` explica las decisiones; `config/project.json` guarda los valores que consumen scripts. Si cambian coeficientes, escala, interfaz o método en frecuencia, actualizar ambos en el mismo PR y enumerar qué vectores/modelos/RTL se ven afectados. Una decisión provisional no se vuelve confirmada por usarla en código. E00–E03 requieren revisión de @andres332271, @moreyrajulian y @EnzoFernandezz11.
 
 ## Qué presentar en un PR
 

@@ -2,10 +2,10 @@
 
 **Estado:** borrador de etapa 0
 **Fuente:** [consigna original](consigna-original.md) facilitada por el equipo el 2/10/2026
-**Revisión conjunta A/B/C:** pendiente
+**Revisión conjunta de @andres332271, @moreyrajulian y @EnzoFernandezz11:** pendiente
 **Regla:** este documento define el comportamiento esperado; [`config/project.json`](../config/project.json) contiene los valores que consumen los scripts. Modificar ambos en el mismo PR cuando cambie un parámetro.
 
-Los acuerdos detallados se completan en [contratos de trabajo](contratos/README.md). Este documento reúne los requisitos y el estado de las decisiones; cada contrato detalla una interfaz o método para que A, B y C trabajen en paralelo.
+Los acuerdos detallados se completan en [contratos de trabajo](contratos/README.md). Este documento reúne los requisitos y el estado de las decisiones; cada contrato detalla una interfaz o método para que @andres332271, @moreyrajulian y @EnzoFernandezz11 trabajen en paralelo.
 
 ## 1. Requisitos confirmados
 
@@ -28,14 +28,14 @@ Estados permitidos: **abierto**, **provisional**, **confirmado por consigna**, *
 
 | ID | Tema y pregunta concreta | Estado | Responsable | Evidencia o respuesta |
 |---|---|---|---|---|
-| D01 | ¿Qué operaciones exactas componen el filtro en frecuencia? ¿Tamaño de bloque/FFT, convolución lineal o circular, overlap-add/save y latencia? | abierto | C | Pendiente. |
-| D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | abierto | A | Pendiente. |
-| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | A/B/C | Pendiente. |
-| D04 | ¿Qué anchos, punto binario, redondeo y saturación tendrá cada nodo? | abierto | A | Depende de barrido SQNR. |
-| D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | abierto | B/C | Pendiente. |
-| D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | abierto | A/B/C | Pendiente. |
-| D07 | ¿Cuál es la definición de SQNR: referencia, muestras descartadas, tratamiento de I/Q y casos usados? | abierto | A | Pendiente. |
-| D08 | ¿Qué arquitectura se elige para cada variante optimizada y qué eje PPA intenta mejorar? | abierto | B/C | Después de las seriales. |
+| D01 | ¿Qué operaciones exactas componen el filtro en frecuencia? ¿Tamaño de bloque/FFT, convolución lineal o circular, overlap-add/save y latencia? | abierto | @EnzoFernandezz11 | Pendiente. |
+| D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | abierto | @andres332271 | Pendiente. |
+| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
+| D04 | ¿Qué anchos, punto binario, redondeo y saturación tendrá cada nodo? | abierto | @andres332271 | Depende de barrido SQNR. |
+| D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | abierto | @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
+| D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
+| D07 | ¿Cuál es la definición de SQNR: referencia, muestras descartadas, tratamiento de I/Q y casos usados? | abierto | @andres332271 | Pendiente. |
+| D08 | ¿Qué arquitectura se elige para cada variante optimizada y qué eje PPA intenta mejorar? | abierto | @moreyrajulian y @EnzoFernandezz11 | Después de las seriales. |
 
 ## 3. Detalle por tema
 
