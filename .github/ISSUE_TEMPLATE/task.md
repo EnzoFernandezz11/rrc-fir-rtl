@@ -12,6 +12,8 @@ assignees: []
 
 ## Responsable y colaboradores
 
+<!-- Mencionar a los usuarios de GitHub y asignar la issue a quienes son responsables. Los revisores pueden quedar mencionados sin asignación. -->
+
 ## Dependencias
 
 <!-- IDs de issues o decisiones del contrato técnico. -->
