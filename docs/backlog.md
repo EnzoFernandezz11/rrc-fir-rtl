@@ -19,14 +19,14 @@ Este listado enlaza las **23 issues creadas en GitHub**. Cada fila aporta títul
 | **[C01 — Diseñar filtro en frecuencia serial](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13)** | @EnzoFernandezz11; @andres332271 revisa | E01 | E03, A03 | Operaciones por bloque, buffers, recursos y latencia calculados. |
 | **[C02 — RTL y testbench en frecuencia serial](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14)** | @EnzoFernandezz11; @andres332271 revisa | C01 | A05 | Vector matching con modelo fijo y manejo de bordes/solapamiento. |
 | **[A06 — Banco común de verificación](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15)** | @andres332271; @moreyrajulian y @EnzoFernandezz11 colaboran | A05, E03 | B02, C02 | Un comando corre ambas simulaciones y da PASS/FAIL con diagnóstico. |
-| **[B03 — Elegir optimización temporal](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16)** | @moreyrajulian; @andres332271 revisa | B02 | — | Opción permitida y predicción de compromiso PPA documentadas. |
-| **[B04 — RTL temporal optimizado](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17)** | @moreyrajulian; @andres332271 y @EnzoFernandezz11 revisan | B03 | A06 | Mismos vectores, regresión y reporte de síntesis/timing reproducibles. |
-| **[C03 — Elegir optimización en frecuencia](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18)** | @EnzoFernandezz11; @andres332271 revisa | C02 | — | Opción permitida, memoria y compromiso PPA documentados. |
-| **[C04 — RTL en frecuencia optimizado](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19)** | @EnzoFernandezz11; @andres332271 y @moreyrajulian revisan | C03 | A06 | Mismos vectores, regresión y reporte de síntesis/timing reproducibles. |
+| **[B03 — Elegir optimización temporal](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16)** | @moreyrajulian; @andres332271 revisa | B01 | — | Se hace en paralelo con B02. Opción permitida y predicción de compromiso PPA documentadas. |
+| **[B04 — RTL temporal optimizado](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17)** | @moreyrajulian; @andres332271 y @EnzoFernandezz11 revisan | B02, B03 | A06 | Mismos vectores, regresión y reporte de síntesis/timing reproducibles. |
+| **[C03 — Elegir optimización en frecuencia](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18)** | @EnzoFernandezz11; @andres332271 revisa | C01 | — | Se hace en paralelo con C02. Opción permitida, memoria y compromiso PPA documentados. |
+| **[C04 — RTL en frecuencia optimizado](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19)** | @EnzoFernandezz11; @andres332271 y @moreyrajulian revisan | C02, C03 | A06 | Mismos vectores, regresión y reporte de síntesis/timing reproducibles. |
 | **[A07 — Automatizar tabla PPA](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20)** | @andres332271; @moreyrajulian y @EnzoFernandezz11 colaboran | E03 | B04, C04 | Script y tabla trazables a logs; se completa con B04/C04. |
 | **[I01 — Comparar las cuatro variantes](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21)** | @andres332271, @moreyrajulian y @EnzoFernandezz11; @andres332271 integra | B04, C04, A07 | — | Tabla bajo mismas condiciones y conclusiones sobre PPA/SQNR. |
 | **[I02 — Redactar informe técnico](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22)** | @andres332271; @moreyrajulian y @EnzoFernandezz11 redactan secciones | A01 | B02, C02, I01 | Metodología, resultados, límites y comandos reproducibles. Puede empezar como borrador. |
-| **[I03 — Preparar filminas y demo](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23)** | @andres332271, @moreyrajulian y @EnzoFernandezz11 | I01 | I02, G01 | Cada uno presenta su implementación; incluye Gantt y aprendizajes. |
+| **[I03 — Preparar filminas y demo](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23)** | @andres332271, @moreyrajulian y @EnzoFernandezz11 | B02, C02 | I01, I02, G01 | Se arma con los resultados seriales y se completa con I01. Cada uno presenta su implementación; incluye Gantt y aprendizajes. |
 
 ## Etiquetas sugeridas
 
@@ -38,6 +38,6 @@ Este listado enlaza las **23 issues creadas en GitHub**. Cada fila aporta títul
 2. **H1:** modelos flotantes/fijos y vectores listos (A01–A05).
 3. **H2:** ambas versiones seriales con vector matching (B02, C02, A06).
 4. **H3:** optimizaciones y PPA comparables (B04, C04, A07, I01).
-5. **Entrega:** informe, filminas, demo y Gantt real (I02, I03, G01).
+5. **Entrega (30/10):** informe, filminas, demo y Gantt real (I02, I03, G01).
 
-Meta tentativa del 16/10: **18/23 issues comenzadas con evidencia**, no 18 terminadas; es lo máximo que permite el plan sin violar dependencias. El registro de [Gantt](gantt.md) distingue tareas iniciadas, integradas y verificadas.
+Meta tentativa del 16/10: **20/23 issues comenzadas con evidencia**, no 20 terminadas; es lo máximo que permite el plan sin violar dependencias. El registro de [Gantt](gantt.md) distingue tareas iniciadas, integradas y verificadas.
