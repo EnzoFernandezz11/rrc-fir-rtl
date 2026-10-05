@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Responsables:** A = modelos/precisión, B = tiempo, C = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); la presentación será en una fecha acordada con el profesor antes de fin de 2026. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Responsables:** A = modelos/precisión, B = tiempo, C = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -16,7 +16,7 @@ gantt
     E01 Método frecuencia    :e01, 2026-10-05, 2d
     E02 Coeficientes         :e02, 2026-10-05, 3d
     E03 Interfaz y PPA       :e03, after e02, 3d
-    G01 Gantt                :g01, 2026-10-05, 32d
+    G01 Gantt                :g01, 2026-10-05, 25d
     section Modelos y precisión (A)
     A01 QPSK y RRCOS         :a01, 2026-10-05, 2d
     A02 Flotante tiempo      :a02, after a01, 2d
@@ -24,24 +24,26 @@ gantt
     A04 Punto fijo           :a04, after a02, 4d
     A05 Vectores             :a05, after a04, 2d
     A06 Banco común          :a06, after a05 e03, 5d
-    A07 Tabla PPA            :a07, after e03, 22d
+    A07 Tabla PPA            :a07, after e03, 18d
     section Filtro temporal (B)
     B01 Diseño serial        :b01, after e02, 3d
     B02 RTL serial           :b02, after b01, 5d
-    B03 Elegir optimización  :b03, after b02, 3d
-    B04 RTL optimizado       :b04, after b03, 9d
+    B03 Elegir optimización  :b03, after b01, 3d
+    B04 RTL optimizado       :b04, after b02 b03, 9d
     section Filtro en frecuencia (C)
     C01 Diseño serial        :c01, after e01, 5d
     C02 RTL serial           :c02, after c01, 8d
-    C03 Elegir optimización  :c03, after c02, 2d
-    C04 RTL optimizado       :c04, after c03, 11d
+    C03 Elegir optimización  :c03, after c01, 2d
+    C04 RTL optimizado       :c04, after c02 c03, 9d
     section Integración y presentación
-    I01 Comparación          :i01, after b04 c04 a07, 2d
-    I02 Informe              :i02, 2026-10-14, 23d
-    I03 Filminas borrador    :i03, after i01, 2d
+    I01 Comparación          :i01, after b04 c04 a07, 1d
+    I02 Informe              :i02, 2026-10-14, 16d
+    I03 Filminas             :i03, after b02 c02, 10d
 ```
 
-G01, I02 e I03 terminan con la versión borrador para la presentación; se extienden cuando se confirme la fecha.
+G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entrar en el plazo, B03 y C03 se hacen en paralelo con el serial, I03 arranca con los resultados seriales, I01 dura un día y C04 baja a 9 días. C04 queda en el camino crítico sin margen; B04 tiene 4 días de holgura.
+
+**Corte de C04 (lunes 26/10):** si C04 no pasa el vector matching, se presenta C serial (C02) contra B optimizado (B04), C04 queda como trabajo futuro en el informe y se avisa al profesor.
 
 ## Avance real
 
@@ -71,8 +73,8 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 | [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | — | — | — | Empieza con variantes disponibles. |
 | [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
 | [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | — | — | — | Borrador temprano; conclusiones tras I01. |
-| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Fecha final pendiente de acordar. |
+| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Presentación 30/10. |
 
 ## Corte del viernes 16/10
 
-Meta: 18 de 23 tareas con evidencia de inicio (78 %). Es el máximo que permite el plan sin violar dependencias; la versión anterior apuntaba a 19 porque varias tareas empezaban antes que sus predecesoras. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C03 para mejorar el porcentaje.
+Meta: 20 de 23 tareas con evidencia de inicio (87 %). Es el máximo que permite el plan sin violar dependencias; solo I01 y C04 (y por lo tanto el cierre de I03) dependen de resultados posteriores. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C04 sin C02 para mejorar el porcentaje.

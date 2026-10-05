@@ -18,7 +18,7 @@ Los acuerdos detallados se completan en [contratos de trabajo](contratos/README.
 | Precisión | SQNR no inferior a 40 dB. |
 | Optimizaciones posibles | Paralela/unfolded, pipeline, sistólica, folded o combinación. |
 | Metas de reloj | Versiones rápidas: 100 MHz; lentas: 10 MHz. |
-| Entrega | Filminas que contrasten resultados y aprendizajes; Gantt con tareas y distribución; presentación en fecha acordada antes de terminar 2026. |
+| Entrega | Filminas que contrasten resultados y aprendizajes; Gantt con tareas y distribución; presentación con fecha límite el 30/10/2026. |
 
 La implementación temporal con 8 taps se tratará como FIR complejo: `y[n] = Σ(k=0..7) h[k]·x[n−k]`. El filtro en frecuencia debe concretarse en D01 antes de fijar RTL: la consigna no define tamaño de bloque, transformada ni tratamiento del solapamiento. Esta ecuación no autoriza a asumir que cualquier producto de FFT por coeficientes es equivalente a convolución lineal.
 
