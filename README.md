@@ -4,7 +4,7 @@ Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, un
 
 ## Estado actual
 
-Este repositorio contiene el **andamiaje de trabajo**. Aún no hay coeficientes definitivos, modelo Python del filtro ni RTL. Esos resultados corresponden a las tareas del [backlog](docs/backlog.md). La [consigna original](docs/consigna-original.md) se conserva tal como fue recibida. Los parámetros confirmados y las decisiones pendientes se registran en el [contrato técnico](docs/contrato-tecnico.md) y los [contratos de trabajo](docs/contratos/README.md); nadie debe deducir coeficientes o formatos a partir del nombre de un archivo.
+Este repositorio contiene el **andamiaje de trabajo**. Aún no hay coeficientes definitivos, modelo Python del filtro ni RTL. Esos resultados corresponden a las tareas del [backlog](docs/backlog.md). La [consigna actualizada](docs/consigna-actualizada.md) (5/10/2026) es la vigente; la [consigna original](docs/consigna-original.md) se conserva tal como fue recibida. Los parámetros confirmados y las decisiones pendientes se registran en el [contrato técnico](docs/contrato-tecnico.md) y los [contratos de trabajo](docs/contratos/README.md); nadie debe deducir coeficientes o formatos a partir del nombre de un archivo.
 
 Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en el [Project del equipo](https://github.com/users/EnzoFernandezz11/projects/4) con estados, rol responsable y fechas previstas. A/B/C son roles por ahora; las cuentas se asignarán cuando los compañeros se sumen.
 
