@@ -1,31 +1,48 @@
-# Diagrama general del filtro en frecuencia — propuesta anterior
+# Diagrama general del filtro en frecuencia
 
-Este diagrama conserva el esquema discutido antes del cambio de [consigna](../consigna-original.md): RRC de ocho taps, nueve muestras nuevas por bloque, FFT/IFFT de 16 puntos y overlap-add. **Es una referencia histórica, no la arquitectura aprobada para la consigna actual.** El IIR de segundo orden y la superposición del 50 % obligan a revisar el método antes de implementarlo.
+Decisiones de Enzo del 5/10/2026, pendientes de revisión del equipo. La [definición de E01](../contratos/frecuencia.md) combina el RRC8, beta 0,5 y 2× originales con FFT y 50 % de superposición de la consigna actualizada.
 
 ```mermaid
 flowchart LR
-    subgraph T0["Dominio del tiempo: preparación"]
-        Q["Símbolos QPSK"] --> U["Sobremuestreo 2×<br/>símbolo, cero, símbolo, cero..."]
-        U --> B["Reunir 9 muestras nuevas<br/>último bloque: completar con ceros"]
-        B --> P["Agregar 7 ceros<br/>16 posiciones"]
+    Q["Generador QPSK reutilizable<br/>símbolos I/Q = ±1"]
+    UP["Interpolador 2× separado<br/>a0, 0, a1, 0, ..."]
+    Q --> UP
 
-        H["Los mismos 8 taps RRC<br/>h[0]...h[7]"] --> HP["Agregar 8 ceros<br/>16 posiciones"]
+    subgraph T0["Preparación de bloque en tiempo"]
+        NEW["8 muestras nuevas<br/>equivalentes a 4 símbolos"]
+        HIST["8 muestras de historial<br/>cero al inicio de trama"]
+        WIN["Ventana de 16 muestras<br/>8 anteriores + 8 nuevas"]
+        NEW --> WIN
+        HIST --> WIN
+        NEW -->|historial para el próximo bloque| HIST
+    end
+    UP --> NEW
+
+    subgraph OFF["Preparación en Python, fuera del procesamiento RTL"]
+        H["8 coeficientes RRC<br/>beta 0,5; tabla exacta en E02"]
+        PAD["Agregar 8 ceros"]
+        FH["Precalcular FFT16"]
+        H --> PAD --> FH
     end
 
-    subgraph F["Dominio de la frecuencia"]
-        P --> FX["FFT de 16 puntos<br/>X[0]...X[15]"]
-        HP --> FH["FFT de 16 puntos<br/>calcular una vez"]
-        FH --> ROM["Tabla de solo lectura<br/>H[0]...H[15]"]
-        FX --> MUL["Multiplicar bin a bin<br/>Y[r] = X[r] × H[r]"]
+    subgraph CORE["Núcleo: un bloque a la vez en la versión inicial"]
+        FX["FFT16"]
+        ROM["H constante o ROM<br/>16 valores complejos"]
+        MUL["16 productos por bloque<br/>X[k] por H[k]"]
+        INV["IFFT16<br/>escala total 1/16"]
+        SELECT["Descartar posiciones 0 a 7<br/>conservar 8 a 15"]
+        FX --> MUL --> INV --> SELECT
         ROM --> MUL
     end
-
-    subgraph T1["Dominio del tiempo: reconstrucción"]
-        MUL --> INV["IFFT de 16 puntos<br/>escala 1/16"]
-        INV --> SUM["Overlap-add<br/>sumar la cola anterior"]
-        SUM --> OUT["Emitir 9 muestras<br/>por bloque completo"]
-        INV --> TAIL["Guardar cola de 7 muestras"]
-        TAIL -->|bloque siguiente| SUM
-        TAIL --> END["Al terminar: vaciar la cola<br/>salida total S + 7 muestras"]
-    end
+    WIN --> FX
+    FH -.->|tabla generada| ROM
+    SELECT --> OUT["8 salidas por bloque completo<br/>p en el parcial; 2S por trama"]
 ```
+
+El historial leído por una ventana pertenece al bloque anterior; se actualiza después de formar la ventana actual. La fuente espera cuando el núcleo no puede aceptar datos. El generador, el interpolador y el núcleo son módulos distintos; el diagrama expresa responsabilidades, no obliga a ejecutarlas en paralelo ni fija puertos RTL.
+
+La tabla H se calcula fuera del hardware una vez que se fijan los coeficientes. Los 16 productos pueden reutilizar una unidad en la implementación inicial. La paralelización y el pipeline se estudian en C03/C04.
+
+Una trama de S símbolos produce 2S muestras, sin cola final. El último cero del interpolador pertenece a la trama. Un bloque parcial se rellena solo para calcular la transformada y emite únicamente sus p muestras válidas. Las pausas no son muestras cero. El historial se reinicia entre tramas independientes.
+
+El filtro IIR temporal se prueba por separado con la misma secuencia de símbolos QPSK. No forma parte de esta cadena. La rama FFT se valida contra la convolución directa del mismo RRC, y cada rama compara su propia versión flotante con punto fijo.

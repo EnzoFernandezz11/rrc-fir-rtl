@@ -1,3 +1,5 @@
 # Modelos Python
 
 A implementará aquí QPSK, generación de coeficientes, filtros flotantes y versiones de punto fijo según los [contratos](../docs/contratos/README.md). Cada modelo debe declarar formato, orden de muestras y latencia, y exportar vectores deterministas. Las pruebas van en `tests/`.
+
+La utilidad [stimuli.py](stimuli.py), incorporada como evidencia de E01, separa la fuente QPSK con semilla (`generate_qpsk`) de la inserción de ceros (`interpolate_2x`). El generador entrega símbolos I/Q = ±1 y puede reutilizarse en ambas ramas. La interpolación entrega exactamente dos muestras por símbolo, incluido el cero tras el último. Son operaciones Python sin latencia de reloj; el protocolo RTL se define en E03/C01. No se fija el mapeo bits → símbolos ni se da por completada A01. La [prueba de E01](../tests/test_frequency_overlap_contract.py) verifica el uso de estos estímulos con overlap-save y ocho taps; sus coeficientes de ejemplo no reemplazan la tabla de E02.

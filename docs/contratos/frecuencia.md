@@ -1,31 +1,122 @@
 # Contrato: filtro en el dominio de la frecuencia
 
-**Estado:** Abierto
-**Prepara:** @EnzoFernandezz11
-**Revisan:** @andres332271 y @moreyrajulian
-**Issues:** E01, A03, C01, C02
-**Fuente:** [consigna original](../consigna-original.md), decisión D01 del [contrato técnico](../contrato-tecnico.md).
+**Estado:** Decisiones de implementación confirmadas por Enzo el 5/10/2026; propuesta lista para revisión de @andres332271 y @moreyrajulian. No implica cierre formal de E01 ni aprobación de los tres integrantes.
+**Issues:** E01, A03, C01, C02; optimización posterior en C03/C04.
+**Fuentes:** [consigna original](../consigna-original.md), [consigna actualizada](../consigna-actualizada.md) y decisiones de Enzo. [Diagrama general](../frecuency/general_diagram.md).
 
-**Revisión requerida por cambio de consigna (2026-10-05).** La [versión actualizada](../consigna-original.md) exige un IIR de segundo orden en tiempo, procesamiento en frecuencia con 50 % de superposición, entrada de prueba por GPIO y alta paralelización de la etapa FFT. No ratifica los ocho taps RRC, QPSK 2× ni el filtro FIR que sustentan las decisiones de abajo. Esos acuerdos documentan el diseño anterior y deben reabrirse antes de usar este contrato como especificación de la nueva implementación. El texto recibido omite el término después de «mediante la» y el tipo de superposición; ambos requieren aclaración.
+## Alcance y lectura conjunta de las consignas
 
-La consigna nombra un filtro complejo en frecuencia pero no especifica una arquitectura de bloques. No escribir RTL definitivo hasta dejar respondidos estos puntos o registrar una hipótesis provisional que luego pueda cambiarse.
+Por indicación de Enzo se complementan ambos textos: para frecuencia se conservan **RRCOS de ocho coeficientes, roll-off 0,5 y sobremuestreo 2×** de la original; se incorporan FFT, superposición del 50 % y el objetivo posterior de alta paralelización de la actualizada. El filtro temporal pasa a ser un **IIR de segundo orden**, según el cambio explícito. Esta combinación es la interpretación del equipo propuesta para revisión, no una nueva transcripción del profesor; el encabezado de la consigna actualizada dice que reemplaza a la original.
 
-**Objetivo funcional (2026-10-05, confirmado por Enzo; pendiente de revisión conjunta):** los filtros temporal y en frecuencia son implementaciones separadas que reciben las mismas entradas para comparar sus resultados y PPA; no se conectan en cascada. Ambos deben calcular la misma convolución lineal con los mismos ocho coeficientes, aunque puedan tener distinta latencia y organización interna.
+Los filtros se prueban por separado con los mismos símbolos QPSK de componentes `±1`. No se exige conectarlos entre sí, ejecutarlos simultáneamente ni que sus salidas coincidan. La referencia de la rama FFT es la convolución directa con **sus mismos ocho coeficientes RRC**, no el IIR temporal. Cada implementación se compara con su propio modelo flotante y fijo.
 
-| Punto | Decisión | Evidencia |
+Se conservan como objetivos del proyecto SQNR ≥ 40 dB y relojes de alrededor de 10 MHz para la variante lenta y 100 MHz para la rápida, provenientes de la original. E01 no demuestra esas métricas: corresponden a A04 y las tareas de RTL/PPA.
+
+## Decisiones confirmadas por Enzo
+
+La numeración corresponde a las alternativas de la propuesta discutida en el chat.
+
+| Decisión | Elección | Consecuencia |
 |---|---|---|
-| Transformada elegida y longitud `N` | FFT/IFFT de `N=16` puntos; `B=9` muestras nuevas por bloque. Cada bloque de entrada se completa con siete ceros hasta 16 posiciones. | `B+8−1=9+8−1=16`: hay espacio para la convolución lineal de cada bloque sin aliasing circular. Elección confirmada por Enzo el 2026-10-05; pendiente revisión de Andrés y Julián. |
-| Relación entre 8 taps y respuesta en frecuencia | Usar exactamente los mismos ocho coeficientes RRC `h[0]…h[7]` que el filtro temporal. Completar `h` con ocho ceros y calcular una vez `H[r] = FFT₁₆(h rellenado)[r]`, `r=0…15`; guardar los 16 valores complejos como constantes en una tabla de solo lectura para reutilizarlos en todos los bloques. Multiplicar cada bin de entrada por su `H[r]`. La tabla exacta de `h` depende de E02; el formato numérico y la implementación física de la memoria se definirán más adelante. | Acuerdo sobre los mismos coeficientes y el cálculo único de `H` confirmado por Enzo el 2026-10-05; pendiente revisión de Andrés y Julián. La relación `H=FFT₁₆(h rellenado)` se desprende del método elegido. |
-| Convolución lineal o circular | Salida objetivo: convolución lineal `y[n] = Σ(k=0..7) h[k]·x[n−k]`, con los mismos `x` y `h` del filtro temporal. La FFT de cada bloque es circular internamente; el método de reconstrucción debe recuperar la salida lineal. | Acuerdo de trabajo confirmado por Enzo el 2026-10-05; pendiente revisión de Andrés y Julián y prueba de equivalencia del modelo. |
-| Método de solapamiento (si aplica) | **Overlap-add**: procesar bloques de nueve muestras nuevas con relleno de ceros, ubicar cada resultado de IFFT en sus índices globales y sumar las contribuciones donde se superponen. Conservar la cola de siete muestras producida por los ocho taps; no reiniciar el filtro entre bloques. | Acuerdo de trabajo confirmado por Enzo el 2026-10-05; pendiente revisión de Andrés y Julián y prueba de equivalencia en los bordes de bloque. |
-| Orden, escala y cuantización FFT/IFFT | Convención del modelo flotante: FFT directa de 16 puntos con exponente negativo y sin factor de escala; producto `Y[r]=X[r]·H[r]` con bins del mismo índice `r=0…15`; IFFT con exponente positivo y factor `1/16`. El orden interno del RTL puede diferir si mantiene esa correspondencia de bins y la misma escala total. Anchos, redondeos y saturaciones de punto fijo quedan pendientes de A04. | Acuerdo de la convención matemática confirmado por Enzo el 2026-10-05; pendiente revisión de Andrés y Julián. El factor `1/16` hace que `IFFT₁₆(FFT₁₆(x))=x`. |
-| Entrada/salida de bloques parciales | Mientras no se indique fin de entrada, una pausa no cierra el bloque: esperar hasta reunir nueve muestras nuevas. Si al terminar la secuencia de `S` muestras queda un bloque parcial de `p` muestras (`1≤p≤8`), completar primero con `9−p` ceros y luego con siete ceros más para formar la entrada de 16 puntos. Aplicar overlap-add sin reiniciar el historial y entregar la convolución lineal completa: `S+7` muestras válidas, índices `0…S+6`, incluida la cola final. Si el último bloque ya tiene nueve muestras, emitir igualmente su cola de siete sin otra FFT. | Opción de relleno y salida completa confirmada por Enzo el 2026-10-05; pendiente revisión de Andrés y Julián y prueba del último bloque parcial. |
-| Latencia y throughput serial esperados | Versión serial inicial: **un bloque por vez**. Reunir nueve muestras aceptadas, procesar FFT₁₆, 16 productos espectrales, IFFT₁₆ y overlap-add, y emitir las nueve salidas correspondientes antes de aceptar el bloque siguiente; conservar la cola de siete para sumarla al siguiente bloque o emitirla al final de la secuencia. La primera salida aparece después de reunir el primer bloque y procesarlo. Si `C_bloque` es el intervalo medido entre inicios de bloques completos, el throughput sostenido es `9·f_clk/C_bloque` muestras/s. El cronograma y la latencia exactos en ciclos se definirán y medirán en C01. | Opción de un bloque por vez confirmada por Enzo el 2026-10-05 como base serial para comparar luego una optimización PPA; pendiente revisión de Andrés y Julián. |
+| 2 — Método | A: **overlap-save**. | Ventanas de entrada superpuestas exactamente al 50 %; sin suma de colas. |
+| 3 — Transformada | **FFT16 e IFFT16**, complejas. | Ocho muestras de historial y ocho nuevas; avance `B=8`. |
+| 4 — Fuente | **Generador QPSK separado y reutilizable**, con etapa de interpolación 2× separada del generador. | El generador entrega símbolos; el interpolador pertenece a la cadena del filtro y el núcleo FFT recibe muestras. |
+| 5 — Coeficientes espectrales | A: **H precalculada en Python**, guardada como constantes o ROM. | No se calcula la FFT de los coeficientes durante cada bloque ni se requiere hardware para calcular H. |
+| 6 — Arquitectura | **Primero simple y funcional**, un bloque a la vez. | Compartir recursos es admisible; la elección de paralelismo, pipeline y optimización PPA se desarrolla en C03/C04. |
 
-## Prueba mínima para cerrar el contrato
+Estas decisiones reemplazan la propuesta anterior de FIR genérico de hasta nueve coeficientes sin sobremuestreo y la elección histórica de overlap-add.
 
-El modelo Python flotante temporal y el de frecuencia deben producir salidas alineadas para impulso, ceros, QPSK y secuencias que crucen límites de bloque, con una tolerancia numérica declarada. Registrar muestras descartadas, retardo y cualquier diferencia intencional. Si el objetivo docente es distinto de esta equivalencia, registrar la respuesta antes de aprobar.
+## Módulos y responsabilidades
 
-## Pregunta al docente
+1. **Generador QPSK reutilizable:** produce `a[m]` con I y Q en `{-1,+1}`. No conoce FFT, historial ni coeficientes. Puede alimentar las pruebas de cualquiera de los filtros. La utilidad Python [model/stimuli.py](../../model/stimuli.py) permite generar símbolos con semilla; no fija el mapeo bits → símbolos ni implementa un generador RTL. A01/E02 completan el generador definitivo y su formato.
+2. **Interpolador 2×:** transforma cada símbolo en dos muestras: `x[2m]=a[m]`, `x[2m+1]=0`. Es una etapa propia de la cadena RRC. La utilidad Python reproduce esta operación; su interfaz por ciclos se define en E03/C01.
+3. **Formador de bloques:** combina ocho muestras anteriores con ocho nuevas, equivalentes a cuatro símbolos nuevos después del interpolador.
+4. **Núcleo de filtrado:** FFT16 → productos espectrales → IFFT16 → selección de las últimas ocho posiciones.
+5. **Control de salida:** entrega las muestras en orden, limita el último bloque a las muestras reales de la trama y reinicia el historial entre tramas independientes.
 
-> Para el filtro de 8 coeficientes RRCOS en frecuencia, ¿espera una implementación por bloques de la misma convolución del filtro temporal? De ser así, ¿hay tamaño de transformada, método de solapamiento o latencia exigidos?
+El generador es una fuente de pruebas separada: el núcleo de filtrado también puede recibir muestras desde vectores u otra fuente que respete la interfaz. Una pausa o falta de aceptación no inserta ceros: los ceros del interpolador son muestras válidas y deben distinguirse de la ausencia de datos.
+
+## Operaciones por bloque
+
+Sean `h[0]…h[7]` los ocho coeficientes del RRC causal. Su fase de muestreo, tabla exacta y normalización se fijan en E02; E01 no inventa esa tabla. Para un RRC de banda base convencional los coeficientes son reales y filtran la señal compleja I/Q. Hay que generar exactamente ocho taps, sin cambiar a nueve por conveniencia de una biblioteca.
+
+| Operación | Definición |
+|---|---|
+| Tabla fija | `H[k] = DFT16([h[0],…,h[7],0,0,0,0,0,0,0,0])[k]`. |
+| Ventana del bloque `b` | `w_b[r] = x[8b−8+r]`, para `r=0…15`. Las entradas fuera de la trama valen cero para el cálculo. |
+| Transformada de entrada | `X_b = FFT16(w_b)`. |
+| Multiplicación | `Y_b[k] = X_b[k] × H[k]`, para `k=0…15`. Son 16 productos por bloque, sin exigir 16 multiplicadores físicos en la versión inicial. |
+| Transformada de salida | `v_b = IFFT16(Y_b)`. |
+| Selección | Descartar `v_b[0…7]`; emitir `v_b[8…15]`, o solo las primeras `p` de estas posiciones en un bloque parcial. |
+| Convención | FFT con exponente negativo sin escala; IFFT con exponente positivo y escala total `1/16`. Índices externos en orden natural; cualquier reordenamiento interno debe mantener alineados `X`, `H` y la salida. |
+
+La tabla H puede ser compleja aunque h sea real. Redondeo, anchos de H y twiddles, escalado por etapas y saturación pertenecen a A04. La cuantización puede introducir error respecto del modelo flotante; la equivalencia matemática descrita aquí supone aritmética exacta.
+
+### Ejemplo de ventanas
+
+```text
+Bloque 0: [0  0  0  0  0  0  0  0 | a0 0 a1 0 a2 0 a3 0]
+Bloque 1: [a0 0 a1 0 a2 0 a3 0 | a4 0 a5 0 a6 0 a7 0]
+```
+
+Las ocho últimas entradas de una ventana pasan a ser el historial de la siguiente. Los ceros entre símbolos son parte del sobremuestreo, no relleno de FFT. Los ocho ceros añadidos a h solo se usan al precalcular H.
+
+### Por qué funciona con ocho coeficientes
+
+El FIR necesita siete muestras anteriores. Para las posiciones conservadas `r=8…15` y los taps `k=0…7`, se cumple `r−k≥1`; por tanto, no hay envolvimiento circular. La salida conservada coincide con `y[n]=Σ(k=0…7) h[k] x[n−k]`.
+
+Las posiciones `0…6` pueden estar contaminadas por circularidad. La posición 7 también es válida, pero se descarta para mantener el avance regular de ocho: corresponde a la muestra anterior al tramo nuevo, ya emitida por el bloque previo (o anterior al inicio de la trama). Guardar ocho muestras de historial, aunque basten siete, cumple exactamente el 50 %.
+
+FFT8 con avance cuatro no ofrece el historial necesario. FFT16 es la menor potencia de dos que admite este FIR con 50 % de superposición sin particionar el filtro.
+
+## Tramas, pausas y salidas
+
+- Una trama de **S símbolos produce 2S muestras de entrada al núcleo y 2S salidas**. Se conserva la decisión de no emitir cola posterior; este conteo sustituye el anterior de S salidas porque se recuperó el sobremuestreo 2×.
+- Cada trama independiente comienza con historial cero. El procesamiento continuo conserva el historial hasta un fin de trama explícito o reset.
+- Un bloque completo reúne ocho muestras nuevas. No se cierra por una pausa: se espera a completar el bloque o recibir fin de trama.
+- Tras el último símbolo se incluye su cero de interpolación. Si quedan `p<8` muestras nuevas, se agregan `8−p` ceros de relleno y se emiten solo `v_b[8]…v_b[8+p−1]`. En la cadena QPSK 2×, `p` es 2, 4 o 6; el núcleo genérico puede admitir cualquier parcial de 1 a 7.
+- Trama vacía: cero salidas. Longitud múltiplo de ocho muestras: no se agrega un bloque extra. El relleno no genera salidas adicionales ni se arrastra a otra trama independiente.
+- No se compensa el retardo del pulso recortando muestras iniciales. La comparación directa y la FFT usan los mismos índices causales; la fase y el retardo del RRC se documentan con sus coeficientes en E02.
+
+## Implementación inicial y latencia esperada
+
+La versión inicial procesa un bloque a la vez: **capturar → FFT → productos → IFFT → emitir**. El control debe poder frenar la fuente mientras procesa o entrega resultados; el generador y el interpolador conservan su estado durante esas pausas. E03/C01 fijan las señales concretas y el calendario por ciclo.
+
+La estimación estructural de la primera salida de un bloque completo es:
+
+```text
+L_primera = C_captura8 + C_FFT16 + C_productos16 + C_IFFT16 + C_hasta_primera_salida
+```
+
+`C_captura8` incluye reunir las ocho muestras posteriores al interpolador (cuatro símbolos). Con una muestra aceptada por ciclo, la fase de captura ocupa ocho ciclos; los intervalos desde el primer flanco aceptado deben contarse en C01 para evitar ambigüedad de un ciclo. Las pausas de fuente o destino agregan espera. Un bloque parcial puede iniciar el cómputo tras el fin de trama, completando el buffer con ceros.
+
+Si `C_bloque` es el intervalo real entre inicios de bloques completos, la tasa sostenida es `8·f_clk/C_bloque` muestras/s, equivalente a `4·f_clk/C_bloque` símbolos/s. El retardo propio del pulso RRC y la latencia de procesamiento por bloques son conceptos distintos.
+
+Como referencia para C01, radix-2 FFT16 requiere 32 butterflies y la IFFT otros 32, más 16 productos espectrales por bloque. Esto es un conteo de operaciones, no 80 ciclos garantizados: faltan latencias aritméticas, accesos a memoria y control. C01 determina esos valores para la arquitectura simple. C03/C04 estudian paralelismo y pipeline para cumplir el requisito posterior de rendimiento; E01 no fija una arquitectura paralela ni da por satisfecho ese requisito.
+
+## Evidencia reproducible
+
+```sh
+python3 -m unittest tests.test_frequency_overlap_contract -v
+make smoke
+```
+
+La [prueba](../../tests/test_frequency_overlap_contract.py) usa una DFT directa de biblioteca estándar como referencia de las transformadas, y compara overlap-save con la suma causal independiente de ocho taps. Incluye QPSK con semilla e interpolación 2×, tramas completas y parciales, trama vacía, impulso en los límites de bloque, retardos y tramas independientes. El criterio es error absoluto por muestra menor que `1e−10` y longitud exacta de salida.
+
+Los coeficientes de prueba incluyen un RRC ilustrativo de ocho taps y una tabla asimétrica para detectar errores de orden. El RRC ilustrativo no aprueba fase ni normalización de E02. La prueba demuestra la reconstrucción por bloques, no la calidad espectral del filtro definitivo, el SQNR en punto fijo, el protocolo RTL ni PPA.
+
+Verificación local del 5/10/2026: las seis pruebas de E01 y las diez pruebas totales de `make smoke` pasan. `git diff --check` no reporta errores de whitespace. No hay RTL registrado; este resultado no es vector matching de hardware.
+
+## Preparación del cierre de E01
+
+| Criterio local | Evidencia / destino |
+|---|---|
+| Transformada, bloques y superposición | FFT16/IFFT16, historial ocho y avance ocho; decisiones confirmadas por Enzo. |
+| Función y módulos | RRC8, beta 0,5, 2×; generador QPSK reutilizable separado; H constante. |
+| Salidas y límites de trama | Índices y conteo 2S definidos arriba. |
+| Latencia esperada | Expresión estructural, condiciones de captura y tasa; calendario por ciclos en C01. |
+| Evidencia reproducible | Prueba de reconstrucción contra convolución directa y `make smoke`. |
+| Revisión de equipo | Pendiente de @andres332271 y @moreyrajulian, conforme al [flujo de contratos](README.md). |
+| Dependencia E00 y cierre en GitHub | E00 debe estar cerrada y debe vincularse el PR con evidencia o decisión revisada según E01. No se realiza ese cierre desde este documento. |
+
+La tabla exacta de taps y el mapeo de bits pertenecen a E02/A01; anchos y SQNR a A04; interfaz y arquitectura por ciclos a E03/C01; RTL a C02; optimización a C03/C04. Estos trabajos posteriores no se dan por terminados al completar la definición de E01. El contrato técnico general, configuración y otros documentos requieren reconciliar el cambio a IIR temporal en sus tareas correspondientes.
