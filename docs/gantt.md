@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Responsables:** A = modelos/precisión, B = tiempo, C = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -17,7 +17,7 @@ gantt
     E02 Coeficientes         :e02, 2026-10-05, 3d
     E03 Interfaz y PPA       :e03, after e02, 3d
     G01 Gantt                :g01, 2026-10-05, 25d
-    section Modelos y precisión (A)
+    section Modelos y precisión (@andres332271)
     A01 QPSK y RRCOS         :a01, 2026-10-05, 2d
     A02 Flotante tiempo      :a02, after a01, 2d
     A03 Flotante frecuencia  :a03, after a02, 3d
@@ -25,12 +25,12 @@ gantt
     A05 Vectores             :a05, after a04, 2d
     A06 Banco común          :a06, after a05 e03, 5d
     A07 Tabla PPA            :a07, after e03, 18d
-    section Filtro temporal (B)
+    section Filtro temporal (@moreyrajulian)
     B01 Diseño serial        :b01, after e02, 3d
     B02 RTL serial           :b02, after b01, 5d
     B03 Elegir optimización  :b03, after b01, 3d
     B04 RTL optimizado       :b04, after b02 b03, 9d
-    section Filtro en frecuencia (C)
+    section Filtro en frecuencia (@EnzoFernandezz11)
     C01 Diseño serial        :c01, after e01, 5d
     C02 RTL serial           :c02, after c01, 8d
     C03 Elegir optimización  :c03, after c01, 2d

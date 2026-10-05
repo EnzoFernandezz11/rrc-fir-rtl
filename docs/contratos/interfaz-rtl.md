@@ -1,11 +1,11 @@
 # Contrato: interfaz RTL y temporización
 
 **Estado:** Abierto
-**Preparan:** B y C
-**Revisa:** A
+**Preparan:** @moreyrajulian y @EnzoFernandezz11
+**Revisa:** @andres332271
 **Issues:** E03, B01, C01, A06
 
-Ambos filtros deben exponer una interfaz comparable aunque sus latencias y tasas de aceptación difieran. Ningún puerto es definitivo hasta revisión A/B/C.
+Ambos filtros deben exponer una interfaz comparable aunque sus latencias y tasas de aceptación difieran. Ningún puerto es definitivo hasta la revisión de @andres332271, @moreyrajulian y @EnzoFernandezz11.
 
 | Elemento | Definición a aprobar | Motivo |
 |---|---|---|
@@ -24,6 +24,6 @@ Al aprobar, agregar una tabla ciclo a ciclo que muestre reset, primera muestra a
 
 ## Revisión
 
-- [ ] A puede escribir un testbench común sin conocer la FSM interna.
-- [ ] B y C confirman que sus arquitecturas pueden cumplir la interfaz.
+- [ ] @andres332271 puede escribir un testbench común sin conocer la FSM interna.
+- [ ] @moreyrajulian y @EnzoFernandezz11 confirman que sus arquitecturas pueden cumplir la interfaz.
 - [ ] El contrato precisa qué ocurre si llega una entrada mientras el diseño no está listo.

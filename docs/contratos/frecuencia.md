@@ -1,8 +1,8 @@
 # Contrato: filtro en el dominio de la frecuencia
 
 **Estado:** Abierto
-**Prepara:** C
-**Revisan:** A y B
+**Prepara:** @EnzoFernandezz11
+**Revisan:** @andres332271 y @moreyrajulian
 **Issues:** E01, A03, C01, C02
 **Fuente:** [consigna original](../consigna-original.md), decisión D01 del [contrato técnico](../contrato-tecnico.md).
 

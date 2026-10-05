@@ -1,8 +1,8 @@
 # Contrato: verificación, SQNR y PPA
 
 **Estado:** Abierto
-**Prepara:** A
-**Revisan:** B y C
+**Prepara:** @andres332271
+**Revisan:** @moreyrajulian y @EnzoFernandezz11
 **Issues:** E03, A04–A07, I01
 
 ## Vector matching
@@ -34,7 +34,7 @@ La tabla final tendrá columnas `variante`, `commit`, `configuración`, `SQNR`, 
 
 ## Condiciones para aprobar
 
-- [ ] B y C pueden ejecutar los mismos vectores y saber qué salida se compara.
+- [ ] @moreyrajulian y @EnzoFernandezz11 pueden ejecutar los mismos vectores y saber qué salida se compara.
 - [ ] El método de SQNR reproduce el mismo resultado desde la configuración y los datos.
 - [ ] Las cuatro variantes usarán tecnología y constraints comunes para área/timing.
 - [ ] La metodología de potencia identifica su herramienta y fuente de actividad.
