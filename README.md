@@ -36,6 +36,8 @@ El registro de RTL está vacío mientras no exista una implementación. **Agrega
 
 ## Organización
 
+El [borrador de diseño del filtro en frecuencia serial (C01)](docs/diseno-frecuencia-serial.md) organiza la discusión por módulos, alternativas y decisiones pendientes, considerando la consigna actualizada.
+
 | Ruta | Contenido |
 |---|---|
 | `config/` | Parámetros confirmados y registro de variantes para CI. |
