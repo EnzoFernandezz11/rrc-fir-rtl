@@ -1,6 +1,6 @@
 # Diagrama general del filtro en frecuencia
 
-Decisiones de Enzo del 5/10/2026, pendientes de revisión del equipo. La [definición de E01](../contratos/frecuencia.md) combina el RRC8, beta 0,5 y 2× originales con FFT y 50 % de superposición de la consigna actualizada.
+La [propuesta de E01](../contratos/frecuencia.md) implementa el FIR RRC8, beta 0,5, mediante FFT16 y 50 % de superposición según la [consigna vigente](../consigna-actualizada.md). El sobremuestreo 2× se mantiene como propuesta para confirmar con el docente.
 
 ```mermaid
 flowchart LR
@@ -45,4 +45,4 @@ La tabla H se calcula fuera del hardware una vez que se fijan los coeficientes. 
 
 Una trama de S símbolos produce 2S muestras, sin cola final. El último cero del interpolador pertenece a la trama. Un bloque parcial se rellena solo para calcular la transformada y emite únicamente sus p muestras válidas. Las pausas no son muestras cero. El historial se reinicia entre tramas independientes.
 
-El filtro IIR temporal se prueba por separado con la misma secuencia de símbolos QPSK. No forma parte de esta cadena. La rama FFT se valida contra la convolución directa del mismo RRC, y cada rama compara su propia versión flotante con punto fijo.
+El FIR temporal se implementa por separado y recibe las mismas muestras interpoladas y los mismos ocho coeficientes RRC. Ambas ramas deben producir la misma secuencia causal de 2S salidas, sin cola final, al alinear sus índices de muestra. Se admiten diferencias de redondeo en flotante; A04 define la tolerancia entre dominios en punto fijo y cada RTL se compara con su modelo fijo.

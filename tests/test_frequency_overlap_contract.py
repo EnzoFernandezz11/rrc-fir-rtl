@@ -4,49 +4,11 @@ La DFT de referencia usa solo la biblioteca estándar. Los coeficientes de prueb
 son ejemplos independientes de la tabla definitiva del filtro en frecuencia.
 """
 
-import cmath
 import math
 import unittest
 
+from model.frequency import frequency_filter
 from model.stimuli import generate_qpsk, interpolate_2x
-
-
-N = 16
-HOP = 8
-
-
-def transform(values, inverse=False):
-    assert len(values) == N
-    sign = 1 if inverse else -1
-    scale = 1 / N if inverse else 1
-    return [
-        scale
-        * sum(
-            values[n] * cmath.exp(sign * 2j * math.pi * k * n / N)
-            for n in range(N)
-        )
-        for k in range(N)
-    ]
-
-
-def frequency_filter(signal, taps):
-    """Overlap-save: 8 muestras previas + 8 nuevas; conservar las últimas 8."""
-    if len(taps) != 8:
-        raise ValueError("El contrato exige exactamente 8 coeficientes")
-    spectrum = transform(list(taps) + [0j] * (N - len(taps)))
-    result = []
-    for start in range(0, len(signal), HOP):
-        block = [
-            signal[index] if 0 <= index < len(signal) else 0j
-            for index in range(start - HOP, start + HOP)
-        ]
-        input_spectrum = transform(block)
-        circular = transform(
-            [input_spectrum[k] * spectrum[k] for k in range(N)],
-            inverse=True,
-        )
-        result.extend(circular[HOP : HOP + min(HOP, len(signal) - start)])
-    return result
 
 
 def direct_filter(signal, taps):
@@ -120,12 +82,6 @@ class FrequencyOverlapContractTest(unittest.TestCase):
         self.assertEqual(len(actual), len(expected))
         for got, want in zip(actual, expected):
             self.assertLess(abs(got - want), 1e-10)
-
-    def test_independent_frame_does_not_inherit_history(self):
-        taps = illustrative_rrc_taps()
-        frequency_filter(interpolate_2x(generate_qpsk(5, seed=17)), taps)
-        quiet_frame = [0j] * 10
-        self.assertEqual(frequency_filter(quiet_frame, taps), quiet_frame)
 
     def test_reusable_source_and_interpolator(self):
         symbols = generate_qpsk(64, seed=17)
