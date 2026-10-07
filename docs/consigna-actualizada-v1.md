@@ -1,10 +1,10 @@
-# Consigna actualizada
+# Consigna actualizada (v1, reemplazada)
 
-Segunda versión actualizada por el profesor, recibida el 6/10/2026. Reemplaza a la [primera versión actualizada](consigna-actualizada-v1.md) y a la [consigna original](consigna-original.md), que se conservan como historial. Texto transcripto sin cambios.
+Primera versión actualizada por el profesor, recibida el 5/10/2026. Reemplazada el 6/10/2026 por la [consigna actualizada](consigna-actualizada.md), que corrige el filtro en tiempo (FIR RRC de 8 taps en lugar de IIR de segundo orden). Se conserva como historial. Texto transcripto sin cambios.
 
 Se deberán implementar por separado dos tipos de filtros complejos: uno en el dominio del tiempo y otro en el dominio de la frecuencia.
 
-El filtro en el dominio del tiempo deberá ser un filtro FIR de 8 taps rrcos con 50, porciento de rolloff. Por su parte, el filtro en el dominio de la frecuencia deberá implementarse mediante la técnica de procesamiento por bloques con una superposición del 50 %. Las señales de entrada utilizadas para las pruebas serán simbolos QPSK(+/-1) .
+El filtro en el dominio del tiempo deberá ser un filtro IIR de segundo orden. Por su parte, el filtro en el dominio de la frecuencia deberá implementarse mediante la técnica de procesamiento por bloques con una superposición del 50 %. Las señales de entrada utilizadas para las pruebas serán simbolos QPSK(+/-1) .
 
 La documentación del proyecto deberá incluir un diagrama de bloques completo, acompañado por una descripción detallada de cada una de las etapas del sistema. Asimismo, se deberá realizar una comparación entre una implementación en punto flotante y otra en punto fijo, evaluando el comportamiento de ambas alternativas mediante pruebas con distintos conjuntos de datos.
 
