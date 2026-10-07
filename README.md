@@ -1,10 +1,10 @@
 # Filtros RRCOS complejos en RTL
 
-Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, una en el dominio del tiempo y otra en frecuencia. La entrada usa símbolos QPSK con sobremuestreo 2× y el RRCOS tiene roll-off de 50 %. El trabajo compara versiones seriales y optimizadas con foco en rendimiento, potencia y área (PPA).
+Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, una en el dominio del tiempo y otra en frecuencia. La entrada usa símbolos QPSK; se propone mantener sobremuestreo 2× y el RRCOS tiene roll-off de 50 %. El trabajo compara versiones seriales y optimizadas con foco en rendimiento, potencia y área (PPA).
 
 ## Estado actual
 
-Este repositorio contiene el **andamiaje de trabajo**. Aún no hay coeficientes definitivos, modelo Python del filtro ni RTL. Esos resultados corresponden a las tareas del [backlog](docs/backlog.md). La [consigna actualizada](docs/consigna-actualizada.md) (5/10/2026) es la vigente; la [consigna original](docs/consigna-original.md) se conserva tal como fue recibida. Los parámetros confirmados y las decisiones pendientes se registran en el [contrato técnico](docs/contrato-tecnico.md) y los [contratos de trabajo](docs/contratos/README.md); nadie debe deducir coeficientes o formatos a partir del nombre de un archivo.
+Este repositorio contiene el **andamiaje de trabajo**, utilidades QPSK y un [modelo flotante de overlap-save](model/frequency.py) verificado contra convolución directa. La tabla definitiva de coeficientes y el RTL corresponden a las tareas del [backlog](docs/backlog.md). La [consigna vigente](docs/consigna-actualizada.md), confirmada el 7/10/2026, es la única copia en el árbol de trabajo: se retiraron las versiones reemplazadas para evitar contexto contradictorio; el historial permanece en Git. Los requisitos y las decisiones se registran en el [contrato técnico](docs/contrato-tecnico.md) y los [contratos de trabajo](docs/contratos/README.md).
 
 Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en el [Project del equipo](https://github.com/users/EnzoFernandezz11/projects/4) con estados, responsables asignados y fechas previstas. [Andrés (@andres332271)](https://github.com/andres332271) lleva modelos y precisión; [Julián (@moreyrajulian)](https://github.com/moreyrajulian), el filtro temporal; y [Enzo (@EnzoFernandezz11)](https://github.com/EnzoFernandezz11), el filtro en frecuencia. Cada integrante puede filtrar sus tareas por asignado en las [issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) o en la vista correspondiente del Project.
 
@@ -50,4 +50,4 @@ El [borrador de diseño del filtro en frecuencia serial (C01)](docs/diseno-frecu
 | `constraints/` | Condiciones de reloj y tecnología para PPA. |
 | `reports/` | Resultados finales y conclusiones trazables. |
 
-La meta de precisión es **SQNR ≥ 40 dB**. Las variantes rápidas apuntan a **100 MHz** y las lentas a **10 MHz**. El método de cálculo del SQNR, la tecnología para timing y la metodología de potencia deben quedar acordados antes de publicar comparaciones.
+Los mínimos del proyecto, confirmados por Enzo el 7/10/2026, son **SQNR ≥ 40 dB**, frecuencia de reloj **≥ 100 MHz para las variantes rápidas** y **≥ 10 MHz para las lentas**. El método de cálculo del SQNR, la tecnología para timing y la metodología de potencia deben quedar acordados antes de publicar comparaciones.

@@ -1,6 +1,6 @@
 # Guía integral para diseñar y verificar los filtros RRCOS en RTL
 
-> **Propósito.** Leer antes de comenzar y consultar mientras se construyen los modelos, el RTL y la comparación PPA del trabajo final. Esta guía enseña la teoría y propone una forma de comprobar cada paso. **No aprueba decisiones pendientes:** la fuente de requisitos es la [consigna](../rrc-fir-rtl/docs/consigna-original.md), y el estado de cada acuerdo vive en el [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md) y en [config/project.json](../rrc-fir-rtl/config/project.json).
+> **Propósito.** Leer antes de comenzar y consultar mientras se construyen los modelos, el RTL y la comparación PPA del trabajo final. Esta guía enseña la teoría y propone una forma de comprobar cada paso. **No aprueba decisiones pendientes:** la fuente de requisitos es la [consigna](consigna-actualizada.md), y el estado de cada acuerdo vive en el [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md) y en [config/project.json](../rrc-fir-rtl/config/project.json).
 >
 > **Lectura rápida:** §§ 1–3 antes del modelo; §§ 4–6 antes del RTL; §§ 7–9 durante verificación y PPA; § 10 para dudas frecuentes. Las referencias del § 11 permiten volver a las clases y a los libros. “Página” de un libro significa **página del PDF**, que puede diferir de la numeración impresa.
 
@@ -24,7 +24,7 @@
 
 ### 1.1 Requisitos que sí están confirmados
 
-La consigna pide **dos filtros complejos implementados por separado**, uno en tiempo y otro en frecuencia. Son filtros de **8 coeficientes** de la familia **RRCOS** o *root raised cosine*, con roll-off $\beta=0{,}5$, sobremuestreo $L=2$ muestras por símbolo y símbolos QPSK. El orden de trabajo es: modelo Python flotante; modelo de punto fijo y elección de bits con **SQNR al menos 40 dB**; versión serial de cada filtro y vector matching; arquitectura optimizada de cada uno; comparación de performance, power y area (**PPA**). Las variantes rápidas apuntan a **100 MHz** y las lentas a **10 MHz**. La entrega incluye resultados contrastados, aprendizajes, Gantt, informe y filminas. [Fuentes: consigna](../rrc-fir-rtl/docs/consigna-original.md); [Módulo 1, diap. 5–9 y 50–52](Modulo_1.pptx).
+La consigna pide **dos filtros complejos implementados por separado**: un FIR temporal **RRCOS de 8 taps**, roll-off $\beta=0{,}5$, y una implementación en frecuencia basada en FFT con **50 % de superposición**. Deben verificarse la correspondencia de sus resultados y las diferencias entre flotante y punto fijo; luego de la interfaz serie se requiere una implementación paralela, con énfasis en FFT, productos e IFFT. También exige diagrama de bloques, descripción de etapas y Gantt con aportes individuales. Como aclaración adicional, Enzo confirmó el 7/10/2026 los mínimos **SQNR ≥ 40 dB**, **reloj ≥ 100 MHz en variantes rápidas** y **≥ 10 MHz en lentas**; se registran en el [contrato técnico](contrato-tecnico.md). El sobremuestreo $L=2$ sigue como propuesta para confirmar con el docente. El proyecto incluye la comparación PPA. [Fuente: consigna](consigna-actualizada.md).
 
 Una frecuencia de reloj objetivo no equivale a tasa de muestras. Si una arquitectura acepta una muestra cada $II$ ciclos, su tasa sostenida ideal es $f_{\mathrm{clk}}/II$, siempre que no haya paradas adicionales. Un diseño a 100 MHz con $II=16$ entrega menos muestras por segundo que uno a 10 MHz con $II=1$. Medir ambos números.
 
@@ -55,7 +55,7 @@ La tabla es una brújula de trabajo, no permiso para rellenar valores arbitrario
 | D07 | ¿Cuál es la referencia y el tramo exacto para SQNR? | Evita una cifra “40 dB” irreproducible. |
 | D08 | ¿Qué optimización se elige en cada dominio y qué métrica intenta mejorar? | Da sentido a la comparación. |
 
-**Regla de trazabilidad.** Para cada acuerdo anotar valor, estado, fuente, ejemplo numérico y PR en el [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md). Actualizar [config/project.json](../rrc-fir-rtl/config/project.json) solo con los valores que usarán scripts y modelos. La consigna no determina una tabla única de ocho coeficientes solo por decir $\beta=0{,}5$ y $L=2$.
+**Regla de trazabilidad.** Para cada acuerdo anotar valor, estado, fuente, ejemplo numérico y PR en el [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md). Actualizar [config/project.json](../rrc-fir-rtl/config/project.json) solo con los valores que usarán scripts y modelos. El roll-off $\beta=0{,}5$ de la consigna y el sobremuestreo propuesto $L=2$ no determinan una tabla única de ocho coeficientes.
 
 ### 1.4 Reparto y dependencias
 
@@ -490,7 +490,7 @@ Los tests Python actuales comprueban requisitos del andamiaje, ausencia de RTL r
 
 ### 9.1 Qué significan las métricas
 
-**Performance:** reportar $f_{\mathrm{max}}$ **medido bajo una tecnología y constraints**, latencia en ciclos y tiempo, $II$, muestras/s y símbolos/s. Una meta de 100 o 10 MHz se verifica con un análisis temporal, no con una simulación funcional. Distinguir timing tras síntesis, tras placement y tras routing si existen datos: cambian la precisión del interconnect. [Fuentes: Módulo 8, diap. 8–15 y 20–30](Modulo_8.pptx); [Módulo 9, diap. 23–31](Modulo_9.pptx).
+**Performance:** reportar $f_{\mathrm{max}}$ **medido bajo una tecnología y constraints**, latencia en ciclos y tiempo, $II$, muestras/s y símbolos/s. El cumplimiento de reloj ≥ 100 MHz en variantes rápidas o ≥ 10 MHz en lentas se verifica con análisis temporal a la frecuencia de operación elegida, no con una simulación funcional. Distinguir timing tras síntesis, tras placement y tras routing si existen datos: cambian la precisión del interconnect. [Fuentes: Módulo 8, diap. 8–15 y 20–30](Modulo_8.pptx); [Módulo 9, diap. 23–31](Modulo_9.pptx).
 
 **Área:** en FPGA, LUT/FF/DSP/BRAM y familia de dispositivo; en ASIC, área de celdas bajo la misma biblioteca, corner y constraints, además de memorias/macros si corresponde. El recuento genérico de celdas de Yosys permite una comparación limitada de lógica, pero **no es área física final**. No poner un número FPGA frente a $\mu m^2$ ASIC como si fueran la misma unidad. [Fuente: Módulo 8, diap. 12–17 y 30](Modulo_8.pptx).
 
@@ -639,7 +639,7 @@ Luego crear una entrada de impulso complejo y comparar $\operatorname{convolve}(
 
 ### 11.1 Orden de autoridad
 
-1. **Requisitos del trabajo:** [consigna original](../rrc-fir-rtl/docs/consigna-original.md).
+1. **Requisitos del trabajo:** [consigna vigente](consigna-actualizada.md).
 2. **Decisiones aprobadas o abiertas:** [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md), [contratos de trabajo](../rrc-fir-rtl/docs/contratos/README.md) y [configuración consumida por scripts](../rrc-fir-rtl/config/project.json).
 3. **Implementación y avance:** [backlog](../rrc-fir-rtl/docs/backlog.md), [Gantt](../rrc-fir-rtl/docs/gantt.md), [guía de contribución](../rrc-fir-rtl/CONTRIBUTING.md), [CI](../rrc-fir-rtl/.github/workflows/rtl-ci.yml).
 4. **Fundamento técnico:** libros de comunicaciones y DSP; módulos del curso. Un ejemplo de clase muestra una técnica, pero no cambia la consigna.

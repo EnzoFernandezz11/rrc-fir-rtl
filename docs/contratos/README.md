@@ -1,9 +1,9 @@
 # Contratos de trabajo entre @andres332271, @moreyrajulian y @EnzoFernandezz11
 
-La [consigna original](../consigna-original.md) es la fuente externa. El [contrato técnico](../contrato-tecnico.md) reúne requisitos confirmados y el registro de decisiones. Estos documentos detallan los acuerdos que permiten trabajar en paralelo:
+La [consigna vigente](../consigna-actualizada.md) es la única fuente externa de requisitos. El [contrato de frecuencia](frecuencia.md) define la implementación por bloques del mismo FIR RRC de ocho taps y roll-off 0,5 que la rama temporal. Ambas salidas deben corresponder con iguales entradas y coeficientes. El sobremuestreo 2× es una propuesta que debe confirmarse con el docente. Estos documentos detallan los acuerdos para trabajar en paralelo:
 
 1. [Señales, coeficientes y formatos](senales-y-formatos.md): @andres332271 prepara; @moreyrajulian y @EnzoFernandezz11 revisan antes de tomar vectores como referencia.
-2. [Método en frecuencia](frecuencia.md): @EnzoFernandezz11 propone; @andres332271 valida contra el modelo temporal y @moreyrajulian revisa la comparación.
+2. [Método en frecuencia](frecuencia.md): @EnzoFernandezz11 propone; @andres332271 valida el procesamiento por bloques contra una referencia directa independiente y @moreyrajulian revisa la comparación. La salida debe coincidir con el FIR temporal salvo redondeo en flotante; A04 fija la tolerancia en punto fijo.
 3. [Interfaz RTL](interfaz-rtl.md): @moreyrajulian y @EnzoFernandezz11 acuerdan puertos y ciclos; @andres332271 valida que el banco común puede usarlos.
 4. [Verificación y PPA](verificacion-y-ppa.md): @andres332271 prepara métricas y vectores; @moreyrajulian y @EnzoFernandezz11 validan que se ejecutan igual en sus variantes.
 
