@@ -19,7 +19,7 @@ Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están e
 1. Leer el [contrato técnico](docs/contrato-tecnico.md) y cerrar E00–E03 entre los tres. Registrar allí las respuestas del docente y los supuestos provisionales.
 2. Seguir el [Gantt](docs/gantt.md) y tomar una tarea del [backlog](docs/backlog.md).
 3. Crear una rama corta por tarea y abrir un PR con la [guía de contribución](CONTRIBUTING.md).
-4. Ejecutar `make smoke` localmente antes del PR. El comando valida el contrato y ejecuta los testbenches que estén registrados en `config/rtl_targets.json`.
+4. Instalar dependencias con `pip install -r requirements.txt` y ejecutar `make smoke` localmente antes del PR. El comando valida el contrato y ejecuta los testbenches que estén registrados en `config/rtl_targets.json`.
 
 ## Comandos
 
