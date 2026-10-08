@@ -16,9 +16,8 @@ EXPECTED_CONFIRMED = {
     "filter_family": "RRCOS",
     "coefficient_count": 8,
     "rolloff": 0.5,
-    "samples_per_symbol": 2,
     "minimum_sqnr_db": 40,
-    "clock_targets_mhz": {"fast": 100, "slow": 10},
+    "minimum_clock_mhz": {"fast": 100, "slow": 10},
 }
 REQUIRED_DECISIONS = {
     "coefficients",
@@ -49,7 +48,7 @@ def validate_project(data: dict[str, Any]) -> None:
     if confirmed != EXPECTED_CONFIRMED:
         raise ValueError(
             "config/project.json: los requisitos confirmados no coinciden con la "
-            "consigna original; revisar docs/consigna-original.md antes de cambiarlos"
+            "consigna y las aclaraciones registradas; revisar docs/contrato-tecnico.md antes de cambiarlos"
         )
     decisions = data.get("decisions")
     if not isinstance(decisions, dict) or not REQUIRED_DECISIONS <= decisions.keys():
@@ -128,12 +127,15 @@ def main() -> int:
     try:
         project = load_project()
         targets = load_targets()
-        if not (ROOT / "docs/consigna-original.md").is_file():
-            raise ValueError("falta docs/consigna-original.md")
+        if not (ROOT / "docs/consigna-actualizada.md").is_file():
+            raise ValueError("falta docs/consigna-actualizada.md")
     except ValueError as exc:
         print(f"ERROR: {exc}")
         return 1
-    pending = [key for key, value in project["decisions"].items() if value is None]
+    pending = [
+        key for key, value in project["decisions"].items()
+        if value is None or (isinstance(value, dict) and value.get("status") == "proposed")
+    ]
     print("Contrato: requisitos formales válidos")
     print(f"Decisiones pendientes: {', '.join(pending) if pending else 'ninguna'}")
     print(f"Variantes RTL registradas: {len(targets)}")

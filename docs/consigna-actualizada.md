@@ -1,6 +1,6 @@
-# Consigna actualizada
+# Consigna vigente
 
-Segunda versión actualizada por el profesor, recibida el 6/10/2026. Reemplaza a la [primera versión actualizada](consigna-actualizada-v1.md) y a la [consigna original](consigna-original.md), que se conservan como historial. Texto transcripto sin cambios.
+Texto definitivo confirmado por Enzo el 7/10/2026, transcripto a continuación sin cambios. Se mantiene una única consigna en el árbol de trabajo para evitar que versiones reemplazadas introduzcan contexto contradictorio en la documentación, las revisiones y las herramientas de asistencia. Las versiones anteriores siguen disponibles en el historial de Git.
 
 Se deberán implementar por separado dos tipos de filtros complejos: uno en el dominio del tiempo y otro en el dominio de la frecuencia.
 
