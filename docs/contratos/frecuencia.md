@@ -26,7 +26,7 @@ Enzo confirmó el 7/10/2026 los mínimos del proyecto: **SQNR ≥ 40 dB**, reloj
 
 ## Módulos y responsabilidades
 
-1. **Generador QPSK reutilizable:** produce `a[m]` con I y Q en `{-1,+1}`. No conoce FFT, historial ni coeficientes. Puede alimentar las pruebas de cualquiera de los filtros. La utilidad Python [model/stimuli.py](../../model/stimuli.py) permite generar símbolos con semilla; no fija el mapeo bits → símbolos ni implementa un generador RTL. A01/E02 completan el generador definitivo y su formato.
+1. **Generador QPSK reutilizable:** produce `a[m]` con I y Q en `{-1,+1}`. No conoce FFT, historial ni coeficientes. Puede alimentar las pruebas de cualquiera de los filtros. En Python es `qpsk()` de [model/qpsk_rrc.py](../../model/qpsk_rrc.py), con el mapeo de E02; no hay generador RTL, los testbenches inyectan los vectores exportados por A05.
 2. **Interpolador 2×:** transforma cada símbolo en dos muestras: `x[2m]=a[m]`, `x[2m+1]=0`. Es una etapa propia de la cadena RRC. La utilidad Python reproduce esta operación; su interfaz por ciclos se define en E03/C01.
 3. **Formador de bloques:** combina ocho muestras anteriores con ocho nuevas, equivalentes a cuatro símbolos nuevos después del interpolador.
 4. **Núcleo de filtrado:** FFT16 → productos espectrales → IFFT16 → selección de las últimas ocho posiciones.
