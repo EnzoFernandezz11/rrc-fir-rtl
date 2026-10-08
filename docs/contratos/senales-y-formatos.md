@@ -14,7 +14,7 @@ Ambos filtros procesan señal compleja con los mismos ocho coeficientes RRCOS y 
 
 | Punto | Valor acordado | Fuente/ejemplo | Estado |
 |---|---|---|---|
-| Mapeo bits → símbolos QPSK y amplitud I/Q | Dos bits por símbolo, `(b_I, b_Q)`; bit 0 → +1, bit 1 → −1. I/Q = ±1 sin normalizar por √2. | Consigna vigente (±1); `qpsk()` en [`model/qpsk_rrc.py`](../../model/qpsk_rrc.py) | Propuesto (E02) |
+| Mapeo bits → símbolos QPSK y amplitud I/Q | Dos bits por símbolo, `(b_I, b_Q)`; bit 0 → +1, bit 1 → −1. En RTL, como palabra `b[1:0]`: `b[1]` = b_I (primer bit) y `b[0]` = b_Q. I/Q = ±1 sin normalizar por √2. | Consigna vigente (±1); `qpsk()` en [`model/qpsk_rrc.py`](../../model/qpsk_rrc.py) | Propuesto (E02) |
 | Inserción de ceros/interpolación para 2× | `x[2m] = a[m]`, `x[2m+1] = 0`, incluido el cero tras el último símbolo. | `upsample()` en `model/qpsk_rrc.py`; [E01](frecuencia.md), decisión de Enzo del 5/10/2026 | Propuesto; la consigna vigente no menciona 2×, confirmar con el docente |
 | Fórmula y fase de muestreo RRCOS | Pulso RRCOS en forma cerrada (abajo), muestreado en `t_k = (k − 3,5)/2` Ts, k = 0…7: grilla simétrica ±0,25…±1,75 Ts sin tap central. | `rrc()` y `sample_times()` | Propuesto (E02) |
 | Tabla `h[0]…h[7]` y orden de taps | Tabla de abajo; `h[0]` multiplica a `x[n]` en `y[n] = Σ h[k]·x[n−k]`. Simétrica, fase lineal, retardo de grupo 3,5 muestras. | `rrc_taps()`; copia en `config/project.json` | Propuesto (E02) |
