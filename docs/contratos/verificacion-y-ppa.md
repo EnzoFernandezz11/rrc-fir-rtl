@@ -20,14 +20,14 @@ Cada testbench compara por **índice de muestra válido** con su modelo fijo. La
 
 ## SQNR
 
-La meta formal es **≥ 40 dB**. Antes de reportarla, fijar si la referencia es la salida flotante del filtro temporal o una referencia por dominio, la escala aplicada, el tramo de muestras y el tratamiento de I/Q. Una fórmula candidata para revisar es `10·log10(Σ|y_ref|² / Σ|y_fxp−y_ref|²)` sobre muestras válidas alineadas. No registrar un número aislado sin su configuración y vectores.
+El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como aclaración adicional a la consigna vigente. Antes de reportarla, fijar si la referencia es la salida flotante del filtro temporal o una referencia por dominio, la escala aplicada, el tramo de muestras y el tratamiento de I/Q. Una fórmula candidata para revisar es `10·log10(Σ|y_ref|² / Σ|y_fxp−y_ref|²)` sobre muestras válidas alineadas. No registrar un número aislado sin su configuración y vectores.
 
 ## PPA
 
 | Métrica | Definición y herramienta a acordar |
 |---|---|
 | Área | FPGA: LUT/FF/DSP; ASIC: área de celdas. Misma tecnología y constraints. |
-| Performance | Fmax medido, latencia en ciclos y throughput en muestras/s. Metas 100/10 MHz según variante. |
+| Performance | Fmax medido, latencia en ciclos y throughput en muestras/s. Reloj mínimo de 100 MHz en variantes rápidas y 10 MHz en lentas, confirmado por Enzo el 7/10/2026; verificar timing a la frecuencia de operación elegida. |
 | Potencia | Herramienta, actividad de entrada, reloj, tecnología y corner pendientes. |
 
 La tabla final tendrá columnas `variante`, `commit`, `configuración`, `SQNR`, `área`, `Fmax`, `latencia`, `throughput`, `potencia`, `herramienta/log`. Si una métrica no se puede medir con las herramientas disponibles, dejarla como «no medida» y explicar la limitación. No presentar el mapeo lógico de Yosys como Fmax medido ni una estimación sin actividad como potencia comparable.

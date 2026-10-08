@@ -6,9 +6,8 @@
     "filter_family": "RRCOS",
     "coefficient_count": 8,
     "rolloff": 0.5,
-    "samples_per_symbol": 2,
     "minimum_sqnr_db": 40,
-    "clock_targets_mhz": {
+    "minimum_clock_mhz": {
       "fast": 100,
       "slow": 10
     }
@@ -16,10 +15,22 @@
   "decisions": {
     "coefficients": null,
     "coefficient_normalization": null,
-    "frequency_method": null,
+    "frequency_method": {
+      "status": "proposed",
+      "method": "overlap-save",
+      "fft_size": 16,
+      "hop_size": 8
+    },
     "fixed_point_format": null,
     "rtl_interface": null,
     "target_technology": null,
     "power_method": null
+  },
+  "proposals": {
+    "samples_per_symbol": {
+      "value": 2,
+      "status": "proposed",
+      "confirmation": "docente"
+    }
   }
 }
