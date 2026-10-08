@@ -13,8 +13,17 @@
     }
   },
   "decisions": {
-    "coefficients": null,
-    "coefficient_normalization": null,
+    "coefficients": [
+      0.010942691568693055,
+      -0.11095557645481882,
+      0.11095557645481889,
+      0.6893895688276623,
+      0.6893895688276623,
+      0.11095557645481889,
+      -0.11095557645481882,
+      0.010942691568693055
+    ],
+    "coefficient_normalization": "unit_energy",
     "frequency_method": {
       "status": "proposed",
       "method": "overlap-save",
