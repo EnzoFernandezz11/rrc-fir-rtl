@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Alta de R01 y avance real:** 2026-10-07. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -35,6 +35,8 @@ gantt
     C02 RTL serial           :c02, after c01, 8d
     C03 Elegir optimización  :c03, after c01, 2d
     C04 RTL optimizado       :c04, after c02 c03, 9d
+    section RTL común (@moreyrajulian y @EnzoFernandezz11)
+    R01 Entrada y salida     :r01, after e03, 9d
     section Integración y presentación
     I01 Comparación          :i01, after b04 c04 a07, 1d
     I02 Informe              :i02, 2026-10-14, 16d
@@ -49,14 +51,16 @@ G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entr
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
 
+**Al 07/10:** 6 de 24 tareas iniciadas (E00, E01, E02, G01, A01, R01), 1 integrada (E00) y 0 verificadas. E01 y A01 llevan un día de atraso. E01 es el más delicado: está en la cadena E01 → C01 → C02 → C04, que no tiene holgura, así que cada día de demora sin recuperar llega al corte del 26/10. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
+
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
 |---|---|---|---|---|
-| [E00](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/1) | — | — | — | — |
-| [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | — | — | — | Consulta docente si hace falta. |
-| [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | — | — | — | — |
+| [E00](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/1) | @andres332271 | 05/10 | 07/10 | Consigna actualizada en #27 y segunda versión en #29 (06/10). |
+| [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | @EnzoFernandezz11 | 05/10 | — | PR #28 en revisión, con cambios pedidos. Plan: fin 06/10. |
+| [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | @andres332271 | 07/10 | — | PR #33 en revisión; necesita el acuerdo de los tres. |
 | [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | — | — | — | — |
-| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | — | — | — | Actualizar semanalmente. |
-| [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | — | — | — | — |
+| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27 y este registro. Actualizar semanalmente. |
+| [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | @andres332271 | 07/10 | — | PR #32 en revisión. Plan: fin 06/10. |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | — | — | — | — |
 | [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | — | — | — | — |
 | [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | — | — | — | — |
@@ -65,6 +69,7 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 | [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | — | — | — | — |
 | [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | — | — | — | — |
 | [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | — | — | — | — |
+| [R01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31) | @moreyrajulian y @EnzoFernandezz11 | 07/10 | — | Reparto acordado; contrato de interfaces propuesto en la issue. |
 | [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | — | — | — | — |
 | [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | — |
 | [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | — |
@@ -77,4 +82,4 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 
 ## Corte del viernes 16/10
 
-Meta: 20 de 23 tareas con evidencia de inicio (87 %). Es el máximo que permite el plan sin violar dependencias; solo I01 y C04 (y por lo tanto el cierre de I03) dependen de resultados posteriores. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C04 sin C02 para mejorar el porcentaje.
+Meta: 21 de 24 tareas con evidencia de inicio (88 %). Es el máximo que permite el plan sin violar dependencias; solo I01 y C04 (y por lo tanto el cierre de I03) dependen de resultados posteriores. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C04 sin C02 para mejorar el porcentaje.

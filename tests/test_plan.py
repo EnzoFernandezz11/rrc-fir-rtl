@@ -37,7 +37,7 @@ class PlanChecks(unittest.TestCase):
     def test_gantt_respects_backlog_dependencies(self):
         deps = backlog_dependencies()
         schedule = gantt_schedule()
-        self.assertEqual(len(deps), 23)
+        self.assertEqual(len(deps), 24)
         self.assertEqual(deps.keys(), schedule.keys())
         for task, (to_start, to_close) in deps.items():
             start, end = schedule[task]
