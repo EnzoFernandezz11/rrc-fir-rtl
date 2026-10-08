@@ -5,6 +5,7 @@ import unittest
 import numpy as np
 
 from model.qpsk_rrc import TAPS, impulse_response, qpsk, rrc, rrc_taps, sample_times, upsample
+from scripts.validate_project import load_project
 
 
 class QpskChecks(unittest.TestCase):
@@ -32,6 +33,10 @@ class RrcChecks(unittest.TestCase):
         # t = 0 y t = ±1/(4α) usan fórmulas aparte; deben coincidir con el límite.
         for t in (0.0, 0.5, -0.5):
             np.testing.assert_allclose(rrc([t]), rrc([t + 1e-7]), rtol=1e-5)
+
+    def test_config_matches_model(self):
+        # E02: la copia en config/project.json no puede divergir del generador.
+        np.testing.assert_allclose(load_project()["decisions"]["coefficients"], rrc_taps(), rtol=0, atol=1e-15)
 
     def test_impulse_response_is_taps(self):
         h = rrc_taps()

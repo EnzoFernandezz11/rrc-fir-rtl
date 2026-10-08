@@ -44,8 +44,8 @@ Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado po
 | ID | Tema y pregunta concreta | Estado | Responsable | Evidencia o respuesta |
 |---|---|---|---|---|
 | D01 | ¿Qué operaciones exactas componen el filtro en frecuencia? ¿Tamaño de bloque/FFT, convolución lineal o circular, overlap-add/save y latencia? | propuesto | @EnzoFernandezz11 | [Contrato de frecuencia](contratos/frecuencia.md): overlap-save FFT16/IFFT16, historial y avance de ocho, salidas causales sin cola y latencia estructural. Evidencia en `tests/test_frequency_overlap_contract.py`; PR #28. |
-| D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | abierto | @andres332271 | Pendiente. |
-| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
+| D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | provisional | @andres332271 | Propuesta E02 en [señales y formatos](contratos/senales-y-formatos.md): grilla ±0,25…±1,75 Ts, energía unitaria. Pasa a acordado por equipo al integrar el PR con la revisión de los tres. |
+| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | E02 propone el mapeo QPSK y la entrada I/Q de 2 bits; el resto de la interfaz sigue en E03. |
 | D04 | ¿Qué anchos, punto binario, redondeo y saturación tendrá cada nodo? | abierto | @andres332271 | Depende de barrido SQNR. |
 | D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | abierto | @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
 | D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
@@ -72,5 +72,6 @@ Las tablas de cada tema viven en un solo lugar, el contrato de trabajo correspon
 | 2026-10-07 | D01 | Actualizar correspondencia FIR temporal/frecuencia y registrar propuesta FFT16. | Consigna vigente y corrección del review. | Ambas ramas comparten taps, entradas e índices; A04 fija tolerancia de punto fijo. | #28 |
 | 2026-10-07 | D05, D07 | Precisar mínimos de SQNR y reloj. | Aclaración de Enzo: al menos 40 dB, 10 MHz en lentas y 100 MHz en rápidas. | A04 y RTL/PPA deben demostrar esos mínimos con las condiciones de medición acordadas. | #28 |
 | 2026-10-07 | D02 | ¿Se mantiene sobremuestreo 2×? | Propuesta heredada; consulta docente por realizar. | Conservar 2× provisionalmente en modelos y ejemplos; fijar una tabla común en E02. | #28 |
+| 2026-10-07 | D02, D03 | Propuesta de coeficientes, normalización, mapeo QPSK y entrada I/Q. | E02. | Modelos A02/A03 y RTL B/C usan `decisions.coefficients`. | #33 |
 
 E00–E03 se cierran cuando las decisiones relevantes tienen respuesta, fuente y revisión de los tres. Las nuevas decisiones se agregan aquí antes de incorporarlas a `config/project.json`.
