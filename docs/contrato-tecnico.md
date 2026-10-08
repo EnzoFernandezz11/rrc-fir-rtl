@@ -5,7 +5,7 @@
 **Revisión conjunta de @andres332271, @moreyrajulian y @EnzoFernandezz11:** pendiente
 **Regla:** este documento define el comportamiento esperado; [`config/project.json`](../config/project.json) contiene los valores que consumen los scripts. Modificar ambos en el mismo PR cuando cambie un parámetro.
 
-Los acuerdos detallados se completan en [contratos de trabajo](contratos/README.md). Este documento reúne los requisitos y el estado de las decisiones; cada contrato detalla una interfaz o método para que @andres332271, @moreyrajulian y @EnzoFernandezz11 trabajen en paralelo.
+Este documento reúne los requisitos y el estado de las decisiones. Los acuerdos detallados están en los contratos de trabajo de la [sección 3](#3-detalle-por-tema); cada uno detalla una interfaz o método para que @andres332271, @moreyrajulian y @EnzoFernandezz11 trabajen en paralelo.
 
 ## 1. Requisitos confirmados por la consigna vigente
 
@@ -56,13 +56,15 @@ Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado po
 
 Las tablas de cada tema viven en un solo lugar, el contrato de trabajo correspondiente. Este documento solo registra el estado de la decisión (sección 2) y los cambios (sección 4).
 
-| Tema | Decisiones | Contrato |
-|---|---|---|
-| Coeficientes, QPSK, I/Q y punto fijo | D02, D03, D04 | [Señales y formatos](contratos/senales-y-formatos.md) |
-| Filtro en frecuencia | D01 | [Método en frecuencia](contratos/frecuencia.md) |
-| Puertos, `valid`, reset y latencia | D03 | [Interfaz RTL](contratos/interfaz-rtl.md) |
-| Vector matching, SQNR y PPA | D05, D06, D07 | [Verificación y PPA](contratos/verificacion-y-ppa.md) |
-| Arquitecturas optimizadas | D08 | Nota en el PR de B03/C03 y fila D08 de la sección 2. |
+| Tema | Decisiones | Contrato | Responsables |
+|---|---|---|---|
+| Coeficientes, QPSK, I/Q y punto fijo | D02, D03, D04 | [Señales y formatos](contratos/senales-y-formatos.md) | @andres332271 prepara; @moreyrajulian y @EnzoFernandezz11 revisan antes de tomar vectores como referencia. |
+| Filtro en frecuencia | D01 | [Método en frecuencia](contratos/frecuencia.md) | @EnzoFernandezz11 propone; @andres332271 valida contra una referencia directa independiente y @moreyrajulian revisa la comparación. |
+| Puertos, `valid`, reset y latencia | D03 | [Interfaz RTL](contratos/interfaz-rtl.md) | @moreyrajulian y @EnzoFernandezz11 acuerdan puertos y ciclos; @andres332271 valida que el banco común puede usarlos. |
+| Vector matching, SQNR y PPA | D05, D06, D07 | [Verificación y PPA](contratos/verificacion-y-ppa.md) | @andres332271 prepara métricas y vectores; @moreyrajulian y @EnzoFernandezz11 validan que se ejecutan igual en sus variantes. |
+| Arquitecturas optimizadas | D08 | Nota en el PR de B03/C03 y fila D08 de la sección 2. | @moreyrajulian y @EnzoFernandezz11. |
+
+Cada contrato pasa por **Abierto → Propuesto → Aprobado por los tres**, y no se aprueba sin evidencia enlazada (respuesta del docente, ecuación, ejemplo numérico o prueba). Para cambiar un contrato aprobado: abrir issue o PR, explicar el impacto y actualizar `config/project.json`, modelos, vectores y RTL afectados en el mismo cambio o en PR dependientes declarados.
 
 ## 4. Cambios y consultas al docente
 
