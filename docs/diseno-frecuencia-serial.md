@@ -8,31 +8,35 @@
 
 **Inicio del borrador:** 2026-10-06.
 
+**Revisión de requisitos:** 2026-10-07; ver [revisión de C01 y módulos comunes](revision-c01-y-modulos-comunes.md).
+
 **Responsable:** @EnzoFernandezz11; revisión de C01: @andres332271.
 
 Este documento es el lugar de trabajo para conversar el diseño módulo por módulo: entender qué debe hacer cada bloque, comparar implementaciones y registrar las decisiones con sus motivos. Los nombres de módulos son tentativos y no implican que ya existan archivos RTL.
 
 ## 1. Alcance y fuentes
 
-La [consigna actualizada del 5/10](consigna-actualizada.md) exige filtrado en frecuencia por bloques con **50 % de superposición**, pruebas QPSK (+/−1), un diagrama completo y descripciones de las etapas, comparación flotante/fijo e implementación de una interfaz serie. También pide una implementación paralela y maximizar la paralelización de la etapa FFT.
+La [consigna vigente, confirmada el 7/10/2026](consigna-actualizada.md), exige un **FIR temporal RRCOS de ocho taps y roll-off 0,5**, filtrado en frecuencia por bloques con **50 % de superposición** y **correspondencia de resultados entre ambas implementaciones**. También exige pruebas QPSK (+/−1), diagrama completo y descripción de etapas, comparación flotante/fijo, interfaz serie, implementación paralela y máxima paralelización de FFT, productos espectrales e IFFT en la versión optimizada.
 
-La base de trabajo es el [contrato de E01 en el commit `3a9cbb1`](https://github.com/EnzoFernandezz11/rrc-fir-rtl/blob/3a9cbb1/docs/contratos/frecuencia.md), leído desde la rama `enzo/e01-define-frecuency-filter`. Esa rama todavía no está integrada en esta rama C01: el enlace identifica la versión consultada y evita confundirla con el contrato local anterior.
+La base actual es el [contrato local de E01](contratos/frecuencia.md), corregido en el commit `fdf66be` e integrado en esta rama mediante `365f3eb`. El primer borrador consultó `3a9cbb1`; esa versión queda como antecedente histórico, no como contrato vigente.
 
-E01 registra decisiones confirmadas por Enzo el 5/10, pendientes de revisión de Andrés y Julián. Complementa ambas consignas: conserva RRC8, roll-off 0,5 y sobremuestreo 2× para frecuencia; el filtro temporal es un IIR independiente. Cada implementación se compara con su propio modelo, sin exigir igualdad entre IIR y RRC.
+Ambos filtros implementan la misma convolución causal `y[n] = Σ(k=0…7) h[k]·x[n−k]`, con iguales muestras, taps, escala, historial inicial y política de cola. La revisión del equipo sigue pendiente según E01. Enzo confirmó el **upsampling 2× el 7/10/2026** para ambas ramas mediante un **upsampler** separado y reutilizable. Los conteos en símbolos usan dos muestras por símbolo; FFT16 y avance ocho se definen en muestras. Esta confirmación de diseño no cierra la revisión conjunta de E02/E03.
+
+En flotante se comprueba correspondencia dentro del error de cálculo declarado. En punto fijo, compartir entradas y taps no garantiza igualdad de palabras por los distintos redondeos internos: A04/E03 deben fijar el criterio entre dominios. Cada RTL debe reproducir exactamente su modelo fijo cuando este describe su aritmética. Los mínimos adicionales confirmados por Enzo son SQNR ≥ 40 dB y reloj ≥ 10 MHz para variantes lentas / ≥ 100 MHz para rápidas; C01 todavía no aporta evidencia de timing ni precisión.
 
 | Tema | Base heredada de E01 |
 |---|---|
 | Filtro | RRC de ocho taps, roll-off 0,5; tabla exacta y normalización pendientes de E02. |
 | Bloques | Overlap-save con FFT16/IFFT16; ocho muestras de historial y ocho nuevas, avance de ocho. |
-| Entrada | Generador QPSK reutilizable separado; interpolador 2× separado: símbolo, cero. El núcleo recibe muestras. |
+| Entrada | Generador QPSK reutilizable separado; upsampler 2× confirmado por Enzo: símbolo, cero. El núcleo recibe muestras comunes a ambas ramas. |
 | Respuesta espectral | H precalculada en Python a partir de los ocho taps y ocho ceros; constantes o ROM en hardware. |
 | Escala y orden | FFT sin escala; IFFT con escala total 1/16; índices externos en orden natural. |
-| Salida | Conservar posiciones 8…15; emitir solo p en un parcial; 2S salidas por S símbolos, sin cola. |
+| Salida | Conservar posiciones 8…15; emitir solo p en un parcial; una salida por muestra recibida, sin cola. Con 2×: 2S por S símbolos, en ambas ramas. |
 | Base serial | Un bloque a la vez: capturar → FFT → productos → IFFT → emitir; la fuente puede frenarse. |
 | Optimización | Paralelismo y pipeline se desarrollan en C03/C04. |
 | Implementación pendiente | Puertos, reset, memorias, operadores, FSM, calendario y formatos internos. |
 
-El backlog indica E01 como dependencia para empezar C01 y E03/A03 para cerrarla. Leer sus decisiones permite preparar este borrador, pero no sustituye su revisión o cierre formal. No se cambia el estado de las issues ni se incorporan los commits de E01 con esta edición.
+El backlog indica E01 como dependencia para empezar C01 y E03/A03 para cerrarla. Disponer del contrato y del modelo permite preparar este borrador, pero no sustituye su revisión o cierre formal. Esta revisión documental no cambia el estado de las issues.
 
 ## 2. Cómo vamos a tomar decisiones
 
@@ -53,26 +57,30 @@ Los IDs D01–D08 de esta tabla son **locales a este borrador**, no reemplazan e
 
 ## 3. Decisión de entrada y próxima conversación
 
-El algoritmo ya tiene una base en E01. Enzo eligió `valid/ready` el 6/10/2026 para la cadena generador → interpolador → formador de bloques y, posteriormente, también para la salida del filtro (M7). Son decisiones de trabajo de C01 que deben coordinarse con E03; no implican aprobación del contrato compartido ni fijan todavía nombres definitivos de puertos, reset o señalización de fin de trama.
+El algoritmo ya tiene una base en E01. Enzo eligió `valid/ready` el 6/10/2026 para la cadena generador → upsampler → formador de bloques y, posteriormente, también para la salida del filtro (M7). Son decisiones de trabajo de C01 que deben coordinarse con E03; no implican aprobación del contrato compartido ni fijan todavía nombres definitivos de puertos, reset o señalización de fin de trama.
 
 **Reglas de la interfaz elegida:**
 
 - Cada enlace tiene datos I/Q, `valid` de la fuente y `ready` del receptor. Fuera de reset, se transfiere una muestra en el flanco activo de reloj solo cuando `valid && ready`.
 - Si `valid=1` y `ready=0`, la fuente mantiene `valid`, datos y metadatos asociados hasta la aceptación. El receptor no cuenta ni almacena esa muestra como aceptada durante la pausa.
 - La fuente no espera a que aparezca `ready` para anunciar con `valid` una muestra disponible. El receptor indica con `ready` que puede aceptarla.
-- El interpolador emite símbolo y luego cero; avanza de fase únicamente al aceptar la muestra correspondiente. Una pausa no equivale a un cero de interpolación.
+- El upsampler emite símbolo y luego cero; avanza de fase únicamente al aceptar la muestra correspondiente. Una pausa no equivale a un cero de upsampling.
 
 **Propuesta de implementación aún por detallar:** un registro de símbolo y control local, sin aceptar otro símbolo hasta entregar el actual y su cero. La elección del protocolo no fija aún estados, ciclos adicionales, reset, nombres de puertos o señalización de fin de trama.
 
 Se consideró como alternativa un calendario dirigido por un controlador central. Se eligió `valid/ready` para permitir pausas entre módulos y verificarlos por separado. Para M2 se eligieron bancos separados de trabajo e historial; para M3/M6, un motor radix-2 folded DIT compartido entre FFT e IFFT. Enzo pidió dejar para más adelante la cantidad de multiplicadores reales dentro de la mariposa. Para ambos modos se eligió una tabla explícita de ocho twiddles. Para M4 se eligió reducir H[k] por simetría conjugada. Para M7 se eligió salida `valid/ready` desde el banco de trabajo. Para M8 se eligió FSM global con controles locales. La próxima conversación puede definir cómo señalar el fin de trama y cerrar bloques parciales; el detalle de puertos y ciclos de M0/M1/M2 sigue pendiente.
 
-Para el núcleo quedan fijados por E01 `N=16`, `R=8`, historial de ocho y filtro de ocho taps. Su referencia es la convolución causal con los mismos taps. La posición 7 de la IFFT también puede ser válida, pero se descarta para no repetir una muestra del tramo anterior. Las pruebas de reconstrucción están en la rama E01; A03 completará el modelo correspondiente.
+Antes de continuar la microarquitectura, acordar con B01/E03 la frontera de entrada en muestras, el upsampler común 2× confirmado por Enzo, reset/fin de trama y el criterio numérico de correspondencia. La [revisión de módulos comunes](revision-c01-y-modulos-comunes.md) contiene propuestas, no nuevas elecciones ya aprobadas.
+
+**Alcance común elegido por Enzo el 7/10:** reutilizar generación de símbolos, upsampler e interfaces externas de entrada/salida con el filtro temporal. Los operadores, memorias de coeficientes, formatos internos y control del núcleo de frecuencia se diseñan dentro de C01; no se propone repartir su implementación RTL con el núcleo temporal. La selección de muestras IFFT y su normalización permanecen en el núcleo, antes de la salida común. El reparto fue aceptado por Julián según confirmación de Enzo: Julián implementa generador QPSK y salida; Enzo, upsampler y entrada. Véase [R01 / #31](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31) y el [contrato RTL común](contratos/rtl-comun.md); las interfaces nuevas siguen propuestas.
+
+Para el núcleo quedan fijados por E01 `N=16`, `R=8`, historial de ocho y filtro de ocho taps. Su referencia es la convolución causal con los mismos taps. La posición 7 de la IFFT también puede ser válida, pero se descarta para no repetir una muestra del tramo anterior. El [modelo flotante](../model/frequency.py) y las [pruebas de reconstrucción](../tests/test_frequency_overlap_contract.py) ya están integrados; A02/A03 completan la referencia con la tabla definitiva de E02.
 
 ## 4. Mapa funcional provisional
 
 ```mermaid
 flowchart LR
-    Q[Generador QPSK separado] --> UP[M0: Interpolador 2x]
+    Q[Generador QPSK separado] --> UP[M0: Upsampler 2x]
     UP --> RX[M1: Recepción de muestras I/Q]
     RX --> BUF[M2: Bloques e historial]
     BUF --> FFT[M3: FFT]
@@ -95,13 +103,13 @@ Son **funciones**, no una instancia obligatoria por caja: FFT e IFFT comparten u
 
 ## 5. Diseño por módulos
 
-### M0 — Interpolador 2×
+### M0 — Upsampler 2×
 
-**Función fijada por E01:** recibir símbolos complejos del generador separado y producir `a[m], 0` por cada símbolo. El cero es una muestra válida; el último símbolo de la trama también lo lleva.
+**Función con upsampling 2× confirmado por Enzo:** recibir símbolos complejos del generador separado y producir `a[m], 0` por cada símbolo. El cero es una muestra válida; el último símbolo de la trama también lo lleva. Se propone reutilizar este mismo módulo en las cadenas temporal y de frecuencia, con núcleos que reciben muestras. El factor y su presencia quedan confirmados por Enzo; la implementación e interfaz por ciclos siguen pendientes.
 
-**Decisión:** `valid/ready` en entrada y salida del interpolador. El núcleo puede frenar la fuente; la propuesta simple evita aceptar otro símbolo mientras quedan muestras pendientes del actual.
+**Decisión:** `valid/ready` en entrada y salida del upsampler. El núcleo puede frenar la fuente; la propuesta simple evita aceptar otro símbolo mientras quedan muestras pendientes del actual.
 
-**Por definir:** registro del símbolo, estados de emisión, propagación de fin de trama después del cero y respuesta ante reset. Acordar la frontera del módulo superior sin fusionar las responsabilidades de generador, interpolador y núcleo.
+**Por definir:** registro del símbolo, estados de emisión, propagación de fin de trama después del cero y respuesta ante reset. Acordar la frontera del módulo superior sin fusionar las responsabilidades de generador, upsampler y núcleo.
 
 **Evidencia al cerrar:** cronograma de dos símbolos con pausas, exactamente cuatro muestras aceptadas y fin de trama asociado al último cero.
 
@@ -252,7 +260,7 @@ Un registro de interfaz sigue siendo admisible si la temporización de lectura o
 | Control | Responsabilidad |
 |---|---|
 | Global | Elegir fase y modo FFT/IFFT, autorizar acceso al banco, iniciar operaciones y esperar su finalización antes de ceder recursos. |
-| Captura/interpolación | Gestionar transferencias aceptadas, símbolo/cero, avance de muestras y armado del bloque según sus interfaces. |
+| Captura/upsampling | Gestionar transferencias aceptadas, símbolo/cero, avance de muestras y armado del bloque según sus interfaces. |
 | Motor FFT/IFFT compartido | Recorrer etapas y parejas, seleccionar twiddles y coordinar cálculo/escritura; informar fin cuando todos los resultados estén guardados. |
 | Producto espectral | Recorrer los 16 bins, alinear X[k] con H[k] reconstruida y terminar tras guardar todos los productos. La compartición de operadores con el motor sigue pendiente. |
 | Salida | Presentar las posiciones válidas desde work, conservar datos durante pausas y finalizar solo tras aceptar la última muestra del bloque. |
@@ -263,7 +271,7 @@ Las señales de inicio/ocupado/fin son conceptuales: faltan nombres, duración, 
 
 **Por definir:** estados detallados y señales de coordinación, contadores de muestra/bin/etapa, selección de accesos a memoria, respuesta ante reset, latencias y condiciones completas de terminación de cada fase.
 
-**Próxima propuesta, aún no elegida:** señalar fin de trama con un metadato `last` asociado a la última transferencia, frente a declarar una longitud de trama al inicio. Si se elige `last`, el interpolador debe conservar la marca del último símbolo y trasladarla al cero válido que lo sigue; el núcleo puede cerrar entonces el parcial y emitir solo sus p muestras. La salida marcaría la última muestra válida de la trama, no la última de cada bloque. El tratamiento de tramas vacías requiere una definición aparte porque no hay transferencia en la que adjuntar `last`. Señales y protocolo de trama siguen pendientes de conversación y E03.
+**Próxima propuesta, aún no elegida:** señalar fin de trama con un metadato `last` asociado a la última transferencia, frente a declarar una longitud de trama al inicio. Si se elige `last`, el upsampler debe conservar la marca del último símbolo y trasladarla al cero válido que lo sigue; el núcleo puede cerrar entonces el parcial y emitir solo sus p muestras. La salida marcaría la última muestra válida de la trama, no la última de cada bloque. El tratamiento de tramas vacías requiere una definición aparte porque no hay transferencia en la que adjuntar `last`. Señales y protocolo de trama siguen pendientes de conversación y E03.
 
 **Evidencia al cerrar:** diagrama de estados y tabla ciclo a ciclo de un bloque, incluyendo esperas de memoria y vaciado de operadores.
 
@@ -288,6 +296,9 @@ Las pausas de entrada/salida pueden hacer variable la latencia. Los números pub
 
 - [ ] E01 resuelta y contratos reconciliados con la consigna actualizada.
 - [x] Base algorítmica de E01 incorporada al borrador: RRC8, FFT16, avance ocho, overlap-save y escala IFFT 1/16; revisión del equipo pendiente.
+- [x] Revisión documental contra la consigna del 7/10; referencias anteriores sustituidas y propuestas de reutilización registradas.
+- [ ] B01/E03 acuerdan implementación de módulos comunes, responsables, reset y protocolo de trama; upsampler 2× confirmado por Enzo.
+- [ ] A04 define correspondencia en punto fijo, origen de H a partir de taps comunes y SQNR respecto de la referencia acordada.
 - [ ] Función e interfaz de cada módulo documentadas; recursos compartidos identificados.
 - [ ] Diagrama físico, FSM y cronograma coherentes con los puertos de memoria.
 - [ ] Operaciones, almacenamiento, recursos, latencia y throughput calculados.
@@ -302,8 +313,8 @@ Las decisiones funcionales de E01 se conservan como base. Cada elección de C01 
 
 | Fecha | Bloque/tema | Decisión y estado | Motivo y alternativas | Evidencia / contrato afectado |
 |---|---|---|---|---|
-| 2026-10-06 | Base funcional y secuencia por bloques | Heredadas de las decisiones de Enzo del 5/10; revisión del equipo pendiente | Evitar reabrir elecciones ya registradas en E01 | Contrato E01, commit `3a9cbb1`, enlazado en sección 1 |
-| 2026-10-06 | Entrada e interpolador | Enzo elige `valid/ready` | Permitir pausas y verificar módulos separados; alternativa considerada: calendario central | Confirmación en conversación: «vamos con valid ready»; coordinar con E03 / M0–M1 |
+| 2026-10-06 | Base funcional y secuencia por bloques | Heredadas de las decisiones de Enzo del 5/10; revisión del equipo pendiente | Evitar reabrir elecciones ya registradas en E01 | Antecedente E01 `3a9cbb1`; versión vigente corregida en `fdf66be` |
+| 2026-10-06 | Entrada e upsampler | Enzo elige `valid/ready` | Permitir pausas y verificar módulos separados; alternativa considerada: calendario central | Confirmación en conversación: «vamos con valid ready»; coordinar con E03 / M0–M1 |
 | 2026-10-06 | M2: memoria de trabajo e historial | Enzo elige A: 16 posiciones complejas de trabajo y ocho de historial, con registros | Direcciones simples y preservación explícita del historial frente a escrituras de FFT; alternativa: buffer circular | Confirmación en conversación: «vamos con A»; anchos, puertos y ciclos pendientes |
 | 2026-10-06 | M3: arquitectura FFT | Enzo elige radix-2 folded, una unidad de mariposa reutilizada | Regularidad y reutilización en la base por bloques; alternativas: paralelismo parcial, red desplegada, SDF y otros radix | Confirmación en conversación: «vamos con al version folded de radix» tras explicar radix-2; DIT/DIF y microarquitectura pendientes |
 | 2026-10-06 | M3: descomposición y orden | Enzo elige DIT: entrada bit-reversal y salida natural | Seguir el desarrollo del Módulo 7 y recorrer X[k] junto con H[k] en orden natural; alternativa: DIF | Confirmación en conversación: «vamos con dit»; mecanismo de reordenamiento y ciclos pendientes |
@@ -314,3 +325,7 @@ Las decisiones funcionales de E01 se conservan como base. Cada elección de C01 
 | 2026-10-06 | M7: protocolo de salida | Enzo elige `valid/ready`; avanzar y terminar emisión solo con muestras aceptadas | Permitir pausas del receptor sin perder datos; alternativa: solo `valid` con receptor siempre disponible | Confirmación en conversación: «dale» a la propuesta de `valid/ready` de salida; almacenamiento, reset y fin de trama pendientes |
 | 2026-10-06 | M7: almacenamiento de salida | Enzo elige A: emitir desde el banco de trabajo y protegerlo hasta la última aceptación | Reutilizar almacenamiento en la base de un bloque a la vez; alternativa: banco de salida separado | Confirmación en conversación: «vamos con a»; lectura, registro de interfaz y conversión de formato pendientes |
 | 2026-10-06 | M8: organización de control | Enzo elige B: FSM global con controles locales | Separar coordinación de fases de ejecución interna y esperar finalización real; alternativa: FSM central para todos los pasos | Confirmación en conversación: «vam,os co b»; protocolo inicio/fin, reset y estados detallados pendientes |
+| 2026-10-07 | Revisión de requisitos y reutilización | Se corrige el contexto del borrador; propuestas comunes pendientes de acuerdo | Consigna vigente exige correspondencia FIR temporal/frecuencia; el estado de 2× se actualiza en la decisión siguiente | [Revisión de C01 y módulos comunes](revision-c01-y-modulos-comunes.md); no se modifican las elecciones aritméticas ni se aprueba E03 |
+| 2026-10-07 | M0 y cadena común | Enzo confirma upsampling 2× y el nombre upsampler | Conformado de pulsos con muestras intermedias; antecedente del curso de Óptica | Ambas cadenas reciben símbolo, cero; `decisions.samples_per_symbol` actualizado; interfaz por ciclos pendiente |
+| 2026-10-07 | Frontera del RTL común | Enzo elige compartir entrada/símbolos y salida; cada autor diseña su núcleo | Separar bloques independientes del tipo de filtro; operadores y memorias permanecen propios | Revisión de módulos comunes actualizada; reparto después aceptado y registrado en R01 / #31 |
+| 2026-10-07 | Reparto RTL común | Enzo confirma que Julián aceptó el reparto; creada R01 / #31 | Julián: generador y salida; Enzo: upsampler y entrada; revisión cruzada | [Contrato RTL común](contratos/rtl-comun.md); puertos/formatos nuevos aún propuestos |

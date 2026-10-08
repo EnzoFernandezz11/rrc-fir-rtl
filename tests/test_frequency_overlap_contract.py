@@ -8,7 +8,7 @@ import math
 import unittest
 
 from model.frequency import frequency_filter
-from model.stimuli import generate_qpsk, interpolate_2x
+from model.stimuli import generate_qpsk, upsample_2x
 
 
 def direct_filter(signal, taps):
@@ -53,7 +53,7 @@ class FrequencyOverlapContractTest(unittest.TestCase):
             for symbol_count in (0, 1, 2, 3, 4, 5, 7, 8, 9, 17, 25):
                 with self.subTest(seed=seed, symbols=symbol_count):
                     symbols = generate_qpsk(symbol_count, seed=seed)
-                    signal = interpolate_2x(symbols)
+                    signal = upsample_2x(symbols)
                     self.assertEqual(len(signal), 2 * symbol_count)
                     self.assert_matches_direct(signal, taps)
 
@@ -76,19 +76,19 @@ class FrequencyOverlapContractTest(unittest.TestCase):
                 self.assert_matches_direct(signal, taps)
 
     def test_last_tap_delay_preserves_indices_and_truncates_tail(self):
-        signal = interpolate_2x(generate_qpsk(9, seed=42))
+        signal = upsample_2x(generate_qpsk(9, seed=42))
         actual = frequency_filter(signal, [0] * 7 + [1])
         expected = [0j] * 7 + signal[:-7]
         self.assertEqual(len(actual), len(expected))
         for got, want in zip(actual, expected):
             self.assertLess(abs(got - want), 1e-10)
 
-    def test_reusable_source_and_interpolator(self):
+    def test_reusable_source_and_upsampler(self):
         symbols = generate_qpsk(64, seed=17)
         self.assertEqual(symbols, generate_qpsk(64, seed=17))
         self.assertEqual(set(symbols), {1+1j, 1-1j, -1+1j, -1-1j})
         self.assertEqual(
-            interpolate_2x([1+1j, -1+1j, -1-1j]),
+            upsample_2x([1+1j, -1+1j, -1-1j]),
             [1+1j, 0j, -1+1j, 0j, -1-1j, 0j],
         )
 

@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Incorporación de R01:** 2026-10-07. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -17,6 +17,8 @@ gantt
     E02 Coeficientes         :e02, 2026-10-05, 3d
     E03 Interfaz y PPA       :e03, after e02, 3d
     G01 Gantt                :g01, 2026-10-05, 25d
+    section RTL común (@EnzoFernandezz11 y @moreyrajulian)
+    R01 Entrada y salida     :r01, after e03, 9d
     section Modelos y precisión (@andres332271)
     A01 QPSK y RRCOS         :a01, 2026-10-05, 2d
     A02 Flotante tiempo      :a02, after a01, 2d
@@ -45,6 +47,8 @@ G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entr
 
 **Corte de C04 (lunes 26/10):** si C04 no pasa el vector matching, se presenta C serial (C02) contra B optimizado (B04), C04 queda como trabajo futuro en el informe y se avisa al profesor.
 
+R01 se planifica provisionalmente del 11/10 al 20/10 (fin exclusivo), después de E03 y en paralelo con las seriales; nueve días incluyen revisión e integración en B02/C02. Es una estimación de planificación, no un plazo acordado con los responsables. Las interfaces todavía propuestas se resuelven en E03.
+
 ## Avance real
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
@@ -55,6 +59,7 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 | [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | — | — | — | Consulta docente si hace falta. |
 | [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | — | — | — | — |
 | [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | — | — | — | — |
+| [R01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31) | @EnzoFernandezz11 y @moreyrajulian | — | — | Reparto aceptado el 7/10; issue creada; contrato definitivo e implementación pendientes. |
 | [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | — | — | — | Actualizar semanalmente. |
 | [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | — | — | — | — |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | — | — | — | — |
@@ -77,4 +82,4 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 
 ## Corte del viernes 16/10
 
-Meta: 20 de 23 tareas con evidencia de inicio (87 %). Es el máximo que permite el plan sin violar dependencias; solo I01 y C04 (y por lo tanto el cierre de I03) dependen de resultados posteriores. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C04 sin C02 para mejorar el porcentaje.
+Meta: 21 de 24 tareas con evidencia de inicio (87,5 %). Es el máximo que permite el plan sin violar dependencias; solo I01 y C04 (y por lo tanto el cierre de I03) dependen de resultados posteriores. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C04 sin C02 para mejorar el porcentaje.

@@ -18,6 +18,6 @@ def generate_qpsk(symbol_count, *, seed=0):
     ]
 
 
-def interpolate_2x(symbols):
+def upsample_2x(symbols):
     """Inserta un cero después de cada símbolo, incluido el último: S → 2S."""
     return [sample for symbol in symbols for sample in (symbol, 0j)]

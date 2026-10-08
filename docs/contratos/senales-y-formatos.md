@@ -8,14 +8,14 @@
 
 ## Alcance común a ambas ramas
 
-Ambos filtros procesan señal compleja con los mismos ocho coeficientes RRCOS y roll-off 0,5. Los símbolos QPSK tienen componentes I/Q = ±1. Se propone sobremuestreo 2× mediante un interpolador separado del generador QPSK reutilizable, sujeto a confirmación docente. La tabla exacta de coeficientes, su orden, fase y normalización serán únicos para ambas ramas; E02/A01 los definen junto con el mapeo de bits. A04 fija formatos y tolerancias de punto fijo.
+Ambos filtros procesan señal compleja con los mismos ocho coeficientes RRCOS y roll-off 0,5. Los símbolos QPSK tienen componentes I/Q = ±1. Enzo confirmó el upsampling 2× el 7/10/2026 mediante un upsampler separado del generador QPSK reutilizable, común a ambas cadenas. La tabla exacta de coeficientes, su orden, fase y normalización serán únicos para ambas ramas; E02/A01 los definen junto con el mapeo de bits. A04 fija formatos y tolerancias de punto fijo.
 
 ## Decisiones para trabajar en paralelo
 
 | Punto | Valor acordado | Fuente/ejemplo | Estado |
 |---|---|---|---|
 | Mapeo bits → símbolos QPSK y amplitud I/Q | I/Q = ±1; mapeo de bits por definir | Consigna actualizada y E01 | Amplitud definida; mapeo abierto |
-| Inserción de ceros/interpolación para 2× | x[2m]=a[m], x[2m+1]=0; generador separado; etapa de interpolación en la cadena RRC | [E01](frecuencia.md), decisión de Enzo del 5/10/2026 | Propuesto; confirmar con el docente |
+| Upsampler 2× | x[2m]=a[m], x[2m+1]=0; generador separado; upsampler común en ambas cadenas RRC | Confirmación de Enzo del 7/10/2026; [registro](../contrato-tecnico.md) | Confirmado por Enzo; revisión conjunta del contrato pendiente |
 | Fórmula y fase de muestreo RRCOS | Por definir | — | Abierto |
 | Tabla `h[0]…h[7]` y orden de taps | Por definir | — | Abierto |
 | Escala de coeficientes y ganancia total | Por definir | — | Abierto |

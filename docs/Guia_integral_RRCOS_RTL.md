@@ -24,7 +24,7 @@
 
 ### 1.1 Requisitos que sí están confirmados
 
-La consigna pide **dos filtros complejos implementados por separado**: un FIR temporal **RRCOS de 8 taps**, roll-off $\beta=0{,}5$, y una implementación en frecuencia basada en FFT con **50 % de superposición**. Deben verificarse la correspondencia de sus resultados y las diferencias entre flotante y punto fijo; luego de la interfaz serie se requiere una implementación paralela, con énfasis en FFT, productos e IFFT. También exige diagrama de bloques, descripción de etapas y Gantt con aportes individuales. Como aclaración adicional, Enzo confirmó el 7/10/2026 los mínimos **SQNR ≥ 40 dB**, **reloj ≥ 100 MHz en variantes rápidas** y **≥ 10 MHz en lentas**; se registran en el [contrato técnico](contrato-tecnico.md). El sobremuestreo $L=2$ sigue como propuesta para confirmar con el docente. El proyecto incluye la comparación PPA. [Fuente: consigna](consigna-actualizada.md).
+La consigna pide **dos filtros complejos implementados por separado**: un FIR temporal **RRCOS de 8 taps**, roll-off $\beta=0{,}5$, y una implementación en frecuencia basada en FFT con **50 % de superposición**. Deben verificarse la correspondencia de sus resultados y las diferencias entre flotante y punto fijo; luego de la interfaz serie se requiere una implementación paralela, con énfasis en FFT, productos e IFFT. También exige diagrama de bloques, descripción de etapas y Gantt con aportes individuales. Como aclaración adicional, Enzo confirmó el 7/10/2026 los mínimos **SQNR ≥ 40 dB**, **reloj ≥ 100 MHz en variantes rápidas** y **≥ 10 MHz en lentas**; se registran en el [contrato técnico](contrato-tecnico.md). Enzo también confirmó el upsampling $L=2$ el 7/10/2026: ambas cadenas usan un upsampler separado del generador. El proyecto incluye la comparación PPA. [Fuente: consigna](consigna-actualizada.md).
 
 Una frecuencia de reloj objetivo no equivale a tasa de muestras. Si una arquitectura acepta una muestra cada $II$ ciclos, su tasa sostenida ideal es $f_{\mathrm{clk}}/II$, siempre que no haya paradas adicionales. Un diseño a 100 MHz con $II=16$ entrega menos muestras por segundo que uno a 10 MHz con $II=1$. Medir ambos números.
 
@@ -55,11 +55,11 @@ La tabla es una brújula de trabajo, no permiso para rellenar valores arbitrario
 | D07 | ¿Cuál es la referencia y el tramo exacto para SQNR? | Evita una cifra “40 dB” irreproducible. |
 | D08 | ¿Qué optimización se elige en cada dominio y qué métrica intenta mejorar? | Da sentido a la comparación. |
 
-**Regla de trazabilidad.** Para cada acuerdo anotar valor, estado, fuente, ejemplo numérico y PR en el [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md). Actualizar [config/project.json](../rrc-fir-rtl/config/project.json) solo con los valores que usarán scripts y modelos. El roll-off $\beta=0{,}5$ de la consigna y el sobremuestreo propuesto $L=2$ no determinan una tabla única de ocho coeficientes.
+**Regla de trazabilidad.** Para cada acuerdo anotar valor, estado, fuente, ejemplo numérico y PR en el [contrato técnico](../rrc-fir-rtl/docs/contrato-tecnico.md). Actualizar [config/project.json](../rrc-fir-rtl/config/project.json) solo con los valores que usarán scripts y modelos. El roll-off $\beta=0{,}5$ de la consigna y el upsampling $L=2$ confirmado por Enzo no determinan una tabla única de ocho coeficientes.
 
 ### 1.4 Reparto y dependencias
 
-El [backlog](../rrc-fir-rtl/docs/backlog.md) y el [Gantt](../rrc-fir-rtl/docs/gantt.md) contienen 23 tareas. Andrés lleva principalmente generador, modelos, precisión y vectores; Julián, el filtro temporal; Enzo, el filtro en frecuencia. Se cierra primero el contrato E00–E03; luego A01–A05; después B02/C02 con banco A06; más tarde B04/C04 y PPA A07; finalmente comparación I01 e informe/presentación I02/I03. El Gantt distingue dependencias **para comenzar** de las necesarias **para cerrar**. El porcentaje de issues movidas no sustituye una prueba de equivalencia.
+El [backlog](../rrc-fir-rtl/docs/backlog.md) y el [Gantt](../rrc-fir-rtl/docs/gantt.md) contienen 24 tareas. Andrés lleva principalmente generador, modelos, precisión y vectores; Julián, el filtro temporal; Enzo, el filtro en frecuencia. Se cierra primero el contrato E00–E03; luego A01–A05; después B02/C02 con banco A06; más tarde B04/C04 y PPA A07; finalmente comparación I01 e informe/presentación I02/I03. El Gantt distingue dependencias **para comenzar** de las necesarias **para cerrar**. El porcentaje de issues movidas no sustituye una prueba de equivalencia.
 
 ---
 
@@ -69,7 +69,7 @@ El [backlog](../rrc-fir-rtl/docs/backlog.md) y el [Gantt](../rrc-fir-rtl/docs/ga
 
 QPSK transmite dos bits por símbolo mediante cuatro puntos del plano I/Q. Una convención didáctica es $a[m]\in\{(\pm1\pm j)/\sqrt{2}\}$, de energía $|a[m]|^2=1$. Otra usa $\pm1\pm j$, de energía 2. El mapeo de pares de bits, el orden I/Q y la amplitud son parte de **D03**: no hay que elegir uno silenciosamente. El notebook previo [Tarea1](<../../Comunicaciones opticas/Ejercicios/Tarea1.ipynb>) usa una convención concreta que puede servir de ejemplo, pero no fija el contrato nuevo. [Fuentes teóricas: Proakis y Salehi, PDF pp. 137–146](<../../Comunicaciones opticas/Material Teorico/John G. Proakis, Masoud Salehi - Digital Communications, 5th Edition   (2007, McGraw-Hill).pdf>); [contrato de señales](../rrc-fir-rtl/docs/contratos/senales-y-formatos.md).
 
-Para $L=2$, la secuencia ideal a la entrada del filtro interpolador se obtiene insertando un cero complejo entre símbolos:
+Para $L=2$, la secuencia ideal a la salida del upsampler y antes del filtro RRC se obtiene insertando un cero complejo entre símbolos:
 
 $$
 u[2m]=a[m],\qquad u[2m+1]=0.
@@ -77,7 +77,7 @@ $$
 
 “Dos muestras por símbolo” no significa repetir cada símbolo dos veces. Repetir produce otro pulso y otra respuesta espectral. Si el diseño recibe ya las muestras $u[n]$ en vez de recibir símbolos $a[m]$, el contrato debe decirlo expresamente. También debe decir si la interfaz recibe I y Q en puertos separados, qué muestra llega primero y qué ocurre al terminar un bloque.
 
-**Ejemplo orientativo, no vector oficial.** Para $a=[1+j,\,-1+j,\,1-j]$, la inserción de ceros produce $u=[1+j,\,0,\,-1+j,\,0,\,1-j,\,0]$. El cero final es útil al vaciar la respuesta, pero la política exacta de fin de trama se acuerda con la interfaz.
+**Ejemplo orientativo, no vector oficial.** Para $a=[1+j,\,-1+j,\,1-j]$, la inserción de ceros produce $u=[1+j,\,0,\,-1+j,\,0,\,1-j,\,0]$. El cero final pertenece a la trama y produce su salida correspondiente; el contrato E01 omite la cola posterior del FIR. La señalización de fin de trama se acuerda con la interfaz.
 
 ### 2.2 FIR complejo y condiciones iniciales
 
@@ -276,6 +276,8 @@ Se procesan bloques de $N$ muestras que incluyen las $M-1=7$ muestras anteriores
 
 Una FFT de 8 puntos daría solo $K=1$ muestra útil por bloque; ésta es una forma rápida de detectar una propuesta poco eficiente. Comparar $N$, buffers y ciclos reales con la opción overlap-add. No mezclar ambos métodos: cambian la posición de las muestras válidas y el manejo del historial. [Fuentes: Oppenheim, PDF pp. 669–686](<../../Comunicaciones opticas/Material Teorico/Oppenheim_Tiempo_Discreto.pdf>); [contrato de frecuencia](../rrc-fir-rtl/docs/contratos/frecuencia.md).
 
+**Propuesta vigente del proyecto:** E01 elige $N=16$, ocho muestras de historial y avance $K=8$ para cumplir exactamente el 50 % de superposición. Descarta posiciones 0…7 y conserva 8…15. La posición 7 también es válida, pero pertenece al tramo anterior. El máximo convencional $N-7=9$ describe otra organización y no es el avance de C01.
+
 ### 5.4 Escala de FFT y número de bits
 
 Una DFT común usa
@@ -301,7 +303,7 @@ $$
 \frac{K f_{\mathrm{clk}}}{\text{intervalo entre bloques, en ciclos}}
 $$
 
-donde $K=B$ en overlap-add y $K=N-7$ en overlap-save, y el denominador es el intervalo entre inicios de bloques en régimen, tras incluir operaciones, transferencias y esperas. Si no se solapan bloques, ese intervalo equivale a los ciclos totales de procesamiento del bloque. La latencia de la primera salida incluye reunir el bloque y procesarlo. Acordar si hay salida continua, ráfagas o backpressure. [Fuentes: Módulo 6, diap. 6–15 y 37–41](Modulo_6.pptx); [Módulo 7, diap. 24–30](Modulo_7.pptx).
+donde $K$ es el avance real: $B$ en overlap-add, $N-7$ en overlap-save con historial mínimo, y **ocho en la propuesta FFT16 al 50 % de E01/C01**. El denominador es el intervalo entre inicios de bloques en régimen, tras incluir operaciones, transferencias y esperas. Si no se solapan bloques, ese intervalo equivale a los ciclos totales de procesamiento del bloque. La latencia de la primera salida incluye reunir el bloque y procesarlo. Acordar si hay salida continua, ráfagas o backpressure. [Fuentes: Módulo 6, diap. 6–15 y 37–41](Modulo_6.pptx); [Módulo 7, diap. 24–30](Modulo_7.pptx).
 
 ### 5.6 Prueba matemática obligatoria antes de RTL
 
@@ -309,7 +311,7 @@ Con los mismos $h[k]$ y entrada, el modelo flotante temporal y el modelo flotant
 
 - impulso al comienzo y justo antes de un límite de bloque;
 - ceros, una secuencia corta conocida y QPSK con semilla fija;
-- cola completa de los ocho taps y último bloque parcial;
+- respuesta de los ocho taps dentro de la trama y último bloque parcial; con el recorte sin cola de E01, extender la entrada con ceros válidos si se quiere observar la respuesta completa de un impulso próximo al final;
 - muestras negativas en I y Q;
 - más de dos bloques, para exponer errores de solapamiento acumulado.
 
@@ -462,7 +464,7 @@ Para cada falla informar: variante, semilla, configuración, índice lógico de 
 
 ### 8.3 Alineación correcta
 
-Mantener una cola de **salidas esperadas asociadas a cada entrada aceptada**. Cuando valid de salida se activa, extraer la siguiente salida esperada y comparar. Si el filtro en frecuencia emite por ráfagas, la cola conserva el orden sin imponer que su latencia coincida con la temporal. Los marcadores de bloque y los índices permiten detectar una salida que falta o sobra. Al terminar, verificar también el conteo: mismas entradas aceptadas y mismas salidas esperadas según la política de cola. Comparar por ciclos sin consultar valid produce falsos fallos; ignorar los conteos permite falsos PASS.
+Mantener una cola de **salidas esperadas asociadas a cada entrada aceptada**. Con `valid/ready`, extraer la siguiente salida esperada y comparar únicamente cuando `out_valid && out_ready`; bajo pausa, verificar además que datos y metadatos permanezcan estables. Si la interfaz aprobada solo tiene `valid`, comparar en cada ciclo válido. Si el filtro en frecuencia emite por ráfagas, la cola conserva el orden sin imponer que su latencia coincida con la temporal. Los marcadores de bloque y los índices permiten detectar una salida que falta o sobra. Al terminar, verificar también el conteo: mismas entradas aceptadas y mismas salidas esperadas según la política de cola. Comparar por ciclos sin consultar la aceptación produce falsos fallos; ignorar los conteos permite falsos PASS.
 
 Una tolerancia de punto fijo debe justificarse por un cambio real de orden de operaciones o de escalado. Si el modelo fijo reproduce la microarquitectura, preferir comparación exacta de palabras. Nunca aumentar tolerancia hasta que pase un error de solapamiento. Para Python flotante vs FFT flotante, usar una tolerancia absoluta/relativa declarada y reportar error máximo por muestra y error RMS.
 
@@ -621,7 +623,7 @@ Luego crear una entrada de impulso complejo y comparar $\operatorname{convolve}(
 | Tap | Un coeficiente $h[k]$ y la muestra histórica con la que se multiplica. |
 | RRC / RRCOS | Pulso raíz coseno alzado; no confundir con RC ni con una ventana de “coseno alzado”. |
 | Roll-off $\beta$ | Parámetro de exceso de ancho de banda del conformado ideal. |
-| Sobremuestreo 2× | Dos instantes de muestra por período de símbolo; el interpolador ideal inserta un cero entre símbolos antes del filtro. |
+| Sobremuestreo 2× | Dos instantes de muestra por período de símbolo; el upsampler ideal inserta un cero entre símbolos antes del filtro. |
 | I/Q | Componentes real e imaginaria de la señal compleja. |
 | Convolución lineal | FIR causal ordinario; longitud $S+M-1$ para secuencias finitas completas. |
 | Convolución circular | Operación natural de DFT/IDFT de longitud $N$; requiere método de bloques para reproducir la lineal. |
@@ -673,4 +675,3 @@ Las diapositivas contienen también ejemplos **distintos** de la consigna, como 
 ### 11.4 Cómo mantener viva esta guía
 
 **Estado del repositorio consultado: 2026-10-04.** El repo todavía describe un andamiaje sin coeficientes definitivos ni variantes RTL registradas. Cuando se apruebe un contrato, actualizar la tabla de decisiones del § 1 y reemplazar ejemplos provisionales por enlaces al generador y a los resultados **sin duplicar valores definitivos en múltiples lugares**. Esta guía debe seguir señalando al contrato como fuente de verdad y conservar la explicación de por qué se eligió cada método.
-
