@@ -5,7 +5,7 @@
 **Revisión conjunta de @andres332271, @moreyrajulian y @EnzoFernandezz11:** pendiente
 **Regla:** este documento define el comportamiento esperado; [`config/project.json`](../config/project.json) contiene los valores que consumen los scripts. Modificar ambos en el mismo PR cuando cambie un parámetro.
 
-Los acuerdos detallados se completan en [contratos de trabajo](contratos/README.md). Este documento reúne los requisitos y el estado de las decisiones; cada contrato detalla una interfaz o método para que @andres332271, @moreyrajulian y @EnzoFernandezz11 trabajen en paralelo.
+Este documento reúne los requisitos y el estado de las decisiones. Los acuerdos detallados están en los contratos de trabajo de la [sección 3](#3-detalle-por-tema); cada uno detalla una interfaz o método para que @andres332271, @moreyrajulian y @EnzoFernandezz11 trabajen en paralelo.
 
 ## 1. Requisitos confirmados por la consigna vigente
 
@@ -46,8 +46,8 @@ Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado po
 | ID | Tema y pregunta concreta | Estado | Responsable | Evidencia o respuesta |
 |---|---|---|---|---|
 | D01 | ¿Qué operaciones exactas componen el filtro en frecuencia? ¿Tamaño de bloque/FFT, convolución lineal o circular, overlap-add/save y latencia? | propuesto | @EnzoFernandezz11 | [Contrato de frecuencia](contratos/frecuencia.md): overlap-save FFT16/IFFT16, historial y avance de ocho, salidas causales sin cola y latencia estructural. Evidencia en `tests/test_frequency_overlap_contract.py`; PR #28. |
-| D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | abierto | @andres332271 | Pendiente. |
-| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
+| D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | provisional | @andres332271 | Propuesta E02 en [señales y formatos](contratos/senales-y-formatos.md): grilla ±0,25…±1,75 Ts, energía unitaria. Pasa a acordado por equipo al integrar el PR con la revisión de los tres. |
+| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | E02 propone el mapeo QPSK y la entrada I/Q de 2 bits; el resto de la interfaz sigue en E03. |
 | D04 | ¿Qué anchos, punto binario, redondeo y saturación tendrá cada nodo? | abierto | @andres332271 | Depende de barrido SQNR. |
 | D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | abierto | @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
 | D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
@@ -58,13 +58,15 @@ Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado po
 
 Las tablas de cada tema viven en un solo lugar, el contrato de trabajo correspondiente. Este documento solo registra el estado de la decisión (sección 2) y los cambios (sección 4).
 
-| Tema | Decisiones | Contrato |
-|---|---|---|
-| Coeficientes, QPSK, I/Q y punto fijo | D02, D03, D04 | [Señales y formatos](contratos/senales-y-formatos.md) |
-| Filtro en frecuencia | D01 | [Método en frecuencia](contratos/frecuencia.md) |
-| Puertos, `valid`, reset y latencia | D03 | [Interfaz RTL](contratos/interfaz-rtl.md) |
-| Vector matching, SQNR y PPA | D05, D06, D07 | [Verificación y PPA](contratos/verificacion-y-ppa.md) |
-| Arquitecturas optimizadas | D08 | Nota en el PR de B03/C03 y fila D08 de la sección 2. |
+| Tema | Decisiones | Contrato | Responsables |
+|---|---|---|---|
+| Coeficientes, QPSK, I/Q y punto fijo | D02, D03, D04 | [Señales y formatos](contratos/senales-y-formatos.md) | @andres332271 prepara; @moreyrajulian y @EnzoFernandezz11 revisan antes de tomar vectores como referencia. |
+| Filtro en frecuencia | D01 | [Método en frecuencia](contratos/frecuencia.md) | @EnzoFernandezz11 propone; @andres332271 valida contra una referencia directa independiente y @moreyrajulian revisa la comparación. |
+| Puertos, `valid`, reset y latencia | D03 | [Interfaz RTL](contratos/interfaz-rtl.md) | @moreyrajulian y @EnzoFernandezz11 acuerdan puertos y ciclos; @andres332271 valida que el banco común puede usarlos. |
+| Vector matching, SQNR y PPA | D05, D06, D07 | [Verificación y PPA](contratos/verificacion-y-ppa.md) | @andres332271 prepara métricas y vectores; @moreyrajulian y @EnzoFernandezz11 validan que se ejecutan igual en sus variantes. |
+| Arquitecturas optimizadas | D08 | Nota en el PR de B03/C03 y fila D08 de la sección 2. | @moreyrajulian y @EnzoFernandezz11. |
+
+Cada contrato pasa por **Abierto → Propuesto → Aprobado por los tres**, y no se aprueba sin evidencia enlazada (respuesta del docente, ecuación, ejemplo numérico o prueba). Para cambiar un contrato aprobado: abrir issue o PR, explicar el impacto y actualizar `config/project.json`, modelos, vectores y RTL afectados en el mismo cambio o en PR dependientes declarados.
 
 ## 4. Cambios y consultas al docente
 
@@ -75,6 +77,7 @@ Las tablas de cada tema viven en un solo lugar, el contrato de trabajo correspon
 | 2026-10-07 | D05, D07 | Precisar mínimos de SQNR y reloj. | Aclaración de Enzo: al menos 40 dB, 10 MHz en lentas y 100 MHz en rápidas. | A04 y RTL/PPA deben demostrar esos mínimos con las condiciones de medición acordadas. | #28 |
 | 2026-10-07 | D02 | ¿Se mantiene sobremuestreo 2×? | Propuesta heredada; consulta docente por realizar. | Conservar 2× provisionalmente en modelos y ejemplos; fijar una tabla común en E02. | #28 |
 | 2026-10-07 | D02, D03 | Enzo confirma upsampling 2× y el nombre upsampler. | Confirmación en conversación; antecedente del curso de Óptica. Sustituye la propuesta de la fila anterior. | Upsampler separado en ambas cadenas; S símbolos → 2S muestras. Configuración, modelos, pruebas y documentos usan la misma decisión y terminología. | — |
+| 2026-10-07 | D02, D03 | Propuesta de coeficientes, normalización, mapeo QPSK y entrada I/Q. | E02. | Modelos A02/A03 y RTL B/C usan `decisions.coefficients`; la revisión conjunta sigue pendiente. | #33 |
 
 E00–E03 se cierran cuando las decisiones relevantes tienen respuesta, fuente y revisión de los tres. Las nuevas decisiones se agregan aquí antes de incorporarlas a `config/project.json`.
 

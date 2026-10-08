@@ -4,7 +4,7 @@ Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, un
 
 ## Estado actual
 
-Este repositorio contiene el **andamiaje de trabajo**, utilidades QPSK y un [modelo flotante de overlap-save](model/frequency.py) verificado contra convolución directa. La tabla definitiva de coeficientes y el RTL corresponden a las tareas del [backlog](docs/backlog.md). La [consigna vigente](docs/consigna-actualizada.md), confirmada el 7/10/2026, es la única copia en el árbol de trabajo: se retiraron las versiones reemplazadas para evitar contexto contradictorio; el historial permanece en Git. Los requisitos y las decisiones se registran en el [contrato técnico](docs/contrato-tecnico.md) y los [contratos de trabajo](docs/contratos/README.md).
+Este repositorio contiene el **andamiaje de trabajo**, utilidades QPSK y un [modelo flotante de overlap-save](model/frequency.py) verificado contra convolución directa. La tabla definitiva de coeficientes y el RTL corresponden a las tareas del [backlog](docs/backlog.md). La [consigna vigente](docs/consigna-actualizada.md), confirmada el 7/10/2026, es la única copia en el árbol de trabajo: se retiraron las versiones reemplazadas para evitar contexto contradictorio; el historial permanece en Git. Los requisitos y las decisiones se registran en el [contrato técnico](docs/contrato-tecnico.md) y sus [contratos de trabajo](docs/contrato-tecnico.md#3-detalle-por-tema). Para el contexto teórico general (RRC, FFT, punto fijo, PPA) está la [guía de Enzo](docs/Guia_integral_RRCOS_RTL.md), que es una referencia y no se mantiene al día.
 
 Las [issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en el [Project del equipo](https://github.com/users/EnzoFernandezz11/projects/4) con estados, responsables asignados y fechas previstas. [Andrés (@andres332271)](https://github.com/andres332271) lleva modelos y precisión; [Julián (@moreyrajulian)](https://github.com/moreyrajulian), el filtro temporal; y [Enzo (@EnzoFernandezz11)](https://github.com/EnzoFernandezz11), el filtro en frecuencia. Cada integrante puede filtrar sus tareas por asignado en las [issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) o en la vista correspondiente del Project.
 
@@ -19,7 +19,7 @@ Las [issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están en e
 1. Leer el [contrato técnico](docs/contrato-tecnico.md) y cerrar E00–E03 entre los tres. Registrar allí las respuestas del docente y los supuestos provisionales.
 2. Seguir el [Gantt](docs/gantt.md) y tomar una tarea del [backlog](docs/backlog.md).
 3. Crear una rama corta por tarea y abrir un PR con la [guía de contribución](CONTRIBUTING.md).
-4. Ejecutar `make smoke` localmente antes del PR. El comando valida el contrato y ejecuta los testbenches que estén registrados en `config/rtl_targets.json`.
+4. Instalar dependencias con `pip install -r requirements.txt` y ejecutar `make smoke` localmente antes del PR. El comando valida el contrato y ejecuta los testbenches que estén registrados en `config/rtl_targets.json`.
 
 ## Comandos
 

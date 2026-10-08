@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Incorporación de R01:** 2026-10-07. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Incorporación de R01 y avance real:** 2026-10-07. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -53,15 +53,17 @@ R01 se planifica provisionalmente del 11/10 al 20/10 (fin exclusivo), después d
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
 
+**Al 07/10:** 5 de 24 tareas iniciadas (E00, E01, E02, G01, A01), 1 integrada (E00) y 0 verificadas. E01 y A01 llevan un día de atraso. E01 es el más delicado: está en la cadena E01 → C01 → C02 → C04, que no tiene holgura, así que cada día de demora sin recuperar llega al corte del 26/10. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
+
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
 |---|---|---|---|---|
-| [E00](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/1) | — | — | — | — |
-| [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | — | — | — | Consulta docente si hace falta. |
-| [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | — | — | — | — |
+| [E00](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/1) | @andres332271 | 05/10 | 07/10 | Consigna actualizada en #27 y segunda versión en #29 (06/10). |
+| [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | @EnzoFernandezz11 | 05/10 | — | PR #28 en revisión, con cambios pedidos. Plan: fin 06/10. |
+| [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | @andres332271 | 07/10 | — | PR #33 en revisión; necesita el acuerdo de los tres. |
 | [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | — | — | — | — |
 | [R01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31) | @EnzoFernandezz11 y @moreyrajulian | — | — | Reparto aceptado el 7/10; issue creada; contrato definitivo e implementación pendientes. |
-| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | — | — | — | Actualizar semanalmente. |
-| [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | — | — | — | — |
+| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27 y este registro. Actualizar semanalmente. |
+| [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | @andres332271 | 07/10 | — | PR #32 en revisión. Plan: fin 06/10. |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | — | — | — | — |
 | [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | — | — | — | — |
 | [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | — | — | — | — |

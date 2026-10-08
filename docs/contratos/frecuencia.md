@@ -26,8 +26,8 @@ Enzo confirmó el 7/10/2026 los mínimos del proyecto: **SQNR ≥ 40 dB**, reloj
 
 ## Módulos y responsabilidades
 
-1. **Generador QPSK reutilizable:** produce `a[m]` con I y Q en `{-1,+1}`. No conoce FFT, historial ni coeficientes. Puede alimentar las pruebas de cualquiera de los filtros. La utilidad Python [model/stimuli.py](../../model/stimuli.py) permite generar símbolos con semilla; no fija el mapeo bits → símbolos ni implementa un generador RTL. A01/E02 completan el generador definitivo y su formato.
-2. **Upsampler 2×:** transforma cada símbolo en dos muestras: `x[2m]=a[m]`, `x[2m+1]=0`. Es una etapa propia de la cadena RRC. La utilidad Python reproduce esta operación; su interfaz por ciclos se define en E03/C01.
+1. **Generador QPSK reutilizable:** produce `a[m]` con I y Q en `{-1,+1}`. No conoce FFT, historial ni coeficientes. Puede alimentar las pruebas de cualquiera de los filtros. En Python es `qpsk()` de [model/qpsk_rrc.py](../../model/qpsk_rrc.py), con el mapeo propuesto en E02; no hay generador RTL, los testbenches inyectan los vectores exportados por A05.
+2. **Upsampler 2×:** transforma cada símbolo en dos muestras: `x[2m]=a[m]`, `x[2m+1]=0`. Es una etapa propia de la cadena RRC. `upsample()` en `model/qpsk_rrc.py` reproduce esta operación; su interfaz por ciclos se define en E03/C01.
 3. **Formador de bloques:** combina ocho muestras anteriores con ocho nuevas, equivalentes a cuatro símbolos nuevos después del upsampler.
 4. **Núcleo de filtrado:** FFT16 → productos espectrales → IFFT16 → selección de las últimas ocho posiciones.
 5. **Control de salida:** entrega las muestras en orden, limita el último bloque a las muestras reales de la trama y reinicia el historial entre tramas independientes.
@@ -101,7 +101,7 @@ make smoke
 
 La [prueba](../../tests/test_frequency_overlap_contract.py) compara el [modelo flotante reutilizable](../../model/frequency.py), que representa FFT16/IFFT16 mediante DFT directa de biblioteca estándar, con una suma causal independiente de ocho taps. Incluye QPSK con semilla e upsampling 2×, tramas completas y parciales, trama vacía, impulso en los límites de bloque y retardos. El modelo procesa una trama completa por llamada y no conserva estado entre llamadas; el reinicio de historial del RTL se verifica en C02. El criterio es error absoluto por muestra menor que `1e−10` y longitud exacta de salida.
 
-Los coeficientes de prueba incluyen un RRC ilustrativo de ocho taps y una tabla asimétrica para detectar errores de orden. El RRC ilustrativo no aprueba fase ni normalización de E02. La prueba demuestra la reconstrucción por bloques, no la calidad espectral del filtro definitivo, el SQNR en punto fijo, el protocolo RTL ni PPA.
+Los coeficientes de prueba incluyen la propuesta RRC de E02 con ocho taps y una tabla asimétrica para detectar errores de orden. Usar la propuesta RRC en la prueba no implica aprobación conjunta de E02. La prueba demuestra la reconstrucción por bloques, no la calidad espectral del filtro definitivo, el SQNR en punto fijo, el protocolo RTL ni PPA.
 
 Verificación local del 7/10/2026: las cinco pruebas de E01 y las nueve pruebas totales de `make smoke` pasan. `git diff --check` no reporta errores de whitespace. No hay RTL registrado; este resultado no es vector matching de hardware.
 
@@ -114,7 +114,7 @@ Verificación local del 7/10/2026: las cinco pruebas de E01 y las nueve pruebas 
 | Salidas y límites de trama | Índices y conteo 2S definidos arriba. |
 | Latencia esperada | Expresión estructural, condiciones de captura y tasa; calendario por ciclos en C01. |
 | Evidencia reproducible | Prueba de reconstrucción contra convolución directa y `make smoke`. |
-| Revisión de equipo | Julián dejó «LGTM» en la PR #28; Andrés solicitó estas correcciones. Falta registrar el acuerdo sobre la versión corregida, conforme al [flujo de contratos](README.md). |
+| Revisión de equipo | Julián dejó «LGTM» en la PR #28; Andrés solicitó estas correcciones. Falta registrar el acuerdo sobre la versión corregida, conforme al [flujo de contratos](../contrato-tecnico.md#3-detalle-por-tema). |
 | Upsampling | 2× confirmado por Enzo el 7/10/2026; nombre del módulo: upsampler. Revisión conjunta del contrato pendiente. |
 | Dependencia E00 y cierre en GitHub | E00 debe estar cerrada y debe vincularse el PR con evidencia o decisión revisada según E01. |
 

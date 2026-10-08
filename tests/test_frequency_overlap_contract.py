@@ -1,14 +1,21 @@
 """Comprueba la reconstrucción por FFT con 50 % de solapamiento de E01.
 
-La DFT de referencia usa solo la biblioteca estándar. Los coeficientes de prueba
-son ejemplos independientes de la tabla definitiva del filtro en frecuencia.
+La referencia es la convolución directa. Los símbolos y la tabla RRC salen de
+`model/qpsk_rrc.py` (A01/E02); el resto de los coeficientes son ejemplos.
 """
 
-import math
 import unittest
 
 from model.frequency import frequency_filter
-from model.stimuli import generate_qpsk, upsample_2x
+from model.qpsk_rrc import qpsk, rrc_taps, upsample
+
+
+def generate_qpsk(symbol_count, *, seed=0):
+    return qpsk(symbol_count, seed).tolist()
+
+
+def interpolate_2x(symbols):
+    return upsample(symbols).tolist()
 
 
 def direct_filter(signal, taps):
@@ -17,26 +24,6 @@ def direct_filter(signal, taps):
         sum(tap * signal[n - k] for k, tap in enumerate(taps) if n >= k)
         for n in range(len(signal))
     ]
-
-
-def illustrative_rrc_taps():
-    """Ejemplo beta=0.5, 2×, ocho taps simétricos; NO es la tabla de E02.
-
-    Se muestrea t/T=(k-3.5)/2 y se normaliza a energía unitaria.
-    Esta rejilla no toca las singularidades t=0 ni t=±T/(4*beta).
-    Solo sirve para comprobar reconstrucción, no calidad de conformado.
-    """
-    beta = 0.5
-    taps = []
-    for k in range(8):
-        t = (k - 3.5) / 2
-        numerator = (
-            math.sin(math.pi * t * (1 - beta))
-            + 4 * beta * t * math.cos(math.pi * t * (1 + beta))
-        )
-        taps.append(numerator / (math.pi * t * (1 - (4 * beta * t) ** 2)))
-    norm = math.sqrt(sum(tap * tap for tap in taps))
-    return [tap / norm for tap in taps]
 
 
 class FrequencyOverlapContractTest(unittest.TestCase):
@@ -48,12 +35,12 @@ class FrequencyOverlapContractTest(unittest.TestCase):
             self.assertLess(abs(got - want), 1e-10, f"muestra {index}")
 
     def test_rrc_with_qpsk_2x_full_partial_and_empty_frames(self):
-        taps = illustrative_rrc_taps()
+        taps = rrc_taps().tolist()
         for seed in (0, 17, 42):
             for symbol_count in (0, 1, 2, 3, 4, 5, 7, 8, 9, 17, 25):
                 with self.subTest(seed=seed, symbols=symbol_count):
                     symbols = generate_qpsk(symbol_count, seed=seed)
-                    signal = upsample_2x(symbols)
+                    signal = interpolate_2x(symbols)
                     self.assertEqual(len(signal), 2 * symbol_count)
                     self.assert_matches_direct(signal, taps)
 
@@ -76,7 +63,7 @@ class FrequencyOverlapContractTest(unittest.TestCase):
                 self.assert_matches_direct(signal, taps)
 
     def test_last_tap_delay_preserves_indices_and_truncates_tail(self):
-        signal = upsample_2x(generate_qpsk(9, seed=42))
+        signal = interpolate_2x(generate_qpsk(9, seed=42))
         actual = frequency_filter(signal, [0] * 7 + [1])
         expected = [0j] * 7 + signal[:-7]
         self.assertEqual(len(actual), len(expected))
@@ -88,7 +75,7 @@ class FrequencyOverlapContractTest(unittest.TestCase):
         self.assertEqual(symbols, generate_qpsk(64, seed=17))
         self.assertEqual(set(symbols), {1+1j, 1-1j, -1+1j, -1-1j})
         self.assertEqual(
-            upsample_2x([1+1j, -1+1j, -1-1j]),
+            interpolate_2x([1+1j, -1+1j, -1-1j]),
             [1+1j, 0j, -1+1j, 0j, -1-1j, 0j],
         )
 
