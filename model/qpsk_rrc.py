@@ -14,10 +14,13 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIRMED = json.loads((ROOT / "config/project.json").read_text(encoding="utf-8"))["confirmed"]
+PROJECT = json.loads((ROOT / "config/project.json").read_text(encoding="utf-8"))
+CONFIRMED = PROJECT["confirmed"]
 TAPS = CONFIRMED["coefficient_count"]
 ROLLOFF = CONFIRMED["rolloff"]
-SPS = CONFIRMED["samples_per_symbol"]
+SPS = CONFIRMED.get("samples_per_symbol", PROJECT.get("proposals", {}).get("samples_per_symbol", {}).get("value"))
+if SPS is None:
+    raise KeyError("samples_per_symbol")
 
 
 def qpsk(count: int, seed: int) -> np.ndarray:
