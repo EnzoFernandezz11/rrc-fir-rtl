@@ -1,6 +1,6 @@
 # C01 — Arquitectura RTL del filtro en frecuencia serial
 
-**Estado:** especificación de trabajo para implementar C02; puertos externos sujetos al acuerdo E03 y formatos fijos sujetos a A04. Basado en la [revisión de C01 del 9/10/2026](revision-c01-y-modulos-comunes.md), el [contrato de frecuencia](contratos/frecuencia.md) y la tabla de taps de [config/project.json](../config/project.json).
+**Estado:** especificación de trabajo para implementar C02; usa la interfaz propuesta en E03 y mantiene los formatos fijos pendientes de A04. Basado en la [revisión de C01 del 9/10/2026](revision-c01-y-modulos-comunes.md), el [contrato de interfaz](contratos/interfaz-rtl.md), el [contrato de frecuencia](contratos/frecuencia.md) y la tabla de taps de [config/project.json](../config/project.json).
 
 ## 1. Qué se implementa
 
@@ -22,18 +22,18 @@ El testbench previsto `tb/frequency/tb_fir_frequency_serial.sv` no forma parte d
 
 ### 2.1 `fir_frequency_serial`: núcleo e interfaz externa
 
-Los nombres son la propuesta concreta para C02; E03 debe confirmar que coincidan con el núcleo temporal. I/Q son componentes **signed** en complemento a dos y viajan juntas. `W_IN=2`, `F_IN=0` es la base de entrada de E02; `W_OUT/F_OUT` y los formatos internos los fijará A04 junto con E03. `F_*` indica bits fraccionarios y no agrega un puerto.
+Los nombres de puertos siguen la propuesta E03 para las cuatro variantes; el nombre del módulo lo define C02. I/Q son componentes **signed** en complemento a dos y viajan juntas. `W_IN=2`, `F_IN=0` es la base de entrada de E02/E03; `W_OUT/F_OUT` y los formatos internos los fijará A04. `F_*` indica bits fraccionarios y no agrega un puerto.
 
 | Parámetro de formato | Valor de trabajo | Estado |
 |---|---|---|
-| `W_IN`, `F_IN` | 2, 0 | Entrada exacta para −1, 0, +1 según E02; confirmar en E03. |
-| `W_OUT`, `F_OUT` | Por fijar | Resultado externo común de ambos filtros; A04/E03. |
+| `W_IN`, `F_IN` | 2, 0 | Entrada exacta para −1, 0, +1 según E02/E03. |
+| `W_OUT`, `F_OUT` | Por fijar | Resultado externo común de ambos filtros; A04. |
 | Anchos de `work`, H, W y productos | Por fijar | Deben soportar FFT sin escala e IFFT escalada al final; A04. |
 
 | Puerto | Dirección | Ancho | Significado |
 |---|---|---|---|
 | `clk` | Entrada | 1 | Reloj; transferencias en flanco ascendente. |
-| `rst_n` | Entrada | 1 | Reset asíncrono activo bajo: cancela trabajo y salidas pendientes, limpia contadores e historial. Decisión local pendiente de E03. |
+| `rst` | Entrada | 1 | Reset síncrono activo alto: cancela trabajo y salidas pendientes, limpia contadores e historial en el flanco. |
 | `in_i`, `in_q` | Entrada | `W_IN` cada uno | Muestra compleja en formato `W_IN/F_IN`; incluye ceros válidos del sobremuestreo. |
 | `in_valid` | Entrada | 1 | La fuente presenta `{in_i, in_q, in_last}`. |
 | `in_ready` | Salida | 1 | El núcleo puede aceptar una muestra nueva. |
@@ -43,7 +43,7 @@ Los nombres son la propuesta concreta para C02; E03 debe confirmar que coincidan
 | `out_ready` | Entrada | 1 | El receptor acepta un resultado. |
 | `out_last` | Salida | 1 | Marca solo el último resultado de la trama. |
 
-Una entrada se acepta únicamente con `rst_n=1 && in_valid && in_ready`; una salida se entrega únicamente con `rst_n=1 && out_valid && out_ready`. Si una transferencia está detenida, su productor mantiene `valid`, I/Q y `last` estables. `in_ready=0` durante copia de historial, cálculo y emisión; no hay FIFO ni captura del bloque siguiente mientras se procesa el actual. `out_valid` no depende de `out_ready`. Con `rst_n=0`, `in_ready=out_valid=0` y `out_last=0`; el reset no produce una trama vacía. Una trama vacía consiste en ninguna transferencia y ninguna salida, sin comando especial.
+Una entrada se acepta únicamente en el flanco con `rst=0 && in_valid && in_ready`; una salida se entrega únicamente con `rst=0 && out_valid && out_ready`. Si una transferencia está detenida, su productor mantiene `valid`, I/Q y `last` estables. `in_ready=0` durante copia de historial, cálculo y emisión; no hay FIFO ni captura del bloque siguiente mientras se procesa el actual. `in_ready` no depende combinacionalmente de `in_valid` y `out_valid` no depende combinacionalmente de `out_ready`. Con `rst=1`, `in_ready=out_valid=0`; en ese flanco se cancelan el cálculo y las salidas pendientes y se limpia el historial. En el primer flanco con `rst=0` puede comenzar otra trama con `x[0]`. Una trama vacía consiste en ninguna transferencia y ninguna salida, sin comando especial.
 
 El módulo superior conserva `history[0…7]` en orden temporal. Copia esas ocho muestras al motor y después le entrega hasta ocho muestras nuevas; cada entrada aceptada actualiza su posición de `history`. Si `last` llega antes de completar ocho, entrega ceros al motor hasta cerrar la ventana. Una vez que el motor avisa `done`, lee sus resultados 8…15 y presenta solo las salidas correspondientes a muestras reales. Conserva `out_i/q/last` durante pausas y limpia `history` al terminar una trama. No calcula FFT, H ni productos espectrales.
 
@@ -53,7 +53,7 @@ Este módulo **posee el único banco `work[0…15]`**. Su interfaz con `fir_freq
 
 | Puerto | Dirección | Ancho | Contrato |
 |---|---|---|---|
-| `clk`, `rst_n` | Entrada | 1 cada uno | Mismo reloj y reset del núcleo; reset aborta un cálculo en curso. |
+| `clk`, `rst` | Entrada | 1 cada uno | Mismo reloj y reset síncrono del núcleo; reset aborta un cálculo en curso. |
 | `load_en` | Entrada | 1 | Escribe una muestra en el flanco mientras el motor está libre. |
 | `load_index` | Entrada | 4 | Índice **temporal** 0…15; el motor escribe internamente `work[bitrev4(load_index)]`. |
 | `load_i`, `load_q` | Entrada | `W_IN` cada uno | Muestra del historial, entrada aceptada o cero de relleno. |
@@ -72,7 +72,7 @@ El motor lo invoca para `W·B` en cada mariposa y para `X·H` en cada bin. **No 
 
 | Puerto | Dirección | Ancho | Contrato |
 |---|---|---|---|
-| `clk`, `rst_n` | Entrada | 1 cada uno | Reset aborta el producto y baja `done`. |
+| `clk`, `rst` | Entrada | 1 cada uno | Reset síncrono aborta el producto y baja `done`. |
 | `start` | Entrada | 1 | Pulso cuando está libre; captura ambos operandos. No se inicia otro producto hasta `done`. |
 | `a_i`, `a_q` | Entrada | `W_A` cada uno | Primer operando complejo signed, en formato `W_A/F_A`. |
 | `b_i`, `b_q` | Entrada | `W_B` cada uno | Segundo operando complejo signed, en formato `W_B/F_B`. El motor alinea H y W a esta interfaz. |
@@ -134,7 +134,7 @@ La mariposa DIT forma `T=W·B` y escribe `A+T` y `A−T` usando los operandos or
 ```mermaid
 stateDiagram-v2
     [*] --> RESET
-    RESET --> ACTIVE: rst_n liberado
+    RESET --> ACTIVE: primer flanco con rst igual a 0
 
     state ACTIVE {
         [*] --> COPY_HISTORY
@@ -155,10 +155,10 @@ stateDiagram-v2
         EMIT --> COPY_HISTORY: ultima salida aceptada
     }
 
-    ACTIVE --> RESET: rst_n igual a 0 desde cualquier estado
+    ACTIVE --> RESET: flanco con rst igual a 1 desde cualquier estado
 ```
 
-`RESET` representa la condición de reset asíncrono, no un registro adicional de la FSM. El módulo superior controla `COPY_HISTORY`, `CAPTURE`, `PAD`, `COMPUTE` y `EMIT`; dentro de `COMPUTE`, `frequency_block_engine` controla FFT, producto, permutación e IFFT y devuelve `done`. En `CAPTURE`, p cuenta muestras **ya aceptadas**: permanece en ese estado ante burbujas, pausas o transferencias que aún no completan ocho muestras ni llevan `last`. En `EMIT` permanece hasta que se acepta el último resultado del bloque; el `last` de trama solo determina si se limpia `history` en esa transición. Los contadores de las 32 mariposas, los 16 productos y los seis intercambios son locales al motor.
+`RESET` representa el efecto del reset síncrono en el flanco, no un registro adicional de la FSM. El módulo superior controla `COPY_HISTORY`, `CAPTURE`, `PAD`, `COMPUTE` y `EMIT`; dentro de `COMPUTE`, `frequency_block_engine` controla FFT, producto, permutación e IFFT y devuelve `done`. En `CAPTURE`, p cuenta muestras **ya aceptadas**: permanece en ese estado ante burbujas, pausas o transferencias que aún no completan ocho muestras ni llevan `last`. En `EMIT` permanece hasta que se acepta el último resultado del bloque; el `last` de trama solo determina si se limpia `history` en esa transición. Los contadores de las 32 mariposas, los 16 productos y los seis intercambios son locales al motor.
 
 Tras reset, `history` vale cero y comienza la copia de ocho posiciones. En `CAPTURE`, solo `in_valid && in_ready` incrementa el conteo; una burbuja o una pausa no inserta ceros. Si se aceptan ocho muestras sin `last`, se procesa un bloque completo y se conserva el historial nuevo para el siguiente. Si `last` se acepta antes de ocho, `PAD` escribe los `8−p` ceros faltantes sin contarlos como entradas. Si `last` llega en la octava, se procesa un bloque completo y no se crea otro bloque vacío.
 
@@ -170,6 +170,8 @@ Ejemplo: si la tercera muestra aceptada lleva `in_last=1`, el núcleo añade cin
 
 La base usa **un multiplicador real**, una mariposa, 16 registros complejos de trabajo en el motor, ocho de historial en el superior, nueve constantes complejas H y ocho twiddles complejos W, además de contadores y registros aritméticos. Con un producto real registrado por ciclo, sin esperas ni ciclos vacíos entre módulos/fases: copia 8 + captura 8 + FFT 32×7 + producto 16×6 + permutación 6 + IFFT 32×7 + emisión 8 = **574 ciclos por bloque completo**. Un parcial de p=1…7 ocupa **566+p ciclos**, pues el relleno completa las ocho posiciones de captura y se emiten p salidas. Son presupuestos de microarquitectura, sujetos a la implementación de lecturas, sumas y conversión; no son medidas de timing.
 
+Con la definición de [E03](contratos/interfaz-rtl.md#latencia-y-throughput), el presupuesto ideal de latencia `L` es **558 ciclos** desde la aceptación de una muestra hasta la presentación de su resultado, incluso para el peor índice del bloque: `x[0]` se acepta en el ciclo 9 y `y[0]` se presenta en el 567; `x[7]` se acepta en el 16 y `y[7]` en el 574. El intervalo entre aceptaciones es 1 ciclo dentro del bloque y 567 ciclos entre bloques completos; por eso el promedio es **574/8 = 71,75 ciclos por muestra**, con throughput ideal `8·f_clk/574`. A 10 MHz equivale a unas 139 373 muestras/s, sujeto a simulación y timing. Burbujas, backpressure o ciclos adicionales de implementación aumentan esas cifras.
+
 | Prueba de C02 | Qué debe demostrar |
 |---|---|
 | `fir_frequency_serial` | Conteo una salida por entrada; dos bloques consecutivos; parcial de 1…7, bloque de 8 y tramas independientes; pausas, `last` y reset sin pérdida ni duplicación. |
@@ -177,4 +179,4 @@ La base usa **un multiplicador real**, una mariposa, 16 registros complejos de t
 | `complex_mul_serial` | Cuatro productos reales correctos con signos, un `done` por `start`, resultado estable durante `done` y cancelación por reset. |
 | Integración con el modelo | Impulso y QPSK en fronteras de bloque; coincidencia por palabra con el modelo fijo cuando A04 cierre la aritmética. |
 
-A03 cubre la correspondencia flotante; A04 debe demostrar SQNR ≥ 40 dB y fijar la tolerancia entre dominios. E03 debe confirmar el reset y los formatos externos antes de declarar definitivo este contrato de puertos.
+A03 debe cubrir la correspondencia flotante; A04 debe demostrar SQNR ≥ 40 dB y fijar la tolerancia entre dominios. C02 medirá `L`, intervalos de aceptación y throughput en simulación. Para PPA se usará la propuesta E03: Vivado out-of-context sobre Artix-7 `xc7a35tcpg236-1`, con [reloj de 10 MHz](../constraints/clk_10mhz.xdc) para esta variante lenta, `report_utilization`, `report_timing_summary` y `report_power` con SAIF del vector QPSK de A05. El contrato mantiene D03/D05/D06 en estado «propuesto» hasta la revisión conjunta; los anchos de A04 siguen abiertos.

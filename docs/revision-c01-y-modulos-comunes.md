@@ -1,6 +1,6 @@
 # Revisión de C01 con el contexto del 9/10/2026
 
-**Fecha:** 2026-10-09. **Estado:** decisiones de trabajo de C01; el contrato externo requiere acuerdo en E03 y los formatos fijos, validación en A04. No asigna tareas RTL comunes.
+**Fecha:** 2026-10-09. **Estado:** decisiones de trabajo de C01 actualizadas con E03/PR #38; D03/D05/D06 siguen marcadas «propuesto» hasta la revisión conjunta y los formatos fijos dependen de A04. No asigna tareas RTL comunes.
 
 Fuentes: [consigna vigente](consigna-actualizada.md), [contrato técnico](contrato-tecnico.md), contratos de [frecuencia](contratos/frecuencia.md), [señales](contratos/senales-y-formatos.md), [interfaz](contratos/interfaz-rtl.md) y [verificación](contratos/verificacion-y-ppa.md), [backlog](backlog.md), `config/project.json` y modelos/pruebas locales. Se verificó el estado de las issues E01 (#2), E02 (#3), A01 (#6), R01 (#31), E03 (#4), A03 (#8) y A04 (#9) el 9/10/2026.
 
@@ -8,7 +8,7 @@ La [arquitectura RTL serial](arquitectura-rtl-frecuencia-serial.md) convierte es
 
 ## 1. Qué cambia y qué se conserva
 
-La consigna pide dos implementaciones del mismo FIR complejo RRCOS de ocho taps y roll-off 0,5: convolución temporal y procesamiento FFT con superposición del 50 %. Ambas deben corresponder con las mismas entradas y coeficientes. E01, E02 y A01 están cerradas; E03, A03 y A04 siguen abiertas. El cierre de una issue no actualizó automáticamente todos los rótulos «propuesto» de los contratos locales.
+La consigna pide dos implementaciones del mismo FIR complejo RRCOS de ocho taps y roll-off 0,5: convolución temporal y procesamiento FFT con superposición del 50 %. Ambas deben corresponder con las mismas entradas y coeficientes. E01, E02, E03 y A01 están cerradas; A03 y A04 siguen abiertas. El [PR #38](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/38) incorporó la propuesta E03 a `main`, pero el contrato y `config/project.json` aún la etiquetan «proposed»; el cierre de la issue no equivale por sí solo a la revisión de los tres.
 
 | Requisito / decisión | Resultado de la revisión | Acción |
 |---|---|---|
@@ -17,12 +17,12 @@ La consigna pide dos implementaciones del mismo FIR complejo RRCOS de ocho taps 
 | Superposición del 50 % | FFT16 con ocho anteriores y ocho nuevas cumple | Conservar overlap-save y avance ocho |
 | Salida causal con mismo índice | Selección IFFT 8…15 es compatible | Aplicar el mismo inicio en reposo y recorte sin cola al FIR temporal, conforme a la propuesta E01 |
 | Upsampling 2× | Confirmado por Enzo; los modelos generan símbolo, cero | Inyectar directamente las muestras exportadas por Python en cada núcleo; M0 queda fuera de C01 |
-| Interfaz serie | `valid/ready` sigue elegido; `last` acompaña a la última muestra aceptada | Usar `rst_n` asíncrono bajo como decisión local de C01; acordar el contrato con B01/E03 |
+| Interfaz serie | E03 propone `valid/ready`, `last` y `rst` síncrono activo alto para las cuatro variantes | Reemplazar la elección local `rst_n` asíncrono y seguir las reglas por ciclo de E03 |
 | FFT folded DIT y motor FFT/IFFT compartido | Compatible como base serial de un bloque a la vez | Conservar; no resuelve el requisito posterior de máxima paralelización |
 | Optimización FFT, producto e IFFT | C03/C04 la contemplan en el backlog | Comparar arquitectura optimizada contra esta base; todavía falta diseñarla y medirla |
 | Comparación flotante/fijo y SQNR ≥ 40 dB | Modelo de bloques flotante disponible; formatos y evidencia SQNR pendientes | A04 y modelos fijos por arquitectura |
-| Reloj ≥ 10 MHz lento / ≥ 100 MHz rápido | Mínimos adicionales registrados; sin RTL ni timing medido | Completar cronograma C01 y verificación RTL/PPA posterior |
-| Diagrama completo y descripción | La arquitectura RTL contiene flujo, estados y puertos; esta revisión fija recursos y cronograma base | Completar el detalle numérico y las interfaces tras E03/A04 |
+| Reloj ≥ 10 MHz lento / ≥ 100 MHz rápido | E03 propone Vivado OOC en Artix-7 y constraints de 10/100 MHz; sin RTL ni timing medido | Medir la serial a 10 MHz y registrar utilización, timing y potencia con SAIF después de C02 |
+| Diagrama completo y descripción | La arquitectura RTL contiene flujo, estados, puertos y presupuesto de ciclos | Completar formatos numéricos tras A04 y verificar el cronograma en C02 |
 | RTL común R01 | R01 cerrada: el vector matching usará vectores Python en cada núcleo | No exigir generador, upsampler ni salida comunes en C01 |
 
 Siguen vigentes las elecciones internas que no contradice el contexto nuevo: bancos de 16 y ocho posiciones complejas, radix-2 folded DIT, motor FFT/IFFT compartido, ocho twiddles explícitos, H por simetría conjugada, salida desde el banco y FSM global con controles locales. Las decisiones nuevas de recursos, orden y ciclos se detallan en §4.
@@ -37,7 +37,7 @@ En punto fijo hay tres verificaciones distintas:
 
 1. Cada modelo fijo se compara con una referencia flotante común para evaluar SQNR.
 2. Cada RTL se compara con las palabras de su modelo fijo, que debe reproducir su aritmética.
-3. Las salidas temporal y de frecuencia se comparan con el criterio entre dominios que acuerden A04/E03.
+3. Las salidas temporal y de frecuencia se comparan con el criterio entre dominios que defina A04/D07.
 
 Los documentos actuales proponen tolerancia para la tercera comparación. La frase «correspondencia de resultados» de la consigna no fija una tolerancia ni aclara identidad bit a bit. Hay que confirmar ese criterio antes de cerrar la aritmética; ambos núcleos deben cumplir las reglas acordadas aunque sus redondeos internos y su código sean propios.
 
@@ -47,9 +47,9 @@ Los documentos actuales proponen tolerancia para la tercera comparación. La fra
 
 El [cierre de R01 / #31](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31) reemplaza la propuesta de cuatro bloques RTL comunes: los testbenches de B02/C02 tomarán vectores exportados por Python e inyectarán las muestras directamente en cada núcleo. El generador QPSK y `upsample()` del modelo A01 producen estímulos con el mismo mapeo y factor 2×; M0 ya no es un módulo RTL de C01. El núcleo de frecuencia conserva una entrada de muestras, no de símbolos.
 
-Cada núcleo acepta `{I, Q, last}` con `valid && ready` y entrega resultados con `out_valid && out_ready`. `in_last` se acepta junto con la última muestra de la trama; `out_last` acompaña solo al último resultado calculado. Una trama vacía no tiene transferencias ni resultados ni requiere comando adicional. `rst_n` es asíncrono activo bajo: cancela operaciones y datos pendientes, reinicia contadores e historial, y no permite transferencias mientras esté activo. Este reset es una elección local de C01 que debe acordarse en E03 con el filtro temporal; la interfaz externa definitiva, incluidos anchos de salida, sigue abierta.
+Cada núcleo acepta `{I, Q, last}` con `valid && ready` y entrega resultados con `out_valid && out_ready`, según la [propuesta E03](contratos/interfaz-rtl.md#reglas-por-ciclo). `in_last` se acepta junto con la última muestra de la trama; `out_last` acompaña solo al último resultado calculado. Una trama vacía no tiene transferencias ni resultados ni requiere comando adicional. `rst` es síncrono activo alto: con `rst=1`, `in_ready=out_valid=0`; en ese flanco cancela operaciones y resultados pendientes, reinicia contadores e historial. La primera muestra aceptada después del reset o de una trama terminada es `x[0]`. Los anchos de salida siguen pendientes de A04.
 
-Durante una pausa con `valid=1 && ready=0`, el productor mantiene datos, `last` y `valid` hasta la aceptación o el reset. El núcleo mantiene `in_ready=0` mientras calcula o emite y no cambia una salida presentada hasta que el receptor la acepta.
+Durante una pausa con `valid=1 && ready=0`, el productor mantiene datos, `last` y `valid` hasta la aceptación o el reset. El núcleo mantiene `in_ready=0` mientras calcula o emite y no cambia una salida presentada hasta que el receptor la acepta. `in_ready` no depende combinacionalmente de `in_valid` y `out_valid` no depende combinacionalmente de `out_ready`.
 
 Los núcleos se simulan y sintetizan por separado. Los drivers entregan la misma secuencia de muestras aceptadas y comparan salidas por índice, no por ciclo; un cero del upsampling es una muestra válida, mientras que una burbuja `valid=0` no avanza ningún contador. El modelo Python y el banco común A06 reutilizan taps, vectores, índices y métricas. Cada autor mantiene dentro de su núcleo operadores, memorias y conversiones.
 
@@ -64,14 +64,14 @@ flowchart LR
     F --> CHECK
 ```
 
-Los drivers, generadores de vectores y comparador quedan fuera del núcleo medido para PPA. Drivers independientes evitan conectar directamente una sola fuente `valid/ready` a receptores con `ready` distintos.
+Los drivers, generadores de vectores y comparador quedan fuera del núcleo medido para PPA. Drivers independientes evitan conectar directamente una sola fuente `valid/ready` a receptores con `ready` distintos. E03 propone medir solo el núcleo en Vivado out-of-context sobre Artix-7 `xc7a35tcpg236-1`: utilización implementada, WNS/Fmax con reloj de 10 MHz y potencia dinámica/estática con actividad SAIF de xsim; registrar también energía por muestra. La CI con Yosys comprueba sintetizabilidad, sin producir cifras PPA comparables.
 
 ## 4. Decisiones por módulo de C01
 
 | Bloque | Decisión de trabajo al 9/10 | Relación con la elección anterior |
 |---|---|---|
 | M0 — upsampling | Fuera de C01; el modelo y los vectores generan `a[m], 0` | Cambia por el cierre de R01; el factor 2× sigue vigente |
-| M1 — entrada | `valid/ready`, `in_last` en la última muestra aceptada, `rst_n` asíncrono bajo | Se conserva `valid/ready`; trama y reset se concretan aquí, pendientes de E03 |
+| M1 — entrada | `valid/ready`, `in_last` en la última muestra aceptada, `rst` síncrono activo alto | E03 reemplaza el reset local asíncrono; se conserva el protocolo de trama |
 | M2 — ventana | `work[0…15]` e `history[0…7]` en registros; un bloque por vez; cargar `work[bitrev4(r)]` al copiar historial y recibir nuevas muestras | Se conservan ambos bancos; la carga en bit reversal evita una permutación inicial |
 | M3/M6 — FFT/IFFT | Una mariposa radix-2 DIT y un motor compartido; ocho twiddles explícitos; un multiplicador real compartido también con M5 | Se conserva la estructura; se elige el recurso aritmético mínimo |
 | M4 — H | Guardar `H[0…8]` y reconstruir `H[9…15]` por conjugación; generar H desde `h_q` | La simetría sigue válida porque E02 usa taps reales |
@@ -98,17 +98,17 @@ La base serial reutiliza **un multiplicador real** entre mariposas FFT/IFFT y lo
 
 Una mariposa ocupa un ciclo para capturar operandos y twiddle, cuatro para los productos reales, uno para formar el producto complejo y otro para calcular `A±T` y escribir ambas posiciones. Un producto espectral ocupa un ciclo de lectura, cuatro productos reales y uno para combinar y escribir `Y[k]`. Ninguna fase se solapa con otra. El banco queda protegido mientras se emite.
 
-Con entrada disponible, salida siempre lista, multiplicador capaz de iniciar y registrar un producto real por ciclo y transiciones de FSM sin ciclos vacíos, un bloque completo ocupa **574 ciclos** desde el inicio de la copia de historial hasta la aceptación de su octava salida: `8 + 8 + 224 + 96 + 6 + 224 + 8`. La primera salida se acepta en el ciclo 567 si el ciclo 1 es la primera copia. Para un bloque parcial con p=1…7, los `8−p` ceros ocupan las posiciones restantes de captura y se emiten p resultados: **566+p ciclos** bajo las mismas condiciones. Una trama vacía no inicia bloque. Estas cifras son un presupuesto estructural, no latencia medida ni prueba de frecuencia máxima.
+Con entrada disponible, salida siempre lista, multiplicador capaz de iniciar y registrar un producto real por ciclo y transiciones de FSM sin ciclos vacíos, un bloque completo ocupa **574 ciclos** desde el inicio de la copia de historial hasta la aceptación de su octava salida: `8 + 8 + 224 + 96 + 6 + 224 + 8`. La primera salida se acepta en el ciclo 567 si el ciclo 1 es la primera copia. Para un bloque parcial con p=1…7, los `8−p` ceros ocupan las posiciones restantes de captura y se emiten p resultados: **566+p ciclos** bajo las mismas condiciones. El presupuesto ideal de `L` de E03 es **558 ciclos** desde aceptación a presentación del resultado; el intervalo entre aceptaciones es 1 dentro del bloque y 567 entre bloques completos, con promedio **71,75 ciclos por muestra** y throughput `8·f_clk/574`. Una trama vacía no inicia bloque. Estas cifras son un presupuesto estructural, no latencia medida ni prueba de frecuencia máxima.
 
 ## 6. Dependencias para cerrar C01
 
-1. E03 debe acordar con B01 la interfaz común, especialmente `valid/ready`, `last`, reset y formatos externos. `rst_n` asíncrono bajo y la ausencia de comando de trama vacía son decisiones locales hasta ese acuerdo.
+1. E03 está cerrada y su interfaz y método PPA están integrados como propuestas. C01 usa `rst` síncrono activo alto, `valid/ready`, `last` y los puertos de E03; la revisión conjunta de D03/D05/D06 sigue pendiente según el contrato compartido.
 2. A03 debe aportar la comparación flotante con el FIR temporal usando la tabla integrada de E02 y casos completos y parciales.
 3. A04 debe elegir anchos, cuantización de `h_q`, H y twiddles, redondeo/saturación y correspondencia numérica entre ramas; debe verificar SQNR ≥ 40 dB. Escalar la IFFT `1/16` al final exige ancho interno suficiente para evitar overflow.
-4. C01 debe convertir este presupuesto en diagrama físico, señales de control y calendario coherente. La tasa y el reloj objetivo se validarán después con RTL y síntesis; C03/C04 compararán la versión optimizada contra esta base mínima.
+4. C01 ya presenta diagrama, señales de control y calendario estructural. C02 debe medir `L`/throughput y comprobar la lógica por simulación; Vivado debe demostrar timing a 10 MHz y registrar PPA. C03/C04 compararán la versión optimizada contra esta base mínima.
 
 ## 7. Evidencia y límites
 
 La evidencia histórica de E01 del 7/10/2026 fue `make smoke` **PASS** con nueve pruebas Python, incluidas cinco de reconstrucción overlap-save. `model/frequency.py` representa FFT16/IFFT16 mediante DFT directa y contrasta la salida contra convolución causal independiente con error absoluto menor que `1e−10`; cubre QPSK, tramas vacías/completas/parciales, taps asimétricos y complejos e impulsos en fronteras. A01/E02 incorporaron después el modelo QPSK, la tabla RRCOS de ocho taps y su configuración reproducible.
 
-El árbol revisado el 9/10/2026 todavía no contiene fuentes ni testbenches RTL y el registro de variantes integrado está vacío. Tampoco contiene un modelo fijo. Las pruebas Python respaldan el algoritmo overlap-save; no verifican el motor folded DIT, el protocolo por ciclos, los **574 ciclos** presupuestados, SQNR ni PPA. La interfaz y los detalles de punto fijo siguen condicionados por E03 y A04.
+El árbol revisado el 9/10/2026 todavía no contiene fuentes ni testbenches RTL y el registro de variantes integrado está vacío. Tampoco contiene un modelo fijo. `main` añadió el modelo temporal flotante A02; A03 aún debe comparar ambas implementaciones con la tabla común. Las pruebas Python respaldan el algoritmo overlap-save; no verifican el motor folded DIT, el protocolo por ciclos, los **574 ciclos** presupuestados, SQNR ni PPA. La interfaz E03 sigue marcada como propuesta y los detalles de punto fijo dependen de A04.
