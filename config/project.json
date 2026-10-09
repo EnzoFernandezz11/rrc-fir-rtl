@@ -31,9 +31,45 @@
       "hop_size": 8
     },
     "fixed_point_format": null,
-    "rtl_interface": null,
-    "target_technology": null,
-    "power_method": null
+    "rtl_interface": {
+      "status": "proposed",
+      "handshake": "valid_ready",
+      "frame_marker": "last",
+      "reset": "sync_active_high",
+      "input": {
+        "signed": true,
+        "width": 2,
+        "fraction_bits": 0
+      },
+      "output": {
+        "signed": true,
+        "width": null,
+        "fraction_bits": null
+      },
+      "source": "docs/contratos/interfaz-rtl.md"
+    },
+    "target_technology": {
+      "status": "proposed",
+      "tool": "vivado",
+      "device": "xc7a35tcpg236-1",
+      "flow": "out_of_context",
+      "constraints": {
+        "fast": "constraints/clk_100mhz.xdc",
+        "slow": "constraints/clk_10mhz.xdc"
+      },
+      "source": "docs/contratos/verificacion-y-ppa.md#ppa"
+    },
+    "power_method": {
+      "status": "proposed",
+      "tool": "vivado_report_power",
+      "activity": "saif_from_simulation",
+      "metrics": [
+        "dynamic_w",
+        "static_w",
+        "energy_per_sample_j"
+      ],
+      "source": "docs/contratos/verificacion-y-ppa.md#ppa"
+    }
   },
   "proposals": {
     "samples_per_symbol": {
