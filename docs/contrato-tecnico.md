@@ -45,10 +45,10 @@ Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado po
 |---|---|---|---|---|
 | D01 | ¿Qué operaciones exactas componen el filtro en frecuencia? ¿Tamaño de bloque/FFT, convolución lineal o circular, overlap-add/save y latencia? | propuesto | @EnzoFernandezz11 | [Contrato de frecuencia](contratos/frecuencia.md): overlap-save FFT16/IFFT16, historial y avance de ocho, salidas causales sin cola y latencia estructural. Evidencia en `tests/test_frequency_overlap_contract.py`; PR #28. |
 | D02 | ¿Cuáles son los 8 coeficientes exactos, su orden, fase de muestreo, escala y normalización? Roll-off y 2× solos no fijan una tabla única. | provisional | @andres332271 | Propuesta E02 en [señales y formatos](contratos/senales-y-formatos.md): grilla ±0,25…±1,75 Ts, energía unitaria. Pasa a acordado por equipo al integrar el PR con la revisión de los tres. |
-| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | E02 propone el mapeo QPSK y la entrada I/Q de 2 bits; el resto de la interfaz sigue en E03. |
+| D03 | ¿Cómo se codifican QPSK, I/Q, `valid`, reset y límites de bloque en la interfaz? | propuesto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | E02 propone el mapeo QPSK y la entrada I/Q de 2 bits. E03 propone en la [interfaz RTL](contratos/interfaz-rtl.md) `valid/ready` con `last`, I/Q `signed` en puertos separados y `rst` síncrono activo alto. |
 | D04 | ¿Qué anchos, punto binario, redondeo y saturación tendrá cada nodo? | abierto | @andres332271 | Depende de barrido SQNR. |
-| D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | abierto | @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
-| D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | abierto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | Pendiente. |
+| D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | propuesto | @moreyrajulian y @EnzoFernandezz11 | E03 propone Vivado out-of-context sobre Artix-7, con relojes de 100 y 10 MHz en `constraints/`. Ver [verificación y PPA](contratos/verificacion-y-ppa.md#ppa). |
+| D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | propuesto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | E03 propone `report_power` de Vivado con actividad SAIF de la simulación del vector QPSK de A05, y energía por muestra. Ver [verificación y PPA](contratos/verificacion-y-ppa.md#ppa). |
 | D07 | ¿Cuál es la definición de SQNR: referencia, muestras descartadas, tratamiento de I/Q y casos usados? | abierto | @andres332271 | Pendiente. |
 | D08 | ¿Qué arquitectura se elige para cada variante optimizada y qué eje PPA intenta mejorar? | abierto | @moreyrajulian y @EnzoFernandezz11 | Después de las seriales. |
 
@@ -75,5 +75,6 @@ Cada contrato pasa por **Abierto → Propuesto → Aprobado por los tres**, y no
 | 2026-10-07 | D05, D07 | Precisar mínimos de SQNR y reloj. | Aclaración de Enzo: al menos 40 dB, 10 MHz en lentas y 100 MHz en rápidas. | A04 y RTL/PPA deben demostrar esos mínimos con las condiciones de medición acordadas. | #28 |
 | 2026-10-07 | D02 | ¿Se mantiene sobremuestreo 2×? | Propuesta heredada; consulta docente por realizar. | Conservar 2× provisionalmente en modelos y ejemplos; fijar una tabla común en E02. | #28 |
 | 2026-10-07 | D02, D03 | Propuesta de coeficientes, normalización, mapeo QPSK y entrada I/Q. | E02. | Modelos A02/A03 y RTL B/C usan `decisions.coefficients`. | #33 |
+| 2026-10-09 | D03, D05, D06 | Propuesta de interfaz RTL, plataforma PPA y método de potencia. | E03; la herramienta es Vivado porque @moreyrajulian la tiene disponible. | B01/C01 cumplen la interfaz; reemplaza el `rst_n` asíncrono elegido localmente en C01. Las cifras PPA salen de Vivado; la CI sigue con Yosys. | — |
 
 E00–E03 se cierran cuando las decisiones relevantes tienen respuesta, fuente y revisión de los tres. Las nuevas decisiones se agregan aquí antes de incorporarlas a `config/project.json`.
