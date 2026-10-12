@@ -1,6 +1,6 @@
 # C01 — Arquitectura RTL del filtro en frecuencia serial
 
-**Estado:** diseño documentado para revisión de C01 y preparación de C02; usa la interfaz propuesta en E03, mantiene la comparación de A03 pendiente y los formatos fijos pendientes de A04. **Consolidación documental:** 12/10/2026. Este documento reúne las decisiones, justificaciones, puertos, bloques, estados y presupuesto de ciclos de la arquitectura serial.
+**Estado:** diseño documentado para revisión de C01 y preparación de C02; usa la interfaz propuesta en E03, incorpora la comparación flotante de A03 y la propuesta de formatos de A04, integradas en main; la adopción y verificación RTL corresponden a C02. **Consolidación documental:** 12/10/2026. Este documento reúne las decisiones, justificaciones, puertos, bloques, estados y presupuesto de ciclos de la arquitectura serial.
 
 Fuentes: [consigna vigente](consigna-actualizada.md), [contrato técnico](contrato-tecnico.md), contratos de [frecuencia](contratos/frecuencia.md), [señales y formatos](contratos/senales-y-formatos.md), [interfaz RTL](contratos/interfaz-rtl.md) y [verificación y PPA](contratos/verificacion-y-ppa.md), [backlog](backlog.md) y tabla de taps de [config/project.json](../config/project.json). Las decisiones compartidas conservan el estado indicado en esos contratos; documentar esta arquitectura no equivale a aprobarlas ni a cerrar las issues.
 
@@ -46,13 +46,13 @@ Los testbenches temporal y de frecuencia usan drivers independientes para entreg
 
 ### 2.1 `fir_frequency_serial`: núcleo e interfaz externa
 
-Los nombres de puertos siguen la propuesta E03 para las cuatro variantes; el nombre del módulo lo define C02. I/Q son componentes **signed** en complemento a dos y viajan juntas. `W_IN=2`, `F_IN=0` es la base de entrada de E02/E03; `W_OUT/F_OUT` y los formatos internos los fijará A04. `F_*` indica bits fraccionarios y no agrega un puerto.
+Los nombres de puertos siguen la propuesta E03 para las cuatro variantes; el nombre del módulo lo define C02. I/Q son componentes **signed** en complemento a dos y viajan juntas. `W_IN=2`, `F_IN=0` es la base de entrada de E02/E03; A04 propone `W_OUT=9`, `F_OUT=7` y los formatos internos de la tabla siguiente; C02 debe adoptarlos y verificarlos. `F_*` indica bits fraccionarios y no agrega un puerto.
 
 | Parámetro de formato | Valor de trabajo | Estado |
 |---|---|---|
 | `W_IN`, `F_IN` | 2, 0 | Entrada exacta para −1, 0, +1 según E02/E03. |
-| `W_OUT`, `F_OUT` | Por fijar | Resultado externo común de ambos filtros; A04. |
-| Anchos de `work`, H, W y productos | Por fijar | Deben soportar FFT sin escala e IFFT escalada al final; A04. |
+| `W_OUT`, `F_OUT` | 9, 7 | Salida Q2.7 común propuesta por A04. |
+| `work`; H/W; producto complejo | 12/5; 10/8; 23/13 (ancho/fracción) | Propuesta A04: redondeo mitad hacia arriba en productos y salida; sin saturación. Ver [tabla de formatos](contratos/senales-y-formatos.md#formatos-de-punto-fijo-a04). |
 
 | Puerto | Dirección | Ancho | Significado |
 |---|---|---|---|
@@ -278,13 +278,13 @@ C02 medirá `L`, intervalos de aceptación y throughput en simulación. Para PPA
 
 ## 7. Dependencias y decisiones pendientes
 
-El [backlog](backlog.md) distingue dependencias para empezar y para cerrar: C01 requiere E01 para empezar y E03/A03 para cerrar; C02 requiere C01 para empezar y A05 para cerrar. Este documento reúne el diseño para revisión, sin dar por cerradas esas dependencias.
+El [backlog](backlog.md) distingue dependencias para empezar y para cerrar: C01 requiere E01 para empezar y E03/A03 para cerrar; C02 requiere C01 para empezar y A05 para cerrar. E01/E03 y A03 están integrados en main; la evidencia de A03 se reproduce en §8. A05 sigue pendiente para el cierre de C02.
 
 | Tarea o decisión | Qué falta o debe conservarse | Consecuencia |
 |---|---|---|
 | E03 / D03, D05 y D06 | La interfaz y el método PPA integrados por [PR #38](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/38) siguen marcados «propuesto» en el contrato y la configuración hasta la revisión conjunta. | Usar `rst` síncrono activo alto, `valid/ready`, `last` y el flujo PPA descritos; el cierre de la issue no equivale por sí solo a aprobar las decisiones compartidas. |
-| A03 | Comparar los modelos flotantes temporal y de frecuencia con la tabla común de E02, incluidos bloques completos, parciales y fronteras. | Aporta la evidencia requerida para cerrar C01. |
-| A04 / D07 | Fijar anchos y bits fraccionarios de `work`, H, W, productos y salida; cuantización de `h_q`, H y W; recortes, redondeo, saturación y correspondencia entre dominios. Demostrar SQNR ≥ 40 dB sin overflow oculto. | Completar formatos y constantes antes de cerrar la aritmética RTL. La escala IFFT `1/16` al final exige ancho interno suficiente. |
+| A03 | Integrada por [PR #40](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/40): compara A02/E01 con la tabla E02, bloques completos, parciales y fronteras; error máximo 1,782e−14 < 1e−12. | Evidencia flotante requerida para cerrar C01 disponible. |
+| A04 / D04, D07 | Integrada por [PR #41](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/41): formatos y modelos fijos propuestos; SQNR mínima de 44,2 dB temporal y 43,0 dB frecuencia en los casos acordados. | C02 adopta formatos, constantes y redondeos y verifica correspondencia palabra por palabra con el modelo fijo; las decisiones conservan su estado en el contrato. |
 | A05 | Exportar entradas y salidas del modelo fijo con formato reproducible. | Permite el vector matching requerido para cerrar C02. |
 | C02 | Implementar y simular el motor, protocolo y bordes; medir latencia y throughput y verificar timing/PPA. | Los 655 ciclos y el reloj de 10 MHz siguen siendo presupuesto y objetivo hasta su medición. |
 
@@ -292,11 +292,20 @@ El [backlog](backlog.md) distingue dependencias para empezar y para cerrar: C01 
 
 El [modelo de frecuencia](../model/frequency.py) representa FFT16/IFFT16 mediante DFT directa en flotante. La [prueba de overlap-save](../tests/test_frequency_overlap_contract.py) lo contrasta con una convolución causal independiente con error absoluto por muestra menor que `1e−10` y longitud exacta de salida. Cubre QPSK con upsampling 2×, tramas vacías/completas/parciales, taps asimétricos y complejos e impulsos en fronteras. Usa la tabla RRC común de A01/E02 y coeficientes de ejemplo para detectar errores de orden.
 
-La evidencia histórica de E01 del 7/10/2026 fue `make smoke` PASS con nueve pruebas Python, incluidas cinco de overlap-save. A03 debe completar la comparación con el [modelo temporal A02](../model/fir_time.py). Los comandos para reproducir la verificación local son:
+La evidencia histórica de E01 del 7/10/2026 fue `make smoke` PASS con nueve pruebas Python, incluidas cinco de overlap-save. A03 completa la comparación con el [modelo temporal A02](../model/fir_time.py) mediante [su prueba](../tests/test_a03_time_vs_frequency.py): casos A02, cuatro semillas QPSK de 256 símbolos, longitudes 0…40 e impulsos en posiciones 0…23. El máximo reproducido es 1,782e−14, menor que la tolerancia 1e−12 comprobada por unittest. Los comandos para reproducir la verificación local son:
 
 ```sh
-python3 -m unittest tests.test_frequency_overlap_contract -v
+python3 -m unittest tests.test_frequency_overlap_contract tests.test_a03_time_vs_frequency -v
+python3 -m tests.test_a03_time_vs_frequency
 make smoke
 ```
 
-Estas pruebas respaldan el algoritmo por bloques; no verifican las 32 operaciones del motor folded DIT, el protocolo RTL por ciclos, los 655 ciclos presupuestados, SQNR ni PPA. El modelo procesa una trama por llamada, de modo que reset e historial entre tramas RTL se comprobarán en C02. Al consolidar este documento, el árbol local no contiene fuentes/testbenches RTL ni modelo fijo y `config/rtl_targets.json` tiene cero variantes: un PASS de `smoke` en ese estado no es vector matching de hardware.
+Las pruebas E01/A03 respaldan el algoritmo por bloques. La [revisión de Andrés en PR #39](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/39) aporta una simulación independiente del motor descrito: tabla de 32 mariposas, orden natural tras FFT, seis intercambios e IFFT, con 20 semillas QPSK y longitudes 0…74; reporta error máximo 5,7e−16 y verifica el presupuesto de 655 ciclos. Esa simulación flotante no mide el protocolo RTL por ciclos ni PPA. El modelo procesa una trama por llamada, de modo que reset e historial entre tramas RTL se comprobarán en C02. Al consolidar este documento, esta rama contiene el modelo fijo A04, pero todavía no contiene fuentes/testbenches RTL y `config/rtl_targets.json` tiene cero variantes: un PASS de `smoke` en ese estado no es vector matching de hardware.
+
+
+## 9. Mejoras previstas para C02 y C03/C04
+
+La revisión de Andrés propone dos mejoras que se evaluarán en las próximas tareas. La base revisada de C01 conserva el presupuesto de 655 ciclos.
+
+- **C02 — multiplicador acumulando:** acumular los cuatro productos reales directamente en dos registros de resultado, en lugar de guardar cuatro productos y combinarlos en un ciclo aparte. Mantener precisión completa hasta los cortes de A04. El presupuesto previsto baja de 8 a 7 ciclos por mariposa y de 7 a 6 por bin: 80 ciclos menos por bloque (575 frente a 655, aproximadamente 12 %). Al implementarlo, actualizar control, presupuesto y pruebas de `done`, reset, estabilidad y vector matching; la mejora debe medirse en simulación y síntesis.
+- **C03/C04 — twiddles triviales:** 15 de las 32 mariposas de cada transformada tienen W=1 y siete tienen W=−j. Evaluar el bypass del multiplicador para esas 22: identidad o intercambio de I/Q con cambio de signo; en IFFT usar el conjugado +j. Preservar cortes, anchos y resultados del modelo fijo y comparar ciclos/PPA con la base serial. Esta mejora complementa el estudio de paralelización exigido para la variante optimizada.
