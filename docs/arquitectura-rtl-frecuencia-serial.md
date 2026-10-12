@@ -1,6 +1,6 @@
 # C01 — Arquitectura RTL del filtro en frecuencia serial
 
-**Estado:** diseño documentado para revisión de C01 y preparación de C02; usa la interfaz propuesta en E03, mantiene la comparación de A03 pendiente y los formatos fijos pendientes de A04. **Consolidación documental:** 12/10/2026. Este documento reúne las decisiones, justificaciones, puertos, bloques, estados y presupuesto de ciclos de la arquitectura serial.
+**Estado:** diseño documentado para revisión de C01, con primera implementación provisional de C02 (§9); usa la interfaz propuesta en E03, mantiene la comparación de A03 pendiente y los formatos fijos pendientes de A04. **Consolidación documental:** 12/10/2026. Este documento reúne las decisiones, justificaciones, puertos, bloques, estados y presupuesto de ciclos de la arquitectura serial.
 
 Fuentes: [consigna vigente](consigna-actualizada.md), [contrato técnico](contrato-tecnico.md), contratos de [frecuencia](contratos/frecuencia.md), [señales y formatos](contratos/senales-y-formatos.md), [interfaz RTL](contratos/interfaz-rtl.md) y [verificación y PPA](contratos/verificacion-y-ppa.md), [backlog](backlog.md) y tabla de taps de [config/project.json](../config/project.json). Las decisiones compartidas conservan el estado indicado en esos contratos; documentar esta arquitectura no equivale a aprobarlas ni a cerrar las issues.
 
@@ -8,17 +8,21 @@ Fuentes: [consigna vigente](consigna-actualizada.md), [contrato técnico](contra
 
 El núcleo recibe **muestras complejas ya sobremuestreadas** y calcula `y[n] = Σ(k=0…7) h[k]·x[n−k]`. Procesa una ventana de 16 muestras con ocho anteriores y ocho nuevas: FFT16 → 16 productos por H[k] → IFFT16 → salidas 8…15. Por cada muestra aceptada entrega exactamente una salida con el mismo índice lógico; no emite cola. Un último bloque con p<8 muestras nuevas se rellena con ceros para calcular y entrega solo p resultados.
 
-La primera versión se divide en **tres módulos RTL sintetizables**. La separación sigue las fronteras reales de datos y control:
+La primera versión conserva **tres bloques funcionales**, con sus FSM en módulos separados y un módulo combinacional de ROMs. Los siete archivos son SystemVerilog sintetizable:
 
 | Archivo previsto | Módulo | Responsabilidad principal |
 |---|---|---|
-| `rtl/frequency/fir_frequency_serial.sv` | `fir_frequency_serial` | Interfaz externa, historial de ocho muestras, armado de ventana, longitud de bloque/trama y emisión con pausas. |
-| `rtl/frequency/frequency_block_engine.sv` | `frequency_block_engine` | Banco `work` de 16 muestras, FFT, productos por H, permutación, IFFT, constantes H/W, tabla fija de 32 operaciones FFT/IFFT y control local de cálculo. |
-| `rtl/frequency/complex_mul_serial.sv` | `complex_mul_serial` | Un producto complejo usando un solo multiplicador real en cuatro pasos; instancia única dentro del motor de bloque. |
+| `rtl/frequency/fir_frequency_serial.sv` | `fir_frequency_serial` | Interfaz externa, historial de ocho muestras, muxes de ventana y conexión del control con el motor. |
+| `rtl/frequency/fir_frequency_serial_control.sv` | `fir_frequency_serial_control` | FSM superior, contadores de bloque/trama, handshakes, `last` y habilitaciones del historial. |
+| `rtl/frequency/frequency_block_engine.sv` | `frequency_block_engine` | Banco `work`, datapath FFT/producto/IFFT, conversiones y conexión con multiplicador, control y ROMs. |
+| `rtl/frequency/frequency_block_engine_control.sv` | `frequency_block_engine_control` | FSM de cálculo, fase FFT/producto/IFFT, índices y habilitaciones del banco/multiplicador. |
+| `rtl/frequency/frequency_block_roms.sv` | `frequency_block_roms` | Constantes H/W, tabla fija de 32 mariposas y seis parejas de permutación; lectura combinacional. |
+| `rtl/frequency/complex_mul_serial.sv` | `complex_mul_serial` | Datapath de producto complejo con un solo multiplicador real y registros de productos. |
+| `rtl/frequency/complex_mul_serial_control.sv` | `complex_mul_serial_control` | FSM de captura, cuatro productos y combinación; selecciones, habilitaciones y pulso `done`. |
 
-M1…M8 son **funciones**, no ocho archivos. M1/M7 y el control de tramas pertenecen al módulo superior; M3…M6 al motor de bloque. La misma mariposa física ejecuta FFT e IFFT en momentos distintos, y ambos modos comparten con el producto espectral la instancia `complex_mul_serial`. H y los twiddles son constantes dentro del motor; no requieren ROM externas. C03/C04 podrán cambiar el paralelismo sin alterar el contrato funcional.
+M1…M8 son **funciones**, no ocho archivos. M1/M7 pertenecen al bloque superior; M3…M6 al motor de bloque. Cada bloque instancia su FSM como `u_control`; los datapaths reciben índices y habilitaciones, sin duplicar estados codificados. La misma mariposa física ejecuta FFT e IFFT en momentos distintos, y ambos modos comparten con el producto espectral la instancia `complex_mul_serial`. H y los twiddles residen en `frequency_block_roms`, instanciado como `u_roms` dentro del motor. C03/C04 podrán cambiar el paralelismo sin alterar el contrato funcional.
 
-El testbench previsto `tb/frequency/tb_fir_frequency_serial.sv` no forma parte del RTL sintetizable y usará vectores Python inyectados directamente en la entrada. Al crear RTL y testbench, registrar **los tres archivos** como fuentes de la variante en `config/rtl_targets.json`. El generador QPSK, el upsampler y una etapa de salida común no son dependencias RTL de C01/C02 tras el [cierre de R01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31).
+El testbench `tb/frequency/tb_fir_frequency_serial.sv` no forma parte del RTL sintetizable y genera los vectores provisionales en SystemVerilog (§9); los vectores oficiales A05 siguen pendientes. Registrar **los siete archivos** como fuentes de la variante en `config/rtl_targets.json`. El generador QPSK, el upsampler y una etapa de salida común no son dependencias RTL de C01/C02 tras el [cierre de R01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31).
 
 ### 1.1 Correspondencia con el FIR temporal
 
@@ -113,7 +117,7 @@ Numerando desde el flanco que acepta `start`: 1 captura operandos; 2…5 registr
 
 ### 2.4 Tabla fija de operaciones FFT16/IFFT16
 
-El motor contiene una tabla combinacional de 32 entradas, implementada como un `case` completo dentro de `frequency_block_engine`. Cada entrada entrega `{addr_a, addr_b, w_index}` con anchos de 4, 4 y 3 bits: **352 bits de información constante**, cuyo costo físico depende de la síntesis. Un contador `butterfly_index` de 5 bits selecciona la operación. La tabla es compartida por FFT e IFFT y se reutiliza en cada bloque.
+El motor usa una tabla combinacional de 32 entradas, implementada como un `case` completo dentro de `frequency_block_roms`. Cada entrada entrega `{addr_a, addr_b, w_index}` con anchos de 4, 4 y 3 bits: **352 bits de información constante**, cuyo costo físico depende de la síntesis. Un contador `butterfly_index` de 5 bits selecciona la operación. La tabla es compartida por FFT e IFFT y se reutiliza en cada bloque.
 
 La entrada seleccionada indica leer `A=work[addr_a]`, `B=work[addr_b]` y `W[w_index]`; la mariposa escribe `A+W·B` en `addr_a` y `A−W·B` en `addr_b`. Los valores de A/B y los resultados se calculan con los datos del bloque actual. Las direcciones y los índices de W siguen siempre esta secuencia:
 
@@ -154,7 +158,7 @@ La entrada seleccionada indica leer `A=work[addr_a]`, `B=work[addr_b]` y `W[w_in
 
 Las filas 0…7, 8…15, 16…23 y 24…31 corresponden a las cuatro etapas DIT. Para regenerar la tabla en Python, recorrer `m=(2,4,8,16)`, luego `base=0,m,…,16−m` y luego `j=0…m/2−1`; cada fila es `(base+j, base+j+m/2, j·16/m)`, con divisiones enteras. Estos cálculos se hacen al generar las constantes. W representa `exp(−j·2πk/16)` para k=0…7; en IFFT se usa su conjugado, con la misma tabla de direcciones. La carga inicial en bit reversal, los seis intercambios antes de IFFT y la escala final `1/16` conservan el orden y la ganancia definidos en §4.
 
-Reset pone `butterfly_index=0`; cada FFT e IFFT comienza también en 0. El contador se mantiene durante la lectura, el producto y la captura de T. Avanza únicamente en el flanco que escribe ambos resultados de la mariposa, el octavo del presupuesto de §2.3. Al terminar la fila 31 permanece en 31 y la FSM pasa a producto espectral o termina la IFFT, según la fase. Fuera de FFT/IFFT la tabla no habilita operaciones. El contador se reinicia antes de la primera mariposa de la siguiente transformada.
+Reset pone `butterfly_index=0`; cada FFT e IFFT comienza también en 0. El contador se mantiene durante la lectura, el producto y la captura de T. Avanza únicamente en el flanco que escribe ambos resultados de la mariposa, el octavo del presupuesto de §2.3. Al terminar la fila 31 de FFT permanece en 31 mientras la FSM pasa a producto espectral; antes de IFFT vuelve a 0. La implementación C02 denomina ese contador `op_index` y, al escribir la última mariposa IFFT, lo reinicia junto con la fase FFT para preparar el próximo `start`. Fuera de FFT/IFFT la tabla no habilita operaciones.
 
 La lectura combinacional permite conservar los ocho ciclos por mariposa. La elección simplifica el control para FFT16; cambiar el tamaño o el algoritmo requiere regenerar y verificar la tabla. El efecto sobre área, timing y potencia queda sujeto a síntesis y medición.
 
@@ -299,4 +303,45 @@ python3 -m unittest tests.test_frequency_overlap_contract -v
 make smoke
 ```
 
-Estas pruebas respaldan el algoritmo por bloques; no verifican las 32 operaciones del motor folded DIT, el protocolo RTL por ciclos, los 655 ciclos presupuestados, SQNR ni PPA. El modelo procesa una trama por llamada, de modo que reset e historial entre tramas RTL se comprobarán en C02. Al consolidar este documento, el árbol local no contiene fuentes/testbenches RTL ni modelo fijo y `config/rtl_targets.json` tiene cero variantes: un PASS de `smoke` en ese estado no es vector matching de hardware.
+Estas pruebas Python respaldan el algoritmo por bloques; no verifican las 32 operaciones del motor folded DIT, el protocolo RTL por ciclos, los 655 ciclos presupuestados, SQNR ni PPA. El modelo procesa una trama por llamada. Antes de la primera tanda de C02, el árbol no contenía fuentes/testbenches RTL y el registro tenía cero variantes: un PASS de `smoke` en ese estado no era vector matching de hardware. La evidencia RTL incorporada se describe a continuación.
+
+## 9. C02 — Primera implementación provisional
+
+Los siete módulos de §1 están implementados en SystemVerilog y registrados como `frequency_serial`, con testbench también SystemVerilog. Las FSM y las ROMs se separaron en archivos propios a pedido del usuario: los controles guardan estados y contadores; los datapaths guardan muestras y productos. La ROM no agrega registros ni ciclos. El control superior agrega un estado `START` entre la última carga y `COMPUTE`; ese flanco coincide con el inicio de la primera mariposa previsto por el presupuesto. El motor reutiliza un único multiplicador real y no captura el bloque siguiente durante cálculo/emisión.
+
+### Perfil de trabajo pendiente de A04
+
+| Nodo | Bits totales / fraccionarios | Parámetros |
+|---|---|---|
+| Entrada | 2 / 0 | `W_IN`, `F_IN` |
+| Taps cuantizados para generar H | 18 / 16 | Perfil provisional de generación |
+| H y W | 18 / 16 | `W_COEF`, `F_COEF` |
+| Banco de trabajo | 32 / 16 | `W_WORK`, `F_WORK` |
+| Producto complejo completo | 51 / 32 | `W_WORK+W_COEF+1`, `F_WORK+F_COEF` |
+| Salida | 24 / 16 | `W_OUT`, `F_OUT` |
+
+Son valores provisionales, marcados `TODO(A04)`, y no reemplazan los campos pendientes de `config/project.json`. H y W comparten formato para evitar adaptadores. Los ocho taps comunes se cuantizan al más cercano con empates al par y después se calcula y cuantiza H; los twiddles usan el mismo redondeo. Los taps resultantes son `[717, -7272, 7272, 45180, 45180, 7272, -7272, 717]`, con 16 bits fraccionarios.
+
+La entrada se extiende con signo **antes** de desplazarla a `F_WORK`. Cada producto conserva su precisión completa hasta reducirlo mediante desplazamiento aritmético por `F_COEF`; las mariposas suman/restan con un bit adicional y conservan los bits bajos del ancho de trabajo. La salida se desplaza por `4+F_WORK-F_OUT`. Estos recortes redondean hacia menos infinito y, si se excede el rango, conservan complemento a dos por wrap; no hay saturación provisional.
+
+La simulación rechaza formatos incompatibles: H/W requieren `F_COEF=16` y `W_COEF>=18`, la entrada debe caber tras alinearla y los desplazamientos deben ser no negativos. Cambiar la fracción de H/W exige regenerar sus tablas y actualizar esa guarda. A04 podrá reemplazar anchos y políticas de recorte; esta tanda no realiza su barrido SQNR.
+
+### Pruebas y reproducción
+
+Ejecutar desde la raíz:
+
+```sh
+make smoke
+make full
+git diff --check
+# Mostrar taps, H y W calculados por el testbench SystemVerilog:
+vvp build/frequency_serial.out +dump_constants
+```
+
+El testbench lee los ocho coeficientes del bloque multilinea `coefficients` de `config/project.json`; no usa una segunda tabla flotante. Genera H/W y los vectores en SystemVerilog, sin archivos Python nuevos. Una referencia entera recorre las etapas mediante bucles, independientemente del `case` de direcciones RTL, y compara cada palabra I/Q. Una convolución causal flotante independiente verifica orden, signo y escala con error absoluto máximo permitido de `0,001` por componente; ese umbral es una comprobación provisional, no el criterio definitivo A04/D07. La referencia también rechaza overflow interno en los vectores probados.
+
+La regresión cubre longitudes 1…17, impulsos en posiciones 0…17, varios bloques y tramas consecutivas, señal nula, extremos signed −2/+1 y QPSK 2× determinista con semilla `0xc02f1234`. Comprueba pausas, estabilidad, ausencia de salidas sobrantes, `last`, trama vacía y reset en copia/captura/relleno, FFT, producto espectral, permutación, IFFT, `done` y salida detenida. El multiplicador se prueba por separado, incluidos signos, extremos, retención y abortos.
+
+Las aserciones comprueban 80 productos complejos por bloque, 630 ciclos de motor, pulso `done` de un ciclo, **639 ciclos de latencia por muestra sin pausas**, **655 ciclos por bloque completo** y **647+p por parcial**, más las esperas observadas. Los intervalos de entrada sin pausas son 1 ciclo dentro del bloque y 648 entre bloques; el throughput ideal es `8/655` muestras/ciclo. La latencia se mide hasta el primer flanco válido; el receptor puede aceptar más tarde si introduce pausas.
+
+`make full` ejecuta síntesis estructural con Yosys, comprueba exactamente un `$mul` antes del mapeo, ausencia de latches y consistencia del diseño sintetizado. No mide timing ni PPA de Artix-7. A03, los formatos/modelo definitivo A04, los vectores oficiales A05, SQNR y PPA Vivado siguen pendientes; esta evidencia no cierra C01 ni C02.

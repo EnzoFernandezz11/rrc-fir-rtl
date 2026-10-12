@@ -17,4 +17,6 @@ El formato de una entrada del registro es:
 }
 ```
 
-Es un **ejemplo de formato**; esos archivos todavía no existen. `smoke` falla si se registra una variante sin fuentes/testbench reales.
+Es un **ejemplo de formato**; esos archivos temporales todavía no existen. `smoke` falla si se registra una variante sin fuentes/testbench reales.
+
+La variante `frequency_serial` registra siete módulos SystemVerilog de `frequency/`: tres bloques de datos, sus tres controles `*_control.sv` y `frequency_block_roms.sv` para las tablas combinacionales. Incluye su testbench y script Yosys. Su perfil numérico es provisional: ver [C02, formatos y validación](../docs/arquitectura-rtl-frecuencia-serial.md#9-c02--primera-implementación-provisional). Ejecutar `make smoke` y `make full` desde la raíz.
