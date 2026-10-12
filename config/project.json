@@ -30,7 +30,19 @@
       "fft_size": 16,
       "hop_size": 8
     },
-    "fixed_point_format": null,
+    "fixed_point_format": {
+      "status": "proposed",
+      "rounding": "round_half_up",
+      "saturation": "none",
+      "fraction_bits": {
+        "coef": 7,
+        "out": 7,
+        "work": 5,
+        "twiddle": 8,
+        "spectrum": 8
+      },
+      "source": "docs/contratos/senales-y-formatos.md"
+    },
     "rtl_interface": {
       "status": "proposed",
       "handshake": "valid_ready",
@@ -43,8 +55,8 @@
       },
       "output": {
         "signed": true,
-        "width": null,
-        "fraction_bits": null
+        "width": 9,
+        "fraction_bits": 7
       },
       "source": "docs/contratos/interfaz-rtl.md"
     },

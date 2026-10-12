@@ -20,7 +20,19 @@ Cada testbench compara por **índice de muestra válido** con su modelo fijo. La
 
 ## SQNR
 
-El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como aclaración adicional a la consigna vigente. Antes de reportarla, fijar si la referencia es la salida flotante del filtro temporal o una referencia por dominio, la escala aplicada, el tramo de muestras y el tratamiento de I/Q. Una fórmula candidata para revisar es `10·log10(Σ|y_ref|² / Σ|y_fxp−y_ref|²)` sobre muestras válidas alineadas. No registrar un número aislado sin su configuración y vectores.
+El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como aclaración adicional a la consigna vigente. No registrar un número aislado sin su configuración y vectores.
+
+**Definición propuesta (D07, A04):**
+
+| Aspecto | Propuesta |
+|---|---|
+| Referencia | Una sola para ambas ramas: el FIR temporal flotante `fir_time(x, h)` con los coeficientes de E02 sin cuantizar. Las dos ramas implementan el mismo filtro, así que la referencia mide también el error de cuantizar h, H y W. |
+| Fórmula | `SQNR = 10·log10(Σ|y_ref|² / Σ|y_fxp − y_ref|²)`, con `y_fxp` = salida entera / 2^7. I e Q juntas como valor complejo. |
+| Muestras | Todas, alineadas por índice. Sin descarte: ambas ramas arrancan con historial cero, igual que la referencia. |
+| Casos | QPSK 2× con semillas 0–4 y 1024 símbolos cada una (2048 muestras); se reporta la **mínima** entre semillas. |
+| Comando | `python3 -m model.fixed_point`; `tests/test_fixed_point.py` lo comprueba en `make smoke`. |
+
+**Tolerancia entre ramas en punto fijo:** cada RTL coincide **palabra por palabra** con su modelo fijo. Entre ramas, las salidas fijas temporal y de frecuencia difieren como máximo en **2 LSB** por componente (máximo observado con los casos de arriba), porque redondean en lugares distintos.
 
 ## PPA
 
