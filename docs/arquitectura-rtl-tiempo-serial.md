@@ -1,9 +1,9 @@
 # B01 — Arquitectura RTL del filtro temporal serial
 
-**Issue:** [B01 (#11)](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11)
-**Responsable:** @moreyrajulian
-**Revisa:** @andres332271
-**Contratos:** [interfaz RTL](contratos/interfaz-rtl.md) (E03), [señales y formatos](contratos/senales-y-formatos.md) (E02, A04)
+- **Issue:** [B01 (#11)](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11)
+- **Responsable:** @moreyrajulian
+- **Revisa:** @andres332271
+- **Contratos:** [interfaz RTL](contratos/interfaz-rtl.md) (E03), [señales y formatos](contratos/senales-y-formatos.md) (E02, A04)
 
 Este documento fija la arquitectura que B02 lleva a RTL: diagrama de bloques, máquina de estados, recursos y cronograma de ciclos. Es la base funcional contra la que B03/B04 miden la optimización, por eso prioriza la simplicidad sobre el desempeño.
 
