@@ -27,7 +27,7 @@ flowchart LR
 
     subgraph CORE["Núcleo: un bloque a la vez en la versión inicial"]
         FX["FFT16"]
-        ROM["H constante o ROM<br/>16 valores lógicos<br/>C01 propone almacenar H 0 a 8 y conjugar"]
+        ROM["Tabla H constante<br/>16 valores explícitos<br/>lectura directa de H k"]
         MUL["16 productos por bloque<br/>X[k] por H[k]"]
         INV["IFFT16<br/>escala total 1/16"]
         SELECT["Descartar posiciones 0 a 7<br/>conservar 8 a 15"]
@@ -42,6 +42,8 @@ flowchart LR
 El historial leído por una ventana pertenece al bloque anterior; se actualiza después de formar la ventana actual. La fuente espera cuando el núcleo no puede aceptar datos. El generador, el upsampler y el núcleo son módulos distintos; el diagrama expresa responsabilidades, no obliga a ejecutarlas en paralelo ni fija puertos RTL.
 
 La tabla H se calcula fuera del hardware una vez que se fijan los coeficientes. Los 16 productos pueden reutilizar una unidad en la implementación inicial. La paralelización y el pipeline se estudian en C03/C04.
+
+C01 usa un motor serial compartido para FFT e IFFT, guiado por una tabla fija de 32 operaciones con las direcciones de ambos operandos y el índice del twiddle. La misma tabla se recorre para cada transformada y cada bloque; los datos y resultados se calculan durante la ejecución. Las entradas y las reglas de avance se detallan en la [arquitectura serial, §2.4](../arquitectura-rtl-frecuencia-serial.md#24-tabla-fija-de-operaciones-fft16ifft16).
 
 Una trama de S símbolos produce 2S muestras, sin cola final. El último cero del upsampler pertenece a la trama. Un bloque parcial se rellena solo para calcular la transformada y emite únicamente sus p muestras válidas. Las pausas no son muestras cero. El historial se reinicia entre tramas independientes.
 

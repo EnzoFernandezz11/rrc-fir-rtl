@@ -36,7 +36,7 @@ El registro de RTL está vacío mientras no exista una implementación. **Agrega
 
 ## Organización
 
-La [revisión de C01](docs/revision-c01-y-modulos-comunes.md) registra las decisiones de diseño; la [arquitectura RTL serial](docs/arquitectura-rtl-frecuencia-serial.md) describe puertos, bloques y estados para la implementación en frecuencia.
+La [arquitectura RTL serial de C01](docs/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones y justificaciones del diseño en frecuencia, puertos, bloques, estados, presupuesto de ciclos, evidencia y dependencias pendientes para implementar C02.
 
 | Ruta | Contenido |
 |---|---|
