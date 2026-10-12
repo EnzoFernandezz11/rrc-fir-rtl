@@ -61,7 +61,7 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 | [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | @andres332271 | 07/10 | — | PR #32 en revisión. Plan: fin 06/10. |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | — | — | — | — |
 | [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | — | — | — | — |
-| [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | @andres332271 | 12/10 | — | Formatos propuestos, salida Q2.7; SQNR 44,2/43,0 dB. Cierra después de A03 (#40). Plan: fin 12/10. |
+| [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | — | — | — | — |
 | [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | — | — | — | Corte para cerrar B02/C02. |
 | [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | — | — | — | — |
 | [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | — | — | — | — |
