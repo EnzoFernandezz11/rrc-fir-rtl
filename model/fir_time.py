@@ -18,7 +18,10 @@ from model.qpsk_rrc import ROOT, qpsk, rrc_taps, upsample
 
 def fir_time(x: np.ndarray, h: np.ndarray) -> np.ndarray:
     """y[n] = Σ h[k]·x[n−k] para n = 0…len(x)−1, con x[n<0] = 0."""
-    return np.convolve(np.asarray(x, dtype=complex), h)[: len(x)]
+    x = np.asarray(x, dtype=complex)
+    if not len(x):  # np.convolve rechaza entradas vacías; E01 devuelve trama vacía.
+        return x
+    return np.convolve(x, h)[: len(x)]
 
 
 def cases(seed: int = 1, symbols: int = 32) -> dict[str, np.ndarray]:
