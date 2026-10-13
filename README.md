@@ -1,6 +1,6 @@
 # Filtros RRCOS complejos en RTL
 
-Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, una en el dominio del tiempo y otra en frecuencia. La entrada usa símbolos QPSK; se propone mantener sobremuestreo 2× y el RRCOS tiene roll-off de 50 %. El trabajo compara versiones seriales y optimizadas con foco en rendimiento, potencia y área (PPA).
+Proyecto final: dos implementaciones de un filtro complejo de 8 coeficientes, una en el dominio del tiempo y otra en frecuencia. La entrada usa símbolos QPSK y un upsampler 2×, confirmado por Enzo el 7/10/2026 para ambas cadenas; el RRCOS tiene roll-off de 50 %. El trabajo compara versiones seriales y optimizadas con foco en rendimiento, potencia y área (PPA).
 
 ## Estado actual
 
@@ -16,7 +16,7 @@ Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están e
 
 ## Primeros pasos
 
-1. Leer el [contrato técnico](docs/contrato-tecnico.md) y cerrar E00–E03 entre los tres. Registrar allí las respuestas del docente y los supuestos provisionales.
+1. Leer el [contrato técnico](docs/contrato-tecnico.md). E00–E03 tienen sus issues cerradas; revisar allí qué decisiones siguen propuestas y registrar las respuestas del docente.
 2. Seguir el [Gantt](docs/gantt.md) y tomar una tarea del [backlog](docs/backlog.md).
 3. Crear una rama corta por tarea y abrir un PR con la [guía de contribución](CONTRIBUTING.md).
 4. Instalar dependencias con `pip install -r requirements.txt` y ejecutar `make smoke` localmente antes del PR. El comando valida el contrato y ejecuta los testbenches que estén registrados en `config/rtl_targets.json`.
@@ -36,11 +36,13 @@ El registro de RTL está vacío mientras no exista una implementación. **Agrega
 
 ## Organización
 
+La [arquitectura RTL serial de C01](docs/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones y justificaciones del diseño en frecuencia, puertos, bloques, estados, presupuesto de ciclos, evidencia y dependencias pendientes para implementar C02.
+
 | Ruta | Contenido |
 |---|---|
 | `config/` | Parámetros confirmados y registro de variantes para CI. |
 | `model/` | Generador QPSK y modelos flotante/fijo. |
-| `rtl/time/`, `rtl/frequency/`, `rtl/common/` | Implementaciones y bloques compartidos. |
+| `rtl/time/`, `rtl/frequency/` | Núcleos independientes; los testbenches inyectan vectores Python. |
 | `tb/` | Testbenches y lectura de vectores. |
 | `tests/` | Pruebas Python. |
 | `vectors/` | Vectores pequeños y reproducibles. |

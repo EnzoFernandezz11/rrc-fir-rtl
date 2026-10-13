@@ -70,7 +70,7 @@ class FrequencyOverlapContractTest(unittest.TestCase):
         for got, want in zip(actual, expected):
             self.assertLess(abs(got - want), 1e-10)
 
-    def test_reusable_source_and_interpolator(self):
+    def test_reusable_source_and_upsampler(self):
         symbols = generate_qpsk(64, seed=17)
         self.assertEqual(symbols, generate_qpsk(64, seed=17))
         self.assertEqual(set(symbols), {1+1j, 1-1j, -1+1j, -1-1j})

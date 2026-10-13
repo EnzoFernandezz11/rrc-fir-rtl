@@ -33,13 +33,15 @@ La referencia temporal es `y[n] = Σ(k=0..7) h[k]·x[n−k]`. La propuesta D01 i
 
 Estos mínimos complementan el texto de la consigna y se registran con la aclaración de Enzo como fuente. La frecuencia corresponde al reloj; el throughput se mide por separado según los ciclos por muestra y las pausas.
 
-### Propuestas y planificación
+### Decisión de upsampling y planificación
 
-Se mantiene **sobremuestreo 2× como propuesta para confirmar con el docente**. La fecha planificada 30/10/2026 es una meta heredada del proyecto, ausente del texto vigente. La tabla exacta de coeficientes sigue en E02. En `config/project.json`, `confirmed` contiene los parámetros de la consigna y los mínimos adicionales confirmados por Enzo (`minimum_sqnr_db` y `minimum_clock_mhz`); `proposals` contiene el sobremuestreo. Una propuesta no equivale a aprobación docente o del equipo.
+Enzo confirmó el **upsampling 2× el 7/10/2026** como decisión de diseño para ambas cadenas: un **upsampler** separado inserta un cero complejo después de cada símbolo, `x[2m]=a[m]`, `x[2m+1]=0`. El antecedente indicado por Enzo es el upsampling utilizado a la entrada en el curso de Óptica. La consigna no fija el factor; esta elección tiene como fuente la confirmación de Enzo y deja de ser una propuesta pendiente de consulta. La revisión conjunta del contrato sigue pendiente, sin atribuir aprobación docente ni del equipo a esta confirmación.
+
+En `config/project.json`, `confirmed` contiene los parámetros de la consigna y los mínimos adicionales confirmados por Enzo; `decisions.samples_per_symbol` registra valor 2, estado `confirmed_by_enzo`, fecha y fuente. La fecha planificada 30/10/2026 es una meta heredada del proyecto, ausente del texto vigente. La tabla exacta de coeficientes sigue en E02: elegir 2× no determina por sí solo fase ni normalización.
 
 ## 2. Registro de decisiones de etapa 0
 
-Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado por consigna**, **confirmado por docente**, **acordado por equipo**. Una decisión provisional puede servir para experimentar, pero no se presenta como requisito confirmado.
+Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado por consigna**, **confirmado por Enzo**, **confirmado por docente**, **acordado por equipo**. Una decisión provisional puede servir para experimentar, pero no se presenta como requisito confirmado.
 
 | ID | Tema y pregunta concreta | Estado | Responsable | Evidencia o respuesta |
 |---|---|---|---|---|
@@ -74,8 +76,13 @@ Cada contrato pasa por **Abierto → Propuesto → Aprobado por los tres**, y no
 | 2026-10-07 | D01 | Actualizar correspondencia FIR temporal/frecuencia y registrar propuesta FFT16. | Consigna vigente y corrección del review. | Ambas ramas comparten taps, entradas e índices; A04 fija tolerancia de punto fijo. | #28 |
 | 2026-10-07 | D05, D07 | Precisar mínimos de SQNR y reloj. | Aclaración de Enzo: al menos 40 dB, 10 MHz en lentas y 100 MHz en rápidas. | A04 y RTL/PPA deben demostrar esos mínimos con las condiciones de medición acordadas. | #28 |
 | 2026-10-07 | D02 | ¿Se mantiene sobremuestreo 2×? | Propuesta heredada; consulta docente por realizar. | Conservar 2× provisionalmente en modelos y ejemplos; fijar una tabla común en E02. | #28 |
-| 2026-10-07 | D02, D03 | Propuesta de coeficientes, normalización, mapeo QPSK y entrada I/Q. | E02. | Modelos A02/A03 y RTL B/C usan `decisions.coefficients`. | #33 |
+| 2026-10-07 | D02, D03 | Enzo confirma upsampling 2× y el nombre upsampler. | Confirmación en conversación; antecedente del curso de Óptica. Sustituye la propuesta de la fila anterior. | Upsampler separado en ambas cadenas; S símbolos → 2S muestras. Configuración, modelos, pruebas y documentos usan la misma decisión y terminología. | — |
+| 2026-10-07 | D02, D03 | Propuesta de coeficientes, normalización, mapeo QPSK y entrada I/Q. | E02. | Modelos A02/A03 y RTL B/C usan `decisions.coefficients`; la revisión conjunta sigue pendiente. | #33 |
 | 2026-10-09 | D03, D05, D06 | Propuesta de interfaz RTL, plataforma PPA y método de potencia. | E03; la herramienta es Vivado porque @moreyrajulian la tiene disponible. | B01/C01 cumplen la interfaz; reemplaza el `rst_n` asíncrono elegido localmente en C01. Las cifras PPA salen de Vivado; la CI sigue con Yosys. | — |
 | 2026-10-12 | D04, D07 | Propuesta de formatos de punto fijo, definición de SQNR y tolerancia entre ramas. | A04: barrido y cotas de peor caso. | `config/project.json` registra `fixed_point_format` y la salida de 9 bits; A05 exporta vectores con estos modelos; B02/C02 deben coincidir palabra por palabra con su modelo fijo. | — |
 
 E00–E03 se cierran cuando las decisiones relevantes tienen respuesta, fuente y revisión de los tres. Las nuevas decisiones se agregan aquí antes de incorporarlas a `config/project.json`.
+
+## 5. Reparto RTL común
+
+Enzo confirmó el 7/10/2026 que Julián aceptó inicialmente el reparto de generación y entrada/salida RTL. El [cierre posterior de R01 / #31](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/31) reemplazó esos bloques comunes por vectores Python inyectados directamente en cada núcleo. E03 propuso `valid/ready`, `last` y `rst` síncrono activo alto; los anchos de salida y formatos internos siguen pendientes de A04. Los núcleos y sus memorias/operadores se diseñan por separado.

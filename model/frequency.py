@@ -30,7 +30,7 @@ def transform(values, inverse=False):
 def frequency_filter(signal, taps):
     """Filtra una trama completa con ocho taps en orden causal h[0]…h[7].
 
-    signal contiene muestras complejas (interpolar antes si se parte de símbolos).
+    signal contiene muestras complejas (aplicar upsampling antes si se parte de símbolos).
     Devuelve len(signal) muestras: historial inicial cero y sin cola final.
     Cada llamada es una trama independiente; no admite fragmentos de un flujo
     continuo conservando estado. Es un modelo flotante sin latencia de reloj.

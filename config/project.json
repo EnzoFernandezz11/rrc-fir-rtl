@@ -81,13 +81,13 @@
         "energy_per_sample_j"
       ],
       "source": "docs/contratos/verificacion-y-ppa.md#ppa"
-    }
-  },
-  "proposals": {
+    },
     "samples_per_symbol": {
       "value": 2,
-      "status": "proposed",
-      "confirmation": "docente"
+      "status": "confirmed_by_enzo",
+      "confirmed_on": "2026-10-07",
+      "source": "docs/contrato-tecnico.md"
     }
-  }
+  },
+  "proposals": {}
 }

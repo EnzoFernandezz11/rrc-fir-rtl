@@ -18,9 +18,7 @@ PROJECT = json.loads((ROOT / "config/project.json").read_text(encoding="utf-8"))
 CONFIRMED = PROJECT["confirmed"]
 TAPS = CONFIRMED["coefficient_count"]
 ROLLOFF = CONFIRMED["rolloff"]
-SPS = CONFIRMED.get("samples_per_symbol", PROJECT.get("proposals", {}).get("samples_per_symbol", {}).get("value"))
-if SPS is None:
-    raise KeyError("samples_per_symbol")
+SPS = PROJECT["decisions"]["samples_per_symbol"]["value"]
 
 
 def qpsk(count: int, seed: int) -> np.ndarray:

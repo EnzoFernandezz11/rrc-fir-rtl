@@ -20,6 +20,7 @@ EXPECTED_CONFIRMED = {
     "minimum_clock_mhz": {"fast": 100, "slow": 10},
 }
 REQUIRED_DECISIONS = {
+    "samples_per_symbol",
     "coefficients",
     "coefficient_normalization",
     "frequency_method",
@@ -53,6 +54,14 @@ def validate_project(data: dict[str, Any]) -> None:
     decisions = data.get("decisions")
     if not isinstance(decisions, dict) or not REQUIRED_DECISIONS <= decisions.keys():
         raise ValueError("config/project.json: faltan decisiones de etapa 0")
+    sampling = decisions["samples_per_symbol"]
+    if (
+        not isinstance(sampling, dict)
+        or type(sampling.get("value")) is not int
+        or sampling["value"] != 2
+        or sampling.get("status") != "confirmed_by_enzo"
+    ):
+        raise ValueError("decisions.samples_per_symbol: registrar upsampling 2× confirmado por Enzo")
     coefficients = decisions["coefficients"]
     if coefficients is not None:
         if not isinstance(coefficients, list) or len(coefficients) != 8:
