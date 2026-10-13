@@ -7,7 +7,6 @@ module complex_mul_serial_control (
     output logic       load_operands,
     output logic       product_en,
     output logic [1:0] product_index,
-    output logic       combine_result,
     output logic       sel_a_q,
     output logic       sel_b_q,
     output logic       done
@@ -19,7 +18,6 @@ module complex_mul_serial_control (
         MUL_QQ,
         MUL_IQ,
         MUL_QI,
-        COMBINE,
         DONE
     } state_t;
 
@@ -29,7 +27,6 @@ module complex_mul_serial_control (
         load_operands = 1'b0;
         product_en = 1'b0;
         product_index = 2'd0;
-        combine_result = 1'b0;
         sel_a_q = 1'b0;
         sel_b_q = 1'b0;
 
@@ -54,7 +51,6 @@ module complex_mul_serial_control (
                 product_index = 2'd3;
                 sel_a_q = 1'b1;
             end
-            COMBINE: combine_result = 1'b1;
             default: begin end
         endcase
     end
@@ -70,8 +66,7 @@ module complex_mul_serial_control (
                 MUL_II: state <= MUL_QQ;
                 MUL_QQ: state <= MUL_IQ;
                 MUL_IQ: state <= MUL_QI;
-                MUL_QI: state <= COMBINE;
-                COMBINE: begin
+                MUL_QI: begin
                     state <= DONE;
                     done <= 1'b1;
                 end

@@ -20,6 +20,14 @@ module tb_fir_frequency_serial;
         .p_i(p_i), .p_q(p_q), .done(mul_done)
     );
 
+    logic wide_mul_done;
+    logic signed [11:0] wide_p_i, wide_p_q;
+    complex_mul_serial #(.W_A(4), .W_B(4), .W_P(12)) wide_mul (
+        .clk(clk), .rst(mul_rst), .start(mul_start),
+        .a_i(a_i), .a_q(a_q), .b_i(b_i), .b_q(b_q),
+        .p_i(wide_p_i), .p_q(wide_p_q), .done(wide_mul_done)
+    );
+
     integer xi [0:127], xq [0:127];
     longint signed yi [0:127], yq [0:127];
     longint signed wr [0:15], wi [0:15];
@@ -53,14 +61,14 @@ module tb_fir_frequency_serial;
             end
             if (dut.u_engine.mul_start) products = products + 1;
             if (dut.engine_done) begin
-                if (previous_done || products != 80 || $time/10-engine_start_cycle != 630)
-                    $fatal(1, "Motor: pulso done, 80 productos o 630 ciclos incorrectos");
+                if (previous_done || products != 80 || $time/10-engine_start_cycle != 550)
+                    $fatal(1, "Motor: pulso done, 80 productos o 550 ciclos incorrectos");
             end
             previous_done = dut.engine_done;
             if (out_valid && out_ready) begin
                 block_outputs = block_outputs + 1;
                 if (block_outputs == block_inputs) begin
-                    if ($time/10-block_start+1 != 647+block_inputs+block_waits)
+                    if ($time/10-block_start+1 != 567+block_inputs+block_waits)
                         $fatal(1,"Presupuesto de bloque incorrecto");
                     measured_blocks = measured_blocks + 1;
                 end
@@ -231,14 +239,14 @@ module tb_fir_frequency_serial;
                 @(posedge clk);
                 if (in_valid && in_ready) begin
                     accepted_at[sent] = $time / 10;
-                    if (!pauses && sent > 0 && accepted_at[sent]-accepted_at[sent-1] != ((sent%8 == 0) ? 648 : 1))
+                    if (!pauses && sent > 0 && accepted_at[sent]-accepted_at[sent-1] != ((sent%8 == 0) ? 568 : 1))
                         $fatal(1,"Intervalo entre aceptaciones incorrecto");
                     if (sent == 0) first_input = $time / 10;
                     sent = sent + 1; pending = 0;
                 end
                 if (out_valid && first_output == 0) first_output = $time / 10;
                 if (out_valid && out_ready) begin
-                    if (!pauses && $time/10-accepted_at[received] != 639)
+                    if (!pauses && $time/10-accepted_at[received] != 559)
                         $fatal(1,"Latencia por muestra incorrecta");
                     if ($signed(out_i) !== yi[received] || $signed(out_q) !== yq[received])
                         $fatal(1, "Trama %0d muestra %0d: esperado (%0d,%0d), obtenido (%0d,%0d)",
@@ -251,7 +259,7 @@ module tb_fir_frequency_serial;
                 #1;
             end
             if (sent != length) $fatal(1, "Conteo de entradas incorrecto");
-            if (!pauses && first_output-first_input != 639) $fatal(1,"Latencia ideal distinta de 639");
+            if (!pauses && first_output-first_input != 559) $fatal(1,"Latencia ideal distinta de 559");
             @(negedge clk); in_valid = 0; in_last = 0; out_ready = 1;
             frames = frames + 1;
             $display("FRAME n=%0d pauses=%0d cycles=%0d first_valid_latency=%0d", length, pauses,
@@ -266,13 +274,21 @@ module tb_fir_frequency_serial;
             expected_r = ar*br-ai*bi; expected_i = ar*bi+ai*br;
             @(negedge clk); a_i = ar; a_q = ai; b_i = br; b_q = bi; mul_start = 1;
             @(posedge clk); #1;
-            if (mul_done) $fatal(1, "done prematuro");
-            @(negedge clk); mul_start = 0;
-            repeat (4) begin @(posedge clk); #1; if (mul_done) $fatal(1, "done prematuro"); end
+            if (mul_done || wide_mul_done) $fatal(1, "done prematuro");
+            // Los operandos quedan capturados; las entradas pueden cambiar.
+            @(negedge clk); mul_start = 0; a_i = 0; a_q = 0; b_i = 0; b_q = 0;
+            repeat (3) begin
+                @(posedge clk); #1;
+                if (mul_done || wide_mul_done) $fatal(1, "done prematuro");
+            end
             @(posedge clk); #1;
-            if (!mul_done || p_i != expected_r || p_q != expected_i) $fatal(1, "Producto complejo incorrecto");
+            if (!mul_done || !wide_mul_done || p_i != expected_r || p_q != expected_i ||
+                wide_p_i != expected_r || wide_p_q != expected_i)
+                $fatal(1, "Producto complejo incorrecto (%0d,%0d)*(%0d,%0d)", ar, ai, br, bi);
             @(posedge clk); #1;
-            if (mul_done || p_i != expected_r || p_q != expected_i) $fatal(1, "Pulso/retencion incorrecto");
+            if (mul_done || wide_mul_done || p_i != expected_r || p_q != expected_i ||
+                wide_p_i != expected_r || wide_p_q != expected_i)
+                $fatal(1, "Pulso/retencion incorrecto");
         end
     endtask
 
@@ -285,6 +301,8 @@ module tb_fir_frequency_serial;
     endtask
 
     integer n, k, length, pos, stage;
+    integer ar_index, ai_index, br_index, bi_index;
+    integer mul_values [0:3];
     logic [31:0] random_state = 32'hc02f1234;
     real angle, sum_r, sum_i;
     initial begin
@@ -316,16 +334,29 @@ module tb_fir_frequency_serial;
         check_mul(7,-8,-8,7);
         check_mul(7,7,7,7);
         check_mul(-3,5,6,-2);
+        mul_values[0]=-8; mul_values[1]=-1; mul_values[2]=0; mul_values[3]=7;
+        for (ar_index=0; ar_index<4; ar_index=ar_index+1)
+            for (ai_index=0; ai_index<4; ai_index=ai_index+1)
+                for (br_index=0; br_index<4; br_index=br_index+1)
+                    for (bi_index=0; bi_index<4; bi_index=bi_index+1)
+                        check_mul(mul_values[ar_index], mul_values[ai_index],
+                                  mul_values[br_index], mul_values[bi_index]);
         for (stage=0; stage<6; stage=stage+1) begin
-            @(negedge clk); mul_start=1;
+            @(negedge clk); mul_start=1; a_i=-8; a_q=7; b_i=-1; b_q=-8;
             @(posedge clk); #1;
             @(negedge clk); mul_start=0;
             repeat (stage) @(negedge clk);
             mul_rst=1;
             @(posedge clk); #1;
-            if (mul_done || p_i || p_q) $fatal(1, "Reset del multiplicador");
+            if (mul_done || wide_mul_done || p_i || p_q || wide_p_i || wide_p_q)
+                $fatal(1, "Reset del multiplicador");
             @(negedge clk); mul_rst=0;
-            repeat (7) begin @(posedge clk); #1; if(mul_done) $fatal(1,"done luego de abortar"); end
+            repeat (7) begin
+                @(posedge clk); #1;
+                if (mul_done || wide_mul_done || p_i || p_q || wide_p_i || wide_p_q)
+                    $fatal(1,"Resultado luego de abortar");
+            end
+            check_mul(-3,5,6,-2);
         end
         reset_filter();
         repeat (12) begin @(posedge clk); if(out_valid) $fatal(1,"Salida en trama vacia"); end
@@ -380,7 +411,7 @@ module tb_fir_frequency_serial;
             run_frame(8,0);
         end
         repeat(12) begin @(posedge clk); if(out_valid) $fatal(1,"Salida extra"); end
-        $display("PASS frequency_serial: %0d tramas, %0d bloques; L=639, bloque=655, intervalo=648; perfil provisional",frames,measured_blocks);
+        $display("PASS frequency_serial: %0d tramas, %0d bloques; L=559, bloque=575, intervalo=568; perfil provisional",frames,measured_blocks);
         $finish;
     end
 endmodule

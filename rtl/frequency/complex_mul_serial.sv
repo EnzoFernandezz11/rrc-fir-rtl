@@ -29,7 +29,6 @@ module complex_mul_serial #(
     logic load_operands;
     logic product_en;
     logic [1:0] product_index;
-    logic combine_result;
     logic sel_a_q, sel_b_q;
 
     logic signed [W_A-1:0] op_a_i, op_a_q;
@@ -37,8 +36,7 @@ module complex_mul_serial #(
     logic signed [W_A-1:0] mul_a;
     logic signed [W_B-1:0] mul_b;
     logic signed [W_REAL-1:0] mul_product;
-    logic signed [W_REAL-1:0] prod_ii, prod_qq, prod_iq, prod_qi;
-    logic signed [W_P-1:0] prod_ii_ext, prod_qq_ext, prod_iq_ext, prod_qi_ext;
+    logic signed [W_P-1:0] mul_product_ext;
 
     complex_mul_serial_control u_control (
         .clk,
@@ -47,7 +45,6 @@ module complex_mul_serial #(
         .load_operands,
         .product_en,
         .product_index,
-        .combine_result,
         .sel_a_q,
         .sel_b_q,
         .done
@@ -57,10 +54,7 @@ module complex_mul_serial #(
     assign mul_b = sel_b_q ? op_b_q : op_b_i;
     assign mul_product = mul_a * mul_b;
 
-    assign prod_ii_ext = {{(W_P-W_REAL){prod_ii[W_REAL-1]}}, prod_ii};
-    assign prod_qq_ext = {{(W_P-W_REAL){prod_qq[W_REAL-1]}}, prod_qq};
-    assign prod_iq_ext = {{(W_P-W_REAL){prod_iq[W_REAL-1]}}, prod_iq};
-    assign prod_qi_ext = {{(W_P-W_REAL){prod_qi[W_REAL-1]}}, prod_qi};
+    assign mul_product_ext = {{(W_P-W_REAL){mul_product[W_REAL-1]}}, mul_product};
 
     always_ff @(posedge clk) begin
         if (rst) begin
@@ -68,10 +62,6 @@ module complex_mul_serial #(
             op_a_q  <= '0;
             op_b_i  <= '0;
             op_b_q  <= '0;
-            prod_ii <= '0;
-            prod_qq <= '0;
-            prod_iq <= '0;
-            prod_qi <= '0;
             p_i     <= '0;
             p_q     <= '0;
         end else begin
@@ -84,16 +74,11 @@ module complex_mul_serial #(
 
             if (product_en) begin
                 case (product_index)
-                    2'd0: prod_ii <= mul_product;
-                    2'd1: prod_qq <= mul_product;
-                    2'd2: prod_iq <= mul_product;
-                    2'd3: prod_qi <= mul_product;
+                    2'd0: p_i <= mul_product_ext;
+                    2'd1: p_i <= p_i - mul_product_ext;
+                    2'd2: p_q <= mul_product_ext;
+                    2'd3: p_q <= p_q + mul_product_ext;
                 endcase
-            end
-
-            if (combine_result) begin
-                p_i <= prod_ii_ext - prod_qq_ext;
-                p_q <= prod_iq_ext + prod_qi_ext;
             end
         end
     end
