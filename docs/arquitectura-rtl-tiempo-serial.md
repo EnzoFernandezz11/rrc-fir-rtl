@@ -56,7 +56,7 @@ flowchart LR
 
 ## 3. Formatos
 
-Los anchos son los propuestos por A04 en [#41](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/41), todavía en revisión. B02 los declara como parámetros (`W_COEF`, `W_ACC`) para absorber un cambio de A04 sin rediseñar.
+Los anchos son los de A04, integrado en [#41](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/41) con la decisión D04 en estado «propuesto» ([formatos de punto fijo](contratos/senales-y-formatos.md#formatos-de-punto-fijo-a04)). B02 los declara como parámetros (`W_COEF`, `W_ACC`) para absorber un cambio de A04 sin rediseñar.
 
 | Nodo | Formato | Bits | Rango | Corte |
 |---|---|---:|---|---|
@@ -163,7 +163,7 @@ Valores en enteros Q·.7 (dividir por 128).
 | Tema | Estado | Consecuencia |
 |---|---|---|
 | E03 (D03, D05, D06) | Integrada, decisiones «propuesto» | El diseño usa la interfaz y el flujo PPA tal como están. |
-| A04 (D04) | [#41](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/41) en revisión | Si cambian los bits fraccionarios, cambian `W_COEF`/`W_ACC` y la tabla `h_q`, no la arquitectura. |
+| A04 (D04) | Integrada en [#41](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/41), decisión «propuesto» | Si cambian los bits fraccionarios, cambian `W_COEF`/`W_ACC` y la tabla `h_q`, no la arquitectura. |
 | A05 | En revisión | Necesario para cerrar B02 con vector matching. |
 
 Quedan fuera de B01 el RTL y el testbench (B02), las cifras PPA (B02/A07) y la elección de la optimización (B03). Esta base no aprovecha la simetría `h[k] = h[7−k]` ni los ceros del 2×, ni solapa la entrega de `y[n]` con la aceptación de `x[n+1]`: son candidatas para B03.
