@@ -1,5 +1,7 @@
 # Diagrama general del filtro en frecuencia
 
+Los [diagramas por módulo RTL](README.md) detallan el núcleo serial, sus controles, el motor, las ROMs y el multiplicador acumulador actuales.
+
 La [propuesta de E01](../contratos/frecuencia.md) implementa el FIR RRC8, beta 0,5, mediante FFT16 y 50 % de superposición según la [consigna vigente](../consigna-actualizada.md). Enzo confirmó el upsampler 2× el 7/10/2026 como decisión de diseño para ambas cadenas.
 
 ```mermaid

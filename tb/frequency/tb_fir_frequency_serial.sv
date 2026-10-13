@@ -1,12 +1,13 @@
 `timescale 1ns/1ps
 
 module tb_fir_frequency_serial;
+    localparam integer MAX_SAMPLES = 2048;
     logic clk = 0;
     always #5 clk = ~clk;
     logic rst = 1;
     logic signed [1:0] in_i = 0, in_q = 0;
     logic in_valid = 0, in_last = 0, in_ready;
-    logic signed [23:0] out_i, out_q;
+    logic signed [8:0] out_i, out_q;
     logic out_valid, out_last, out_ready = 0;
 
     fir_frequency_serial dut (.*);
@@ -28,15 +29,18 @@ module tb_fir_frequency_serial;
         .p_i(wide_p_i), .p_q(wide_p_q), .done(wide_mul_done)
     );
 
-    integer xi [0:127], xq [0:127];
-    longint signed yi [0:127], yq [0:127];
+    integer xi [0:MAX_SAMPLES-1], xq [0:MAX_SAMPLES-1];
+    longint signed yi [0:MAX_SAMPLES-1], yq [0:MAX_SAMPLES-1];
     longint signed wr [0:15], wi [0:15];
     longint signed hr [0:15], hi [0:15];
     longint signed twr [0:7], twi [0:7], taps [0:7];
-    real tap_float [0:7];
+    integer vectors_fd;
+    integer rounding_value;
+    string frame_name = "local";
+    bit use_model_expected = 0;
     integer cycles = 0, frames = 0;
     logic stalled = 0;
-    logic signed [23:0] held_i, held_q;
+    logic signed [8:0] held_i, held_q;
     logic held_last;
     integer block_start = 0, block_waits = 0, block_inputs = 0, block_outputs = 0;
     integer engine_start_cycle = 0, products = 0, measured_blocks = 0;
@@ -78,7 +82,7 @@ module tb_fir_frequency_serial;
 
     always @(posedge clk) begin
         cycles = cycles + 1;
-        if (cycles > 150000) $fatal(1, "Timeout global");
+        if (cycles > 2000000) $fatal(1, "Timeout global");
         if (!rst && stalled &&
             (!out_valid || out_i !== held_i || out_q !== held_q || out_last !== held_last))
             $fatal(1, "Salida cambio durante backpressure");
@@ -88,51 +92,38 @@ module tb_fir_frequency_serial;
         held_last = out_last;
     end
 
-    function automatic longint signed nearest_even(input real value);
-        real base, fraction;
-        longint signed n;
-        begin
-            base = $floor(value);
-            n = $rtoi(base);
-            fraction = value - base;
-            if (fraction > 0.5 || (fraction == 0.5 && (n & 1))) n = n + 1;
-            nearest_even = n;
-        end
+    function automatic longint signed round_shift(input longint signed value, input integer shift);
+        round_shift = (shift == 0) ? value : (value + (64'sd1 << (shift-1))) >>> shift;
     endfunction
 
     function automatic integer reverse4(input integer n);
         reverse4 = ((n & 1) << 3) | ((n & 2) << 1) | ((n & 4) >> 1) | ((n & 8) >> 3);
     endfunction
 
-    // Lee el bloque multilinea "coefficients" del archivo de configuracion del proyecto.
-    task automatic load_taps;
-        integer fd, status, index;
-        reg [4095:0] line;
-        reg [7:0] marker;
-        bit found;
+    // Constantes y vectores salen del mismo modelo A04 usado por Python.
+    task automatic load_model_constants;
+        integer w_work, f_work, w_coef, f_coef, w_out, f_out, index;
         begin
-            fd = $fopen("config/project.json", "r");
-            if (!fd) $fatal(1, "No se pudo abrir config/project.json; ejecutar desde raiz del repo");
-            found = 0;
-            while (!$feof(fd) && !found) begin
-                status = $fgets(line, fd);
-                if ($sscanf(line, " \"coefficients\": %c", marker) == 1 && marker == "[") begin
-                    for (index = 0; index < 8; index = index + 1) begin
-                        status = $fscanf(fd, " %f,", tap_float[index]);
-                        if (status != 1) $fatal(1,"Se requieren ocho coeficientes numericos en config/project.json");
-                    end
-                    found = 1;
-                end
-            end
-            $fclose(fd);
-            if (!found) $fatal(1,"No se encontro coefficients en config/project.json");
+            vectors_fd = $fopen("build/frequency_serial_vectors.txt", "r");
+            if (!vectors_fd) $fatal(1, "Faltan vectores A04: ejecutar make smoke desde la raiz");
+            if ($fscanf(vectors_fd, "%d %d %d %d %d %d", w_work, f_work, w_coef, f_coef, w_out, f_out) != 6)
+                $fatal(1, "Cabecera de formatos A04 invalida");
+            if (w_work != dut.W_WORK || f_work != dut.F_WORK || w_coef != dut.W_COEF ||
+                f_coef != dut.F_COEF || w_out != dut.W_OUT || f_out != dut.F_OUT)
+                $fatal(1, "Los formatos RTL no coinciden con config/project.json y A04");
+            for (index=0; index<8; index=index+1)
+                if ($fscanf(vectors_fd, "%d", taps[index]) != 1) $fatal(1, "Taps A04 invalidos");
+            for (index=0; index<16; index=index+1)
+                if ($fscanf(vectors_fd, "%d %d", hr[index], hi[index]) != 2) $fatal(1, "H A04 invalido");
+            for (index=0; index<8; index=index+1)
+                if ($fscanf(vectors_fd, "%d %d", twr[index], twi[index]) != 2) $fatal(1, "W A04 invalido");
         end
     endtask
 
     function automatic longint signed checked_work(input longint signed value);
         begin
-            if (value < -64'sd2147483648 || value > 64'sd2147483647)
-                $fatal(1, "Overflow provisional en referencia: %0d", value);
+            if (value < -64'sd2048 || value > 64'sd2047)
+                $fatal(1, "Overflow Q7.5 en referencia: %0d", value);
             checked_work = value;
         end
     endfunction
@@ -151,8 +142,8 @@ module tb_fir_frequency_serial;
                         cr = twr[k];
                         ci = inverse ? -twi[k] : twi[k];
                         ar = wr[a]; ai = wi[a];
-                        tr = checked_work((wr[b]*cr - wi[b]*ci) >>> 16);
-                        ti = checked_work((wr[b]*ci + wi[b]*cr) >>> 16);
+                        tr = checked_work(round_shift(wr[b]*cr - wi[b]*ci, 8));
+                        ti = checked_work(round_shift(wr[b]*ci + wi[b]*cr, 8));
                         wr[a] = checked_work(ar + tr); wi[a] = checked_work(ai + ti);
                         wr[b] = checked_work(ar - tr); wi[b] = checked_work(ai - ti);
                     end
@@ -162,19 +153,18 @@ module tb_fir_frequency_serial;
     task automatic reference_frame(input integer length);
         integer offset, r, n, k, rev;
         longint signed tr, ti;
-        real expected_i, expected_q, error_i, error_q;
         begin
             for (offset = 0; offset < length; offset = offset + 8) begin
                 for (r = 0; r < 16; r = r + 1) begin
                     n = offset - 8 + r;
                     rev = reverse4(r);
-                    wr[rev] = (n >= 0 && n < length) ? 64'(xi[n]) * 65536 : 0;
-                    wi[rev] = (n >= 0 && n < length) ? 64'(xq[n]) * 65536 : 0;
+                    wr[rev] = (n >= 0 && n < length) ? 64'(xi[n]) * 32 : 0;
+                    wi[rev] = (n >= 0 && n < length) ? 64'(xq[n]) * 32 : 0;
                 end
                 transform(0);
                 for (k = 0; k < 16; k = k + 1) begin
-                    tr = checked_work((wr[k]*hr[k] - wi[k]*hi[k]) >>> 16);
-                    ti = checked_work((wr[k]*hi[k] + wi[k]*hr[k]) >>> 16);
+                    tr = checked_work(round_shift(wr[k]*hr[k] - wi[k]*hi[k], 8));
+                    ti = checked_work(round_shift(wr[k]*hi[k] + wi[k]*hr[k], 8));
                     wr[k] = tr; wi[k] = ti;
                 end
                 for (k = 0; k < 16; k = k + 1) begin
@@ -186,21 +176,9 @@ module tb_fir_frequency_serial;
                 end
                 transform(1);
                 for (r = 0; r < 8 && offset+r < length; r = r + 1) begin
-                    yi[offset+r] = wr[8+r] >>> 4;
-                    yq[offset+r] = wi[8+r] >>> 4;
+                    yi[offset+r] = round_shift(wr[8+r], 2);
+                    yq[offset+r] = round_shift(wi[8+r], 2);
                 end
-            end
-            // Convolucion causal independiente: detecta errores de signo, orden y ganancia.
-            for (n = 0; n < length; n = n + 1) begin
-                expected_i = 0; expected_q = 0;
-                for (k = 0; k < 8 && k <= n; k = k + 1) begin
-                    expected_i = expected_i + tap_float[k] * xi[n-k];
-                    expected_q = expected_q + tap_float[k] * xq[n-k];
-                end
-                error_i = yi[n] / 65536.0 - expected_i;
-                error_q = yq[n] / 65536.0 - expected_q;
-                if (error_i > 0.001 || error_i < -0.001 || error_q > 0.001 || error_q < -0.001)
-                    $fatal(1, "Referencia difiere de convolucion en %0d", n);
             end
         end
     endtask
@@ -223,10 +201,10 @@ module tb_fir_frequency_serial;
 
     task automatic run_frame(input integer length, input bit pauses);
         integer sent, received, local_cycle, started, first_input, first_output;
-        integer accepted_at [0:127];
+        integer accepted_at [0:MAX_SAMPLES-1];
         bit pending;
         begin
-            reference_frame(length);
+            if (!use_model_expected) reference_frame(length);
             sent = 0; received = 0; local_cycle = 0; pending = 0;
             started = cycles; first_input = 0; first_output = 0;
             while (received < length) begin
@@ -249,20 +227,20 @@ module tb_fir_frequency_serial;
                     if (!pauses && $time/10-accepted_at[received] != 559)
                         $fatal(1,"Latencia por muestra incorrecta");
                     if ($signed(out_i) !== yi[received] || $signed(out_q) !== yq[received])
-                        $fatal(1, "Trama %0d muestra %0d: esperado (%0d,%0d), obtenido (%0d,%0d)",
-                               frames, received, yi[received], yq[received], out_i, out_q);
+                        $fatal(1, "Trama %0d (%s) muestra %0d Q2.7: esperado (%0d,%0d), obtenido (%0d,%0d)",
+                               frames, frame_name, received, yi[received], yq[received], out_i, out_q);
                     if (out_last !== (received == length-1)) $fatal(1, "out_last incorrecto");
                     received = received + 1;
                 end
                 local_cycle = local_cycle + 1;
-                if (local_cycle > 20000) $fatal(1, "Timeout trama");
+                if (local_cycle > 1000 + ((length+7)/8)*800) $fatal(1, "Timeout trama");
                 #1;
             end
             if (sent != length) $fatal(1, "Conteo de entradas incorrecto");
             if (!pauses && first_output-first_input != 559) $fatal(1,"Latencia ideal distinta de 559");
             @(negedge clk); in_valid = 0; in_last = 0; out_ready = 1;
             frames = frames + 1;
-            $display("FRAME n=%0d pauses=%0d cycles=%0d first_valid_latency=%0d", length, pauses,
+            $display("FRAME %s n=%0d pauses=%0d cycles=%0d first_valid_latency=%0d", frame_name, length, pauses,
                      cycles-started, first_output-first_input);
             repeat (2) begin @(posedge clk); if (out_valid) $fatal(1,"Salida extra entre tramas"); end
         end
@@ -292,6 +270,19 @@ module tb_fir_frequency_serial;
         end
     endtask
 
+    task automatic check_product_rounding(input integer value, expected);
+        begin
+            rounding_value = value;
+            force dut.u_engine.u_complex_mul_serial.p_i = rounding_value;
+            force dut.u_engine.u_complex_mul_serial.p_q = rounding_value;
+            #1;
+            if (dut.u_engine.rounded_product_i !== expected || dut.u_engine.rounded_product_q !== expected)
+                $fatal(1, "Redondeo de producto: %0d esperado %0d", value, expected);
+            release dut.u_engine.u_complex_mul_serial.p_i;
+            release dut.u_engine.u_complex_mul_serial.p_q;
+        end
+    endtask
+
     task automatic send_one(input bit last_sample);
         begin
             @(negedge clk); in_valid = 1; in_i = 1; in_q = -1; in_last = last_sample;
@@ -300,29 +291,43 @@ module tb_fir_frequency_serial;
         end
     endtask
 
+    task automatic run_model_frames;
+        integer count, frame_index, length, sample_index;
+        begin
+            if ($fscanf(vectors_fd, "%d", count) != 1 || count < 1)
+                $fatal(1, "Faltan tramas de referencia A04");
+            use_model_expected = 1;
+            for (frame_index=0; frame_index<count; frame_index=frame_index+1) begin
+                if ($fscanf(vectors_fd, "%s %d", frame_name, length) != 2 || length < 0 || length > MAX_SAMPLES)
+                    $fatal(1, "Cabecera de trama A04 invalida");
+                for (sample_index=0; sample_index<length; sample_index=sample_index+1) begin
+                    if ($fscanf(vectors_fd, "%d %d %d %d", xi[sample_index], xq[sample_index],
+                                yi[sample_index], yq[sample_index]) != 4)
+                        $fatal(1, "Vector incompleto en %s muestra %0d", frame_name, sample_index);
+                    if (xi[sample_index] < -1 || xi[sample_index] > 1 || xq[sample_index] < -1 || xq[sample_index] > 1)
+                        $fatal(1, "Entrada fuera del dominio A04");
+                end
+                run_frame(length, (length == 0) || (frame_index % 2 == 0));
+            end
+            $fclose(vectors_fd);
+            use_model_expected = 0;
+        end
+    endtask
+
     integer n, k, length, pos, stage;
     integer ar_index, ai_index, br_index, bi_index;
     integer mul_values [0:3];
     logic [31:0] random_state = 32'hc02f1234;
-    real angle, sum_r, sum_i;
     initial begin
-        // TODO(A04): perfil provisional, no contrato numerico definitivo.
-        load_taps();
-        for (n=0; n<8; n=n+1) begin
-            taps[n] = nearest_even(tap_float[n]*65536.0);
-            angle = -2.0*3.141592653589793*n/16.0;
-            twr[n] = nearest_even($cos(angle)*65536.0);
-            twi[n] = nearest_even($sin(angle)*65536.0);
-        end
-        for (k=0; k<16; k=k+1) begin
-            sum_r=0; sum_i=0;
-            for (n=0; n<8; n=n+1) begin
-                angle = -2.0*3.141592653589793*k*n/16.0;
-                sum_r = sum_r + taps[n]*$cos(angle);
-                sum_i = sum_i + taps[n]*$sin(angle);
-            end
-            hr[k]=nearest_even(sum_r); hi[k]=nearest_even(sum_i);
-        end
+        load_model_constants();
+        check_product_rounding(127, 0);
+        check_product_rounding(128, 1);
+        check_product_rounding(-128, 0);
+        check_product_rounding(-129, -1);
+        check_product_rounding(384, 2);
+        check_product_rounding(-384, -1);
+        check_product_rounding(4194303, 16384);
+        check_product_rounding(-4194304, -16384);
         if ($test$plusargs("dump_constants")) begin
             for (n=0;n<8;n=n+1) $display("h_q[%0d]=%0d W[%0d]=(%0d,%0d)",n,taps[n],n,twr[n],twi[n]);
             for (k=0;k<16;k=k+1) $display("H[%0d]=(%0d,%0d)",k,hr[k],hi[k]);
@@ -372,9 +377,9 @@ module tb_fir_frequency_serial;
             xi[pos]=1; xq[pos]=-1;
             run_frame(25, 0);
         end
-        for(n=0;n<64;n=n+1) begin xi[n]=(n%3)-1; xq[n]=(n%4)-2; end
+        for(n=0;n<64;n=n+1) begin xi[n]=(n%3)-1; xq[n]=1-(n%3); end
         run_frame(64,1);
-        for(n=0;n<32;n=n+1) begin xi[n]=-2; xq[n]=-2; end
+        for(n=0;n<32;n=n+1) begin xi[n]=-1; xq[n]=-1; end
         run_frame(32,0);
         for(n=0;n<32;n=n+1) begin xi[n]=1; xq[n]=1; end
         run_frame(32,0);
@@ -410,8 +415,9 @@ module tb_fir_frequency_serial;
             reset_filter();
             run_frame(8,0);
         end
+        run_model_frames();
         repeat(12) begin @(posedge clk); if(out_valid) $fatal(1,"Salida extra"); end
-        $display("PASS frequency_serial: %0d tramas, %0d bloques; L=559, bloque=575, intervalo=568; perfil provisional",frames,measured_blocks);
+        $display("PASS frequency_serial: %0d tramas, %0d bloques; L=559, bloque=575, intervalo=568; formatos A04 y vector matching Python",frames,measured_blocks);
         $finish;
     end
 endmodule

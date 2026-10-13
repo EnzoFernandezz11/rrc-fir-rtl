@@ -45,6 +45,8 @@ def smoke() -> None:
     for target in targets:
         output = ROOT / "build" / f"{target['name']}.out"
         output.parent.mkdir(parents=True, exist_ok=True)
+        if target["name"] == "frequency_serial":
+            run([sys.executable, "-m", "scripts.frequency_serial_vectors"], "frequency_serial-vectors.log")
         run(
             [
                 "iverilog", "-g2012", "-Wall", "-s", target["testbench_top"],

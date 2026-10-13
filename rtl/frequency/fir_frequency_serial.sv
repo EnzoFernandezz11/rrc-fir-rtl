@@ -1,15 +1,14 @@
 `timescale 1ns/1ps
 
 module fir_frequency_serial #(
-    // TODO A04: confirm these provisional fixed-point formats.
     parameter integer W_IN   = 2,
     parameter integer F_IN   = 0,
-    parameter integer W_WORK = 32,
-    parameter integer F_WORK = 16,
-    parameter integer W_COEF = 18,
-    parameter integer F_COEF = 16,
-    parameter integer W_OUT  = 24,
-    parameter integer F_OUT  = 16
+    parameter integer W_WORK = 12,
+    parameter integer F_WORK = 5,
+    parameter integer W_COEF = 10,
+    parameter integer F_COEF = 8,
+    parameter integer W_OUT  = 9,
+    parameter integer F_OUT  = 7
 ) (
     input  logic                         clk,
     input  logic                         rst,
