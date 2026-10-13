@@ -92,9 +92,9 @@ Diseño en [B01](../arquitectura-rtl-tiempo-serial.md): `L = 9`, `II = 10`. Tram
 |---:|:-:|:-:|:-:|---|:-:|:-:|---|---|
 | 0 | 1 | 0 | 0 | — | 0 | 1 | — | Reset. |
 | 1 | 0 | 1 | 1 | `x[0]` ↑ | 0 | 1 | — | `IDLE`: acepta en el primer flanco sin reset. |
-| 2…9 | 0 | 1 | 0 | `x[1]` | 0 | 1 | — | `MAC`, `k = 0…7`; el productor sostiene `x[1]`. |
-| 10 | 0 | 1 | 0 | `x[1]` | 1 | 0 | `y[0] = 1+j` | `OUT` con backpressure: se sostiene. |
-| 11 | 0 | 1 | 0 | `x[1]` | 1 | 1 | `y[0]` ↑ | Entrega `y[0]`; vuelve a `IDLE`. |
+| 2…9 | 0 | 0 | 0 | — | 0 | 1 | — | `MAC`, `k = 0…7`; el productor todavía no tiene `x[1]`. |
+| 10 | 0 | 0 | 0 | — | 1 | 0 | `y[0] = 1+j` | `OUT` con backpressure: se sostiene. |
+| 11 | 0 | 0 | 0 | — | 1 | 1 | `y[0]` ↑ | Entrega `y[0]`; vuelve a `IDLE`. |
 | 12 | 0 | 0 | 1 | — | 0 | 1 | — | Burbuja: nada cambia. |
 | 13 | 0 | 1 | 1 | `x[1]`, `last` ↑ | 0 | 1 | — | Acepta la última muestra. |
 | 14…21 | 0 | 0 | 0 | — | 0 | 1 | — | `MAC`; `in_ready = 0` hasta cerrar la trama. |
