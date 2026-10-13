@@ -9,10 +9,10 @@
 
 | Aspecto | Decisión |
 |---|---|
-| Modelo de referencia de cada variante | Por definir. |
+| Modelo de referencia de cada variante | Modelo fijo de su rama (A04): `fir_time_fxp` para B, `fir_frequency_fxp` para C. Columnas `yt` y `yf` de [vectors/](../../vectors/README.md). |
 | Casos mínimos | Impulso, ceros, QPSK determinista, extremos y límites de bloque. |
-| Semilla y número de vectores smoke/regresión | Por definir. |
-| Comparación exacta o tolerancia por variante | Por definir. |
+| Semilla y número de vectores smoke/regresión | Smoke: impulso, ceros, extremos y bordes (426 muestras). Regresión: además `build/vectors/qpsk_s1.txt`, semilla 1 y 1024 símbolos, generado con el mismo comando. Ver [vectors/](../../vectors/README.md). |
+| Comparación exacta o tolerancia por variante | Exacta contra el modelo fijo de su rama. Entre ramas, ≤ 2 LSB (A04). |
 | Alineación por índice y descarte de transitorios | Por índice de resultado aceptado, no por ciclo ([interfaz](interfaz-rtl.md#latencia-y-throughput), E03). Descarte de transitorios: por definir con D07. |
 | Mensaje de falla | Variante, índice, I/Q esperado/obtenido, formato y semilla. |
 
