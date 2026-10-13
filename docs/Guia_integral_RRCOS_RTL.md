@@ -61,7 +61,7 @@ La tabla es una brújula de trabajo, no permiso para rellenar valores arbitrario
 
 ### 1.4 Reparto y dependencias
 
-El [backlog](backlog.md) y el [Gantt](gantt.md) contienen 24 tareas, incluida R01 para módulos RTL comunes. Andrés lleva principalmente generador, modelos, precisión y vectores; Julián, el filtro temporal; Enzo, el filtro en frecuencia. Se cierra primero el contrato E00–E03; luego A01–A05; después B02/C02 con banco A06; más tarde B04/C04 y PPA A07; finalmente comparación I01 e informe/presentación I02/I03. El Gantt distingue dependencias **para comenzar** de las necesarias **para cerrar**. El porcentaje de issues movidas no sustituye una prueba de equivalencia.
+El [backlog](backlog.md) y el [Gantt](gantt.md) contienen 23 tareas. Andrés lleva principalmente generador, modelos, precisión y vectores; Julián, el filtro temporal; Enzo, el filtro en frecuencia. Se cierra primero el contrato E00–E03; luego A01–A05; después B02/C02 con banco A06; más tarde B04/C04 y PPA A07; finalmente comparación I01 e informe/presentación I02/I03. El Gantt distingue dependencias **para comenzar** de las necesarias **para cerrar**. El porcentaje de issues movidas no sustituye una prueba de equivalencia.
 
 ---
 
