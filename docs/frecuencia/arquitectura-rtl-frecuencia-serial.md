@@ -2,7 +2,7 @@
 
 **Estado:** diseño C01 y RTL serial C02 con interfaz E03, comparación flotante A03 y formatos A04 adoptados y verificados contra el modelo fijo. Los estados de las decisiones compartidas siguen registrados en el contrato; A05 y timing/PPA con Vivado siguen pendientes. **Consolidación documental:** 13/10/2026. Este documento reúne las decisiones, justificaciones, puertos, bloques, estados y presupuesto de ciclos de la arquitectura serial.
 
-Fuentes: [consigna vigente](consigna-actualizada.md), [contrato técnico](contrato-tecnico.md), contratos de [frecuencia](contratos/frecuencia.md), [señales y formatos](contratos/senales-y-formatos.md), [interfaz RTL](contratos/interfaz-rtl.md) y [verificación y PPA](contratos/verificacion-y-ppa.md), [backlog](backlog.md) y tabla de taps de [config/project.json](../config/project.json). Las decisiones compartidas conservan el estado indicado en esos contratos; documentar esta arquitectura no equivale a aprobarlas ni a cerrar las issues.
+Fuentes: [consigna vigente](../consigna-actualizada.md), [contrato técnico](../contrato-tecnico.md), contratos de [frecuencia](../contratos/frecuencia.md), [señales y formatos](../contratos/senales-y-formatos.md), [interfaz RTL](../contratos/interfaz-rtl.md) y [verificación y PPA](../contratos/verificacion-y-ppa.md), [backlog](../backlog.md) y tabla de taps de [config/project.json](../../config/project.json). Las decisiones compartidas conservan el estado indicado en esos contratos; documentar esta arquitectura no equivale a aprobarlas ni a cerrar las issues.
 
 ## 1. Qué se implementa
 
@@ -42,7 +42,7 @@ La consigna exige correspondencia, pero no fija tolerancia ni identidad bit a bi
 
 ### 1.2 Frontera del núcleo y reutilización
 
-M0 queda fuera del RTL de C01: `qpsk()` y `upsample()` de [model/qpsk_rrc.py](../model/qpsk_rrc.py) preparan los vectores con el mapeo común y la secuencia `a[m], 0`. El núcleo recibe muestras, no símbolos. Un cero del upsampling es una muestra válida; una burbuja `valid=0` no inserta ceros ni avanza contadores.
+M0 queda fuera del RTL de C01: `qpsk()` y `upsample()` de [model/qpsk_rrc.py](../../model/qpsk_rrc.py) preparan los vectores con el mapeo común y la secuencia `a[m], 0`. El núcleo recibe muestras, no símbolos. Un cero del upsampling es una muestra válida; una burbuja `valid=0` no inserta ceros ni avanza contadores.
 
 Los testbenches temporal y de frecuencia usan drivers independientes para entregar la misma secuencia aunque los núcleos tengan distintos `ready`. El modelo Python y el banco común A06 reutilizan taps, vectores, índices y métricas; cada núcleo contiene sus propios operadores, memorias y conversiones. Se simulan y sintetizan por separado. Los generadores de vectores, drivers y comparador quedan fuera del núcleo medido para PPA.
 
@@ -56,7 +56,7 @@ Los nombres de puertos siguen la propuesta E03 para las cuatro variantes; el nom
 |---|---|---|
 | `W_IN`, `F_IN` | 2, 0 | Entrada exacta para −1, 0, +1 según E02/E03. |
 | `W_OUT`, `F_OUT` | 9, 7 | Salida Q2.7 de A04 adoptada en el RTL. |
-| `work`; H/W; producto complejo | 12/5; 10/8; 23/13 (ancho/fracción) | A04 adoptado: redondeo mitad hacia arriba en productos y salida; sin saturación, con detección de overflow en simulación. Ver [tabla de formatos](contratos/senales-y-formatos.md#formatos-de-punto-fijo-a04). |
+| `work`; H/W; producto complejo | 12/5; 10/8; 23/13 (ancho/fracción) | A04 adoptado: redondeo mitad hacia arriba en productos y salida; sin saturación, con detección de overflow en simulación. Ver [tabla de formatos](../contratos/senales-y-formatos.md#formatos-de-punto-fijo-a04). |
 
 | Puerto | Dirección | Ancho | Significado |
 |---|---|---|---|
@@ -268,7 +268,7 @@ Las fases sin el enlace suman un **subtotal de 574 ciclos**; el enlace agrega un
 
 Este presupuesto supone entrada disponible, salida siempre lista y ninguna espera adicional en las otras transiciones; incluye la captura de los primeros operandos FFT en el flanco que acepta `start`. Si la implementación agrega ciclos de arranque o de enlace, C02 actualizará las cifras con la simulación. La simulación RTL verifica 575 ciclos por bloque completo y 550 ciclos de motor; estos conteos no son una medida de timing físico.
 
-Con la definición de [E03](contratos/interfaz-rtl.md#latencia-y-throughput), el presupuesto ideal de latencia `L` es **559 ciclos** desde la aceptación de una muestra hasta el primer flanco con su resultado válido, incluso para el peor índice del bloque: `x[0]` se acepta en el ciclo 9 y `y[0]` tiene su primer flanco válido en el 568; `x[7]` se acepta en el 16 y `y[7]` en el 575. La última escritura IFFT ocurre en el 566, el superior detecta `done` y entra en `EMIT` en el 567, y la primera salida se acepta en el 568. El intervalo entre aceptaciones es 1 ciclo dentro del bloque y 568 ciclos entre bloques completos; por eso el promedio es **575/8 = 71,875 ciclos por muestra**, con throughput ideal `8·f_clk/575`. A 10 MHz equivale a unas 139 130 muestras/s, sujeto a simulación y timing. Burbujas, backpressure o ciclos adicionales de implementación aumentan la latencia y los intervalos y reducen el throughput.
+Con la definición de [E03](../contratos/interfaz-rtl.md#latencia-y-throughput), el presupuesto ideal de latencia `L` es **559 ciclos** desde la aceptación de una muestra hasta el primer flanco con su resultado válido, incluso para el peor índice del bloque: `x[0]` se acepta en el ciclo 9 y `y[0]` tiene su primer flanco válido en el 568; `x[7]` se acepta en el 16 y `y[7]` en el 575. La última escritura IFFT ocurre en el 566, el superior detecta `done` y entra en `EMIT` en el 567, y la primera salida se acepta en el 568. El intervalo entre aceptaciones es 1 ciclo dentro del bloque y 568 ciclos entre bloques completos; por eso el promedio es **575/8 = 71,875 ciclos por muestra**, con throughput ideal `8·f_clk/575`. A 10 MHz equivale a unas 139 130 muestras/s, sujeto a simulación y timing. Burbujas, backpressure o ciclos adicionales de implementación aumentan la latencia y los intervalos y reducen el throughput.
 
 | Prueba de C02 | Qué debe demostrar |
 |---|---|
@@ -278,11 +278,11 @@ Con la definición de [E03](contratos/interfaz-rtl.md#latencia-y-throughput), el
 | `complex_mul_serial` | Cuatro productos reales acumulados con signos; resultado final y `done` registrados en el flanco 5 desde `start`, captura por el motor en el 6 y pulso de un ciclo. Valores parciales permitidos durante el cálculo y resultado estable después de `done` hasta la siguiente acumulación; operaciones consecutivas y cancelación por reset antes o durante `done`. |
 | Integración con el modelo | Impulso y QPSK en fronteras de bloque; coincidencia por palabra con `model.fixed_point.fir_frequency_fxp`, incluidos los casos A03 y las cinco semillas A04 de 1024 símbolos. |
 
-C02 verifica `L`, intervalos de aceptación y throughput en simulación. Para PPA se usará la propuesta E03: Vivado out-of-context sobre Artix-7 `xc7a35tcpg236-1`, con [reloj de 10 MHz](../constraints/clk_10mhz.xdc) para esta variante lenta, `report_utilization`, `report_timing_summary` y `report_power` con SAIF del vector QPSK de A05. Registrar utilización implementada, WNS/Fmax, potencia dinámica/estática y energía por muestra. La CI con Yosys comprueba sintetizabilidad; no produce cifras PPA comparables con este flujo. C03/C04 diseñarán y medirán la optimización frente a esta base serial.
+C02 verifica `L`, intervalos de aceptación y throughput en simulación. Para PPA se usará la propuesta E03: Vivado out-of-context sobre Artix-7 `xc7a35tcpg236-1`, con [reloj de 10 MHz](../../constraints/clk_10mhz.xdc) para esta variante lenta, `report_utilization`, `report_timing_summary` y `report_power` con SAIF del vector QPSK de A05. Registrar utilización implementada, WNS/Fmax, potencia dinámica/estática y energía por muestra. La CI con Yosys comprueba sintetizabilidad; no produce cifras PPA comparables con este flujo. C03/C04 diseñarán y medirán la optimización frente a esta base serial.
 
 ## 7. Dependencias y decisiones pendientes
 
-El [backlog](backlog.md) distingue dependencias para empezar y para cerrar: C01 requiere E01 para empezar y E03/A03 para cerrar; C02 requiere C01 para empezar y A05 para cerrar. E01/E03 y A03 están integrados en main; la evidencia de A03 se reproduce en §8. A05 sigue pendiente para el cierre de C02.
+El [backlog](../backlog.md) distingue dependencias para empezar y para cerrar: C01 requiere E01 para empezar y E03/A03 para cerrar; C02 requiere C01 para empezar y A05 para cerrar. E01/E03 y A03 están integrados en main; la evidencia de A03 se reproduce en §8. A05 sigue pendiente para el cierre de C02.
 
 | Tarea o decisión | Qué falta o debe conservarse | Consecuencia |
 |---|---|---|
@@ -294,9 +294,9 @@ El [backlog](backlog.md) distingue dependencias para empezar y para cerrar: C01 
 
 ## 8. Evidencia disponible y límites
 
-El [modelo de frecuencia](../model/frequency.py) representa FFT16/IFFT16 mediante DFT directa en flotante. La [prueba de overlap-save](../tests/test_frequency_overlap_contract.py) lo contrasta con una convolución causal independiente con error absoluto por muestra menor que `1e−10` y longitud exacta de salida. Cubre QPSK con upsampling 2×, tramas vacías/completas/parciales, taps asimétricos y complejos e impulsos en fronteras. Usa la tabla RRC común de A01/E02 y coeficientes de ejemplo para detectar errores de orden.
+El [modelo de frecuencia](../../model/frequency.py) representa FFT16/IFFT16 mediante DFT directa en flotante. La [prueba de overlap-save](../../tests/test_frequency_overlap_contract.py) lo contrasta con una convolución causal independiente con error absoluto por muestra menor que `1e−10` y longitud exacta de salida. Cubre QPSK con upsampling 2×, tramas vacías/completas/parciales, taps asimétricos y complejos e impulsos en fronteras. Usa la tabla RRC común de A01/E02 y coeficientes de ejemplo para detectar errores de orden.
 
-La evidencia histórica de E01 del 7/10/2026 fue `make smoke` PASS con nueve pruebas Python, incluidas cinco de overlap-save. A03 completa la comparación con el [modelo temporal A02](../model/fir_time.py) mediante [su prueba](../tests/test_a03_time_vs_frequency.py): casos A02, cuatro semillas QPSK de 256 símbolos, longitudes 0…40 e impulsos en posiciones 0…23. El máximo reproducido es 1,782e−14, menor que la tolerancia 1e−12 comprobada por unittest. Los comandos para reproducir la verificación local son:
+La evidencia histórica de E01 del 7/10/2026 fue `make smoke` PASS con nueve pruebas Python, incluidas cinco de overlap-save. A03 completa la comparación con el [modelo temporal A02](../../model/fir_time.py) mediante [su prueba](../../tests/test_a03_time_vs_frequency.py): casos A02, cuatro semillas QPSK de 256 símbolos, longitudes 0…40 e impulsos en posiciones 0…23. El máximo reproducido es 1,782e−14, menor que la tolerancia 1e−12 comprobada por unittest. Los comandos para reproducir la verificación local son:
 
 ```sh
 python3 -m unittest tests.test_frequency_overlap_contract tests.test_a03_time_vs_frequency -v

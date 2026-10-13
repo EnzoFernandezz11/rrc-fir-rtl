@@ -36,7 +36,7 @@ El registro de RTL está vacío mientras no exista una implementación. **Agrega
 
 ## Organización
 
-La [arquitectura RTL serial de C01](docs/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones y justificaciones del diseño en frecuencia, puertos, bloques, estados, presupuesto de ciclos, evidencia y dependencias pendientes para implementar C02.
+La [arquitectura RTL serial de C01](docs/frecuencia/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones y justificaciones del diseño en frecuencia, puertos, bloques, estados, presupuesto de ciclos, evidencia y dependencias pendientes para implementar C02.
 
 | Ruta | Contenido |
 |---|---|
