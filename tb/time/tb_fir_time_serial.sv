@@ -5,6 +5,9 @@
 //   - ideal: productor y receptor siempre listos; mide L e II (interfaz-rtl.md).
 //   - con pausas: burbujas de entrada y out_ready = 0 pseudoaleatorios con semilla
 //     fija; los valores no deben cambiar (regla 7).
+// En todas las corridas, la salida presentada debe mantenerse hasta su transferencia
+// (regla 2). Además, reset en medio de una trama, en MAC y con un resultado pendiente
+// en OUT (regla 6).
 // Con +regresion agrega build/vectors/qpsk_s1.txt (generado con python3 -m model.vectors).
 module tb_fir_time_serial;
 
@@ -50,6 +53,9 @@ module tb_fir_time_serial;
     integer presentada;        // índice de la muestra presentada (-1: ninguna)
     integer ciclo;
     logic   visto;             // out_valid ya visto para el resultado n_out
+    logic   retener = 0;       // fuerza out_ready = 0 (reset con resultado pendiente)
+    logic signed [W_OUT-1:0] ret_i, ret_q;  // salida presentada, para la regla 2
+    logic   ret_last;
     integer t_acepta [0:MAX_N-1];
     integer t_valido [0:MAX_N-1];
 
@@ -61,9 +67,19 @@ module tb_fir_time_serial;
                 t_acepta[n_in] = ciclo;
                 n_in = n_in + 1;
             end
+            // Regla 2 en la salida: presentada, no cambia ni se retira hasta la transferencia.
             if (out_valid && !visto) begin
                 t_valido[n_out] = ciclo;
-                visto = 1;
+                visto    = 1;
+                ret_i    = out_i;
+                ret_q    = out_q;
+                ret_last = out_last;
+            end else if (out_valid && (out_i !== ret_i || out_q !== ret_q || out_last !== ret_last)) begin
+                $fatal(1, "FALLA time_serial %s índice %0d: la salida cambió esperando out_ready (regla 2): %0d/%0d last=%0d -> %0d/%0d last=%0d",
+                       archivo, n_out, ret_i, ret_q, ret_last, out_i, out_q, out_last);
+            end else if (!out_valid && visto) begin
+                $fatal(1, "FALLA time_serial %s índice %0d: out_valid bajó sin transferencia (regla 2)",
+                       archivo, n_out);
             end
             if (out_valid && out_ready) begin
                 if (n_out >= n_tot)
@@ -99,7 +115,10 @@ module tb_fir_time_serial;
                     in_valid   = 1;
                 end
             end
-            out_ready = con_pausas ? ($random(semilla_out) % 3 != 0) : 1;
+            if (retener)
+                out_ready = 0;
+            else
+                out_ready = con_pausas ? ($random(semilla_out) % 3 != 0) : 1;
         end
     end
 
@@ -125,8 +144,28 @@ module tb_fir_time_serial;
         if (n_tot == 0) $fatal(1, "%s: no tiene muestras", ruta);
     endtask
 
-    task automatic correr(input string ruta, input logic pausas);
-        integer espera, tramas, l_max, ii_max;
+    // Espera todos los resultados de la corrida y comprueba que no sobre ninguno.
+    task automatic esperar_fin(input string ruta);
+        integer espera;
+        espera = 0;
+        while (n_out < n_tot) begin
+            @(negedge clk);
+            espera = espera + 1;
+            if (espera > 40 * n_tot + 100)
+                $fatal(1, "FALLA time_serial %s: timeout con %0d de %0d resultados", ruta, n_out, n_tot);
+        end
+
+        // Unos ciclos más sin entrada: no debe aparecer ningún resultado extra.
+        corriendo = 0;
+        in_valid  = 0;
+        out_ready = 1;
+        repeat (2 * II_ESP) @(negedge clk);
+        if (n_in != n_tot)
+            $fatal(1, "FALLA time_serial %s: %0d muestras aceptadas de %0d", ruta, n_in, n_tot);
+    endtask
+
+    // Carga el archivo, resetea el núcleo y arranca productor y receptor.
+    task automatic correr_preparar(input string ruta, input logic pausas);
         cargar(ruta);
         archivo     = ruta;
         con_pausas  = pausas;
@@ -143,26 +182,17 @@ module tb_fir_time_serial;
         n_out = 0;
         ciclo = 0;
         visto = 0;
+        retener = 0;
         presentada = -1;
         repeat (2) @(negedge clk);
         rst = 0;
         corriendo = 1;
+    endtask
 
-        espera = 0;
-        while (n_out < n_tot) begin
-            @(negedge clk);
-            espera = espera + 1;
-            if (espera > 40 * n_tot + 100)
-                $fatal(1, "FALLA time_serial %s: timeout con %0d de %0d resultados", ruta, n_out, n_tot);
-        end
-
-        // Unos ciclos más sin entrada: no debe aparecer ningún resultado extra.
-        corriendo = 0;
-        in_valid  = 0;
-        out_ready = 1;
-        repeat (2 * II_ESP) @(negedge clk);
-        if (n_in != n_tot)
-            $fatal(1, "FALLA time_serial %s: %0d muestras aceptadas de %0d", ruta, n_in, n_tot);
+    task automatic correr(input string ruta, input logic pausas);
+        integer tramas, l_max, ii_max;
+        correr_preparar(ruta, pausas);
+        esperar_fin(ruta);
 
         tramas = 0;
         for (int n = 0; n < n_tot; n++) tramas += (v_last[n] != 0);
@@ -192,15 +222,75 @@ module tb_fir_time_serial;
         correr(ruta, 1);
     endtask
 
+    // Regla 6: reset en medio de una trama, en MAC (en_out = 0) o con y[n] pendiente
+    // en OUT (en_out = 1). Llena el historial con extremos_tiempo (todas las muestras
+    // son ±1), resetea y corre impulso.txt sin otro reset: si el historial no quedó
+    // en cero, el impulso no coincide; si el resultado pendiente no se canceló, sale
+    // un resultado de más.
+    task automatic reset_en_trama(input logic en_out);
+        integer n_out_antes;
+
+        // 1) Trama con historial lleno; los resultados que salen se comparan igual.
+        correr_preparar("vectors/extremos_tiempo.txt", 0);
+        archivo = en_out ? "reset en OUT (extremos_tiempo)" : "reset en MAC (extremos_tiempo)";
+        while (n_in < 5) @(negedge clk);   // cinco muestras ±1 en el historial
+        if (en_out) begin
+            retener = 1;                     // y[4] queda esperando en OUT
+            while (!out_valid) @(negedge clk);
+            repeat (2) @(negedge clk);
+        end else begin
+            repeat (3) @(negedge clk);       // a mitad de los ocho ciclos de MAC
+        end
+        if (in_ready !== 0 || out_valid !== en_out)
+            $fatal(1, "FALLA time_serial %s: el núcleo no estaba ocupado al resetear", archivo);
+
+        // 2) Reset de un solo flanco, el caso mínimo: un segundo flanco con rst = 1
+        //    encontraría el núcleo ya en IDLE y podría ocultar un historial sin limpiar.
+        //    Mientras rst = 1: sin transferencias y con in_ready = out_valid = 0.
+        corriendo = 0;
+        retener   = 0;
+        in_valid  = 0;
+        rst       = 1;
+        visto     = 0;
+        n_out_antes = n_out;
+        #1;
+        if (in_ready !== 0 || out_valid !== 0)
+            $fatal(1, "FALLA time_serial %s: con rst = 1, in_ready = %0d y out_valid = %0d",
+                   archivo, in_ready, out_valid);
+        @(negedge clk);
+        rst = 0;
+
+        // Sin entrada y con el receptor listo, no debe salir el resultado cancelado.
+        out_ready = 1;
+        repeat (2 * II_ESP) @(negedge clk);
+        if (n_out != n_out_antes)
+            $fatal(1, "FALLA time_serial %s: salió un resultado cancelado por el reset", archivo);
+
+        // 3) impulso.txt sin otro reset: exige historial en cero (x[n<0] = 0).
+        cargar("vectors/impulso.txt");
+        archivo    = en_out ? "vectors/impulso.txt tras reset en OUT" : "vectors/impulso.txt tras reset en MAC";
+        con_pausas = 0;
+        n_in       = 0;
+        n_out      = 0;
+        ciclo      = 0;
+        visto      = 0;
+        presentada = -1;
+        corriendo  = 1;
+        esperar_fin(archivo);
+        $display("OK time_serial %s: ningún resultado tras el reset e impulso con historial en cero", archivo);
+    endtask
+
     initial begin
         correr_ambos("vectors/impulso.txt");
         correr_ambos("vectors/ceros.txt");
         correr_ambos("vectors/extremos_tiempo.txt");
         correr_ambos("vectors/extremos_frecuencia.txt");
         correr_ambos("vectors/bordes.txt");
+        reset_en_trama(0);
+        reset_en_trama(1);
         if ($test$plusargs("regresion"))
             correr_ambos("build/vectors/qpsk_s1.txt");
-        $display("PASS time_serial: vector matching, L e II y pruebas de protocolo");
+        $display("PASS time_serial: vector matching, L e II, pausas, salida estable y reset en trama");
         $finish;
     end
 
