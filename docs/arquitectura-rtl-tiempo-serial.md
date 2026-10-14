@@ -16,7 +16,7 @@ Dos propiedades de la consigna simplifican el datapath:
 1. **Coeficientes reales sobre datos complejos.** I y Q no se mezclan: `y_I = Σ h·x_I` e `y_Q = Σ h·x_Q`. El núcleo es dos FIR reales idénticos que comparten control, contador de tap y tabla de coeficientes. Se procesan en paralelo, con un acumulador cada uno.
 2. **Entrada en {−1, 0, +1}.** El producto `h[k]·x` es `+h[k]`, `−h[k]` o `0`: una selección y una negación, sin multiplicador. El producto es exacto y el acumulador no necesita redondeo (A04).
 
-El módulo propuesto es `fir_time_serial`; B02 confirma el nombre. No incluye generador QPSK ni interpolador: el testbench inyecta los vectores de A05 directamente en la interfaz.
+El módulo es `fir_time_serial`, implementado en B02 en [`rtl/time/fir_time_serial.sv`](../rtl/time/fir_time_serial.sv). No incluye generador QPSK ni interpolador: el testbench inyecta los vectores de A05 directamente en la interfaz.
 
 ## 2. Diagrama de bloques
 
@@ -125,7 +125,7 @@ Son cifras ideales: burbujas y `out_ready = 0` alargan el intervalo sin cambiar 
 | Tabla de coeficientes | 8 × 8 bits, indexada por `k` | Lógica |
 | Multiplicadores, DSP48, BRAM | 0 | — |
 
-Es una estimación de diseño, no una medida: las cifras de LUT/FF salen de Vivado en B02/A07 con el flujo de D05.
+Es una estimación de diseño, no una medida: las cifras de LUT/FF salen de Vivado en A07 con el flujo de D05. B02 solo comprueba con Yosys que el RTL es sintetizable.
 
 ## 7. Cumplimiento de la interfaz
 
@@ -164,6 +164,6 @@ Valores en enteros Q·.7 (dividir por 128).
 |---|---|---|
 | E03 (D03, D05, D06) | Integrada, decisiones «propuesto» | El diseño usa la interfaz y el flujo PPA tal como están. |
 | A04 (D04) | Integrada en [#41](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/41), decisión «propuesto» | Si cambian los bits fraccionarios, cambian `W_COEF`/`W_ACC` y la tabla `h_q`, no la arquitectura. |
-| A05 | En revisión | Necesario para cerrar B02 con vector matching. |
+| A05 | Integrada en [#42](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/42) | Vectores que usa el testbench de B02 para el vector matching. |
 
-Quedan fuera de B01 el RTL y el testbench (B02), las cifras PPA (B02/A07) y la elección de la optimización (B03). Esta base no aprovecha la simetría `h[k] = h[7−k]` ni los ceros del 2×, ni solapa la entrega de `y[n]` con la aceptación de `x[n+1]`: son candidatas para B03.
+Quedan fuera de B01 el RTL y el testbench (B02), las cifras PPA (A07) y la elección de la optimización (B03). Esta base no aprovecha la simetría `h[k] = h[7−k]` ni los ceros del 2×, ni solapa la entrega de `y[n]` con la aceptación de `x[n+1]`: son candidatas para B03.

@@ -17,4 +17,4 @@ El formato de una entrada del registro es:
 }
 ```
 
-Es un **ejemplo de formato**; esos archivos todavía no existen. `smoke` falla si se registra una variante sin fuentes/testbench reales.
+Es la entrada real de la variante temporal serial (B02). `smoke` falla si se registra una variante sin fuentes/testbench reales.
