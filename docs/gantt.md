@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Avance real:** 2026-10-07 y 2026-10-12. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Avance real:** 2026-10-07, 2026-10-12 y 2026-10-14. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -49,13 +49,13 @@ G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entr
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
 
-**Al 12/10:** 11 de 23 tareas iniciadas (E00–E03, G01, A01–A05 y C01), 6 integradas (E00–E03, A01 y A02) y 0 verificadas. Según el plan deberían haber empezado 15: faltan B01, B02, B03, C02 y A07. A05 empezó un día antes de lo previsto. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
+**Al 14/10:** 14 de 23 tareas iniciadas (E00–E03, G01, A01–A05, B01, B02, C01 y C02), 11 integradas (E00–E03, A01–A05, B01 y C01) y 0 verificadas. Según el plan deberían haber empezado 18: faltan B03, C03, A07 e I02. B02 pasa el vector matching en su PR (#45), pero cuenta como verificada recién al integrarse. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
 
-Riesgos al 12/10:
+Riesgos al 14/10:
 
-- **Rama temporal:** B01 no tiene evidencia en el repo y el plan lo ubicaba del 08/10 al 10/10. La cadena B01 → B02 → B04 tenía 4 días de holgura hasta I01 (29/10). Si B01 empieza el 13/10, lleva 5 días de atraso y B04 terminaría el 29/10, un día tarde: pasa a ser la cadena más comprometida.
-- **Rama en frecuencia:** C01 sigue sin holgura. El plan lo cerraba el 11/10 y sigue en revisión; cada día hasta integrarlo corre C02, C04 y el corte del 26/10.
-- **Modelos:** A03 lleva un día de atraso y bloquea el cierre de C01 y de A04. A07 (tabla PPA) no empezó; su plan arrancaba el 11/10.
+- **Rama temporal:** B01 se integró el 13/10, 3 días después del plan, y B02 (#45) está en revisión con cambios pedidos; su plan cierra el 15/10. B03 no empezó (plan 11–13/10) y B04 necesita B02 y B03. Si los dos cierran el 17/10, B04 termina el 26/10 y la holgura hasta I01 (29/10) baja de 4 a 2 días.
+- **Rama en frecuencia:** C01 se integró el 13/10, 2 días después del plan, pero C02 empezó en paralelo el 12/10 como estaba previsto (rama sin PR). C04 sigue sin holgura: C02 tiene que cerrar el 19/10. C03 no empezó (plan 12–13/10); no frena a C04 mientras termine antes que C02.
+- **Modelos:** A01–A05 integradas; A05 cerró un día antes del plan. A07 (tabla PPA) lleva 3 días sin empezar (plan 11/10) y es dependencia de I01; ya puede arrancar con `time_serial` registrada. A06 empieza el 15/10, según el plan, e I02 hoy.
 
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
 |---|---|---|---|---|
@@ -63,24 +63,24 @@ Riesgos al 12/10:
 | [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | @EnzoFernandezz11 | 05/10 | 08/10 | #28 integrado. Plan: fin 06/10 (+2 días). |
 | [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | @andres332271 | 07/10 | 08/10 | #33 integrado; D02/D03 siguen propuestos hasta la revisión conjunta. Plan: fin 07/10 (+1). |
 | [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | @moreyrajulian | 09/10 | 09/10 | #38 integrado; D03, D05 y D06 siguen propuestos. Plan: fin 10/10 (−1). |
-| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27, #34 y este registro. Actualizar semanalmente. |
+| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27, #34, #43 y este registro. Actualizar semanalmente. |
 | [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | @andres332271 | 07/10 | 08/10 | #32 integrado. Plan: fin 06/10 (+2). |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | @andres332271 | 07/10 | 09/10 | #35 integrado. Plan: fin 08/10 (+1). |
-| [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | @andres332271 | 12/10 | — | #40 en revisión; error máx. entre modelos flotantes < 2e-14. Plan: fin 11/10. |
-| [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | @andres332271 | 12/10 | — | #41 en revisión: salida Q2.7 (9 bits), SQNR 44,2/43,0 dB. Cierra después de A03. Plan: fin 12/10. |
-| [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | @andres332271 | 12/10 | — | #42 en revisión, apilado sobre #41. Corte para cerrar B02/C02. Plan: inicio 13/10, fin 14/10. |
-| [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | @moreyrajulian | — | — | Sin evidencia en el repo. Plan: inicio 08/10, fin 10/10. |
-| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | — | — | — | Plan: inicio 11/10. |
-| [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | @EnzoFernandezz11 | 06/10 | — | #39 en revisión, con cambios pedidos el 12/10 (quitar R01); arquitectura verificada por simulación. Plan: fin 11/10. |
-| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | — | — | — | Plan: inicio 12/10. |
-| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | — | — | — | — |
-| [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | Plan: inicio 11/10. |
+| [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | @andres332271 | 12/10 | 12/10 | #40 integrado; error máx. entre modelos flotantes < 2e-14. Plan: fin 11/10 (+1). |
+| [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | @andres332271 | 12/10 | 12/10 | #41 integrado: salida Q2.7 (9 bits), SQNR 44,2/43,0 dB. Plan: fin 12/10. |
+| [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | @andres332271 | 12/10 | 13/10 | #42 integrado. Plan: inicio 13/10, fin 14/10 (−1). |
+| [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | @moreyrajulian | 12/10 | 13/10 | #44 integrado: `L = 9`, `II = 10`, 56 FF estimados. Plan: inicio 08/10, fin 10/10 (+3). |
+| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | @moreyrajulian | 14/10 | — | #45 en revisión con cambios pedidos: vector matching, `L`/`II` y pausas pasan; falta prueba de reset en medio de trama. Plan: inicio 11/10, fin 15/10. |
+| [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | @EnzoFernandezz11 | 06/10 | 13/10 | #39 integrado tras quitar R01. Plan: fin 11/10 (+2). |
+| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | — | Rama `enzo/c02-rtl-implemntation`, sin PR. Plan: inicio 12/10, fin 19/10. |
+| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | — | — | — | Plan: inicio 15/10. |
+| [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | Plan: inicio 11/10, fin 13/10. |
 | [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | — |
-| [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | — | — | — | — |
+| [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | — | — | — | Plan: inicio 12/10, fin 13/10. |
 | [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | — | — | — | Camino crítico hasta I01. |
-| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | — | — | — | Empieza con variantes disponibles. Plan: inicio 11/10. |
+| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | — | — | — | Empieza con variantes disponibles; `time_serial` registrada en #45. Plan: inicio 11/10. |
 | [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
-| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | — | — | — | Borrador temprano; conclusiones tras I01. |
+| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | — | — | — | Borrador temprano; conclusiones tras I01. Plan: inicio 14/10. |
 | [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Presentación 30/10. |
 
 ## Corte del viernes 16/10
