@@ -11,6 +11,7 @@ from pathlib import Path
 from validate_project import ROOT, load_project, load_targets
 
 LOG_DIR = ROOT / "build/ci-logs"
+COMMON_TB = "tb/common/tb_fir_common.sv"
 
 
 def run(command: list[str], log_name: str) -> None:
@@ -53,7 +54,35 @@ def smoke() -> None:
             f"{target['name']}-compile.log",
         )
         run(["vvp", str(output)], f"{target['name']}-sim.log")
+    common(targets)
     print(f"Smoke: {len(targets)} variante(s) compiladas y simuladas")
+
+
+def common(targets: list[dict], regression: bool = False) -> None:
+    """Banco común (A06): mismos vectores y pruebas de protocolo para cada variante."""
+    for target in targets:
+        name = target["name"]
+        output = ROOT / "build" / f"{name}-comun.out"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        run(
+            [
+                "iverilog", "-g2012", "-Wall", "-s", "tb_fir_common", f"-DFIR_DUT={target['rtl_top']}",
+                "-o", str(output), *target["sources"], COMMON_TB,
+            ],
+            f"{name}-comun-compile.log",
+        )
+        plusargs = [f"+variante={name}", f"+dominio={target['domain']}"]
+        if regression:
+            plusargs.append("+regresion")
+        run(["vvp", str(output), *plusargs], f"{name}-comun{'-regresion' if regression else ''}.log")
+
+
+def regression() -> None:
+    load_project()
+    targets = load_targets()
+    run([sys.executable, "-m", "model.vectors"], "vectors.log")
+    common(targets, regression=True)
+    print(f"Regresión: {len(targets)} variante(s) con el banco común")
 
 
 def full() -> None:
@@ -71,13 +100,15 @@ def full() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("smoke", "full", "has-targets", "has-synth"))
+    parser.add_argument("command", choices=("smoke", "full", "regresion", "has-targets", "has-synth"))
     args = parser.parse_args()
     try:
         if args.command == "smoke":
             smoke()
         elif args.command == "full":
             full()
+        elif args.command == "regresion":
+            regression()
         elif args.command == "has-targets":
             return 0 if load_targets() else 1
         elif args.command == "has-synth":
