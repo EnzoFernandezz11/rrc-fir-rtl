@@ -32,7 +32,7 @@ Las [23 issues](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues) están e
 
 Requisitos actuales: Python 3.12 o compatible; `iverilog` y `vvp` cuando se registre el primer RTL; `yosys` para `make full`. Las salidas se escriben en `build/` y no se versionan. La [CI](.github/workflows/rtl-ci.yml) corre `smoke` en cada PR y `full` después de integrar en `main` o manualmente.
 
-El registro de RTL tiene la variante temporal serial (`time_serial`, B02). **Agregar una variante al registro en el mismo PR que incorpora su RTL y testbench.** Si una variante registrada falta o su simulación falla, `make smoke` falla; el mensaje inicial de «0 variantes» no cuenta como vector matching.
+Las variantes registradas están en `config/rtl_targets.json`. **Agregar una variante al registro en el mismo PR que incorpora su RTL y testbench.** Si una variante registrada falta o su simulación falla, `make smoke` falla; el mensaje inicial de «0 variantes» no cuenta como vector matching.
 
 ## Organización
 
