@@ -69,8 +69,8 @@ Riesgos al 12/10:
 | [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | @andres332271 | 12/10 | — | #40 en revisión; error máx. entre modelos flotantes < 2e-14. Plan: fin 11/10. |
 | [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | @andres332271 | 12/10 | — | #41 en revisión: salida Q2.7 (9 bits), SQNR 44,2/43,0 dB. Cierra después de A03. Plan: fin 12/10. |
 | [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | @andres332271 | 12/10 | — | #42 en revisión, apilado sobre #41. Corte para cerrar B02/C02. Plan: inicio 13/10, fin 14/10. |
-| [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | @moreyrajulian | — | — | Sin evidencia en el repo. Plan: inicio 08/10, fin 10/10. |
-| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | — | — | — | Plan: inicio 11/10. |
+| [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | @moreyrajulian | 12/10 | 13/10 | #44 integrado: `L = 9`, `II = 10`, 56 FF estimados. Plan: inicio 08/10, fin 10/10 (+3). |
+| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | @moreyrajulian | 13/10 | — | RTL, testbench (vectores smoke, `L`/`II`, pausas) y registro en CI. Plan: inicio 11/10. |
 | [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | @EnzoFernandezz11 | 06/10 | — | #39 en revisión, con cambios pedidos el 12/10 (quitar R01); arquitectura verificada por simulación. Plan: fin 11/10. |
 | [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | — | — | — | Plan: inicio 12/10. |
 | [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | — | — | — | — |
