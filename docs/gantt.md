@@ -49,13 +49,13 @@ G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entr
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
 
-**Al 14/10:** 14 de 23 tareas iniciadas (E00–E03, G01, A01–A05, B01, B02, C01 y C02), 11 integradas (E00–E03, A01–A05, B01 y C01) y 0 verificadas. Según el plan deberían haber empezado 18: faltan B03, C03, A07 e I02. B02 pasa el vector matching en su PR (#45), pero cuenta como verificada recién al integrarse. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
+**Al 14/10:** 16 de 23 tareas iniciadas (E00–E03, G01, A01–A07, B01, B02, C01 y C02), 11 integradas (E00–E03, A01–A05, B01 y C01) y 0 verificadas. Según el plan deberían haber empezado 18: faltan B03, C03 e I02. A06 empezó un día antes de lo previsto. B02 pasa el vector matching en su PR (#45), pero cuenta como verificada recién al integrarse. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
 
 Riesgos al 14/10:
 
 - **Rama temporal:** B01 se integró el 13/10, 3 días después del plan, y B02 (#45) está en revisión con cambios pedidos; su plan cierra el 15/10. B03 no empezó (plan 11–13/10) y B04 necesita B02 y B03. Si los dos cierran el 17/10, B04 termina el 26/10 y la holgura hasta I01 (29/10) baja de 4 a 2 días.
 - **Rama en frecuencia:** C01 se integró el 13/10, 2 días después del plan, pero C02 empezó en paralelo el 12/10 como estaba previsto (rama sin PR). C04 sigue sin holgura: C02 tiene que cerrar el 19/10. C03 no empezó (plan 12–13/10); no frena a C04 mientras termine antes que C02.
-- **Modelos:** A01–A05 integradas; A05 cerró un día antes del plan. A07 (tabla PPA) lleva 3 días sin empezar (plan 11/10) y es dependencia de I01; ya puede arrancar con `time_serial` registrada. A06 empieza el 15/10, según el plan, e I02 hoy.
+- **Modelos:** A01–A05 integradas; A05 cerró un día antes del plan. A06 y A07 empezaron el 14/10, en ramas sin PR. A07 arrancó 3 días tarde y es dependencia de I01: la tabla se arma con el flujo Vivado de C02, que hoy solo mide `fir_frequency_serial`; hasta que acepte otras variantes no hay cifras de B02/B04. I02 no empezó (plan 14/10).
 
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
 |---|---|---|---|---|
@@ -73,12 +73,12 @@ Riesgos al 14/10:
 | [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | @moreyrajulian | 14/10 | — | #45 en revisión con cambios pedidos: vector matching, `L`/`II` y pausas pasan; falta prueba de reset en medio de trama. Plan: inicio 11/10, fin 15/10. |
 | [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | @EnzoFernandezz11 | 06/10 | 13/10 | #39 integrado tras quitar R01. Plan: fin 11/10 (+2). |
 | [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | — | Rama `enzo/c02-rtl-implemntation`, sin PR. Plan: inicio 12/10, fin 19/10. |
-| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | — | — | — | Plan: inicio 15/10. |
+| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | @andres332271 | 14/10 | — | Rama `a/a06-banco-comun`, sin PR: banco común en `tb/common/` y `make regresion`; pasa con el RTL de B02 y C02. Cierra con B02 y C02 integrados. Plan: inicio 15/10 (−1). |
 | [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | Plan: inicio 11/10, fin 13/10. |
 | [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | — |
 | [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | — | — | — | Plan: inicio 12/10, fin 13/10. |
 | [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | — | — | — | Camino crítico hasta I01. |
-| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | — | — | — | Empieza con variantes disponibles; `time_serial` registrada en #45. Plan: inicio 11/10. |
+| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | @andres332271 | 14/10 | — | Rama `a/a07-tabla-ppa`, sin PR: `scripts/ppa_table.py` arma la tabla desde el `summary.tsv` del flujo Vivado de C02. Plan: inicio 11/10 (+3). |
 | [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
 | [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | — | — | — | Borrador temprano; conclusiones tras I01. Plan: inicio 14/10. |
 | [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Presentación 30/10. |
