@@ -25,4 +25,8 @@ Los cinco primeros (426 muestras) corren en cada integración; \texttt{qpsk\_s1}
 
 \pendiente{Andrés (A06)}{Banco de pruebas común: un mismo testbench para las variantes de ambas ramas, con pausas en la entrada y contrapresión en la salida; resultados de la regresión.}
 
-\pendiente{Andrés}{Integración continua: qué corre \texttt{make smoke} (modelos, vectores, simulación con Icarus) y \texttt{make full} (síntesis con Yosys).}
+\subsection{Integración continua}
+
+Toda la verificación corre con dos comandos, idénticos en una máquina local y en GitHub Actions. \texttt{make smoke} valida la configuración compartida (\texttt{config/project.json}: requisitos de la consigna y decisiones del equipo), ejecuta las pruebas de Python (modelos flotantes y fijos, correspondencia entre ramas, SQNR y vectores) y, para cada variante RTL registrada en \texttt{config/rtl\_targets.json}, compila el testbench con Icarus Verilog y lo simula contra los vectores. \texttt{make full} sintetiza cada variante con Yosys y falla si el diseño no es sintetizable o tiene errores estructurales, como lazos combinacionales o señales con más de un driver; no produce cifras de desempeño, que salen de Vivado (sección~\ref{sec:ppa}). Agregar una variante consiste en registrarla en ese archivo con sus fuentes, su testbench y su script de síntesis, sin tocar la CI.
+
+El primer comando corre en cada pull request y su resultado es requisito para aprobarlo en la revisión; el segundo, en cada integración a la rama principal. Ante un fallo, la CI guarda los registros de cada paso para diagnosticarlo sin reproducirlo localmente.
