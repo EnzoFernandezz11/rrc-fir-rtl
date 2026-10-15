@@ -52,7 +52,7 @@ Estados permitidos: **abierto**, **propuesto**, **provisional**, **confirmado po
 | D05 | ¿Qué plataforma, biblioteca, reloj y constraints se usarán para comparar PPA? | propuesto | @moreyrajulian y @EnzoFernandezz11 | E03 propone Vivado out-of-context sobre Artix-7, con relojes de 100 y 10 MHz en `constraints/`. Ver [verificación y PPA](contratos/verificacion-y-ppa.md#ppa). |
 | D06 | ¿Cómo se estimará potencia con los mismos estímulos y condiciones para las cuatro variantes? | propuesto | @andres332271, @moreyrajulian y @EnzoFernandezz11 | E03 propone `report_power` de Vivado con actividad SAIF de la simulación del vector QPSK de A05, y energía por muestra. Ver [verificación y PPA](contratos/verificacion-y-ppa.md#ppa). |
 | D07 | ¿Cuál es la definición de SQNR: referencia, muestras descartadas, tratamiento de I/Q y casos usados? | propuesto | @andres332271 | A04 en [verificación y PPA](contratos/verificacion-y-ppa.md#sqnr): referencia flotante común, todas las muestras, I/Q juntas, semillas 0–4 × 1024 símbolos. |
-| D08 | ¿Qué arquitectura se elige para cada variante optimizada y qué eje PPA intenta mejorar? | abierto | @moreyrajulian y @EnzoFernandezz11 | Después de las seriales. |
+| D08 | ¿Qué arquitectura se elige para cada variante optimizada y qué eje PPA intenta mejorar? | propuesto (temporal); abierto (frecuencia) | @moreyrajulian y @EnzoFernandezz11 | Temporal, B03 en [arquitectura optimizada](arquitectura-rtl-tiempo-optimizada.md): sistólica en forma transpuesta, `II = 1`, `L = 1`, variante rápida a 100 MHz; eje **desempeño** (throughput ×10 frente a B02 a igual reloj; ×100 con los relojes objetivo de cada variante) a costa de área (≈ 146 FF y 14 sumadores, sin DSP). Frecuencia: C03. |
 
 ## 3. Detalle por tema
 

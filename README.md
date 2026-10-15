@@ -36,7 +36,7 @@ Las variantes registradas están en `config/rtl_targets.json`. **Agregar una var
 
 ## Organización
 
-La [arquitectura RTL serial de B01](docs/arquitectura-rtl-tiempo-serial.md) define el diseño temporal que implementa `rtl/time/fir_time_serial.sv` (B02). La [arquitectura RTL serial de C01](docs/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones y justificaciones del diseño en frecuencia, puertos, bloques, estados, presupuesto de ciclos, evidencia y dependencias pendientes para implementar C02.
+La [arquitectura RTL serial de B01](docs/arquitectura-rtl-tiempo-serial.md) define el diseño temporal que implementa `rtl/time/fir_time_serial.sv` (B02), y la [arquitectura optimizada de B03](docs/arquitectura-rtl-tiempo-optimizada.md) elige la variante sistólica que implementará B04. La [arquitectura RTL serial de C01](docs/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones y justificaciones del diseño en frecuencia, puertos, bloques, estados, presupuesto de ciclos, evidencia y dependencias pendientes para implementar C02.
 
 | Ruta | Contenido |
 |---|---|
