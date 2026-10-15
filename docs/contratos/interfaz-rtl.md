@@ -84,6 +84,23 @@ Protocolo ilustrativo, no arquitectura: un núcleo hipotético con `II = 3` y `L
 | 9 | 0 | 0 | 0 | — | 1 | 1 | `y[2]`, `last` ↑ | Fin de trama; el historial vuelve a cero. |
 | 10 | 0 | 1 | 1 | `x[0]` ↑ | 0 | 1 | — | Primera muestra de una trama nueva. |
 
+## Secuencia de B01 (temporal serial)
+
+Diseño en [B01](../arquitectura-rtl-tiempo-serial.md): `L = 9`, `II = 10`. Trama de dos muestras `x[0] = +1+j`, `x[1] = −1−j`; los ciclos 2…9 y 14…21 son los ocho taps de cada muestra. Salidas en enteros Q2.7.
+
+| Ciclo | `rst` | `in_valid` | `in_ready` | Entrada | `out_valid` | `out_ready` | Salida | Qué pasa |
+|---:|:-:|:-:|:-:|---|:-:|:-:|---|---|
+| 0 | 1 | 0 | 0 | — | 0 | 1 | — | Reset. |
+| 1 | 0 | 1 | 1 | `x[0]` ↑ | 0 | 1 | — | `IDLE`: acepta en el primer flanco sin reset. |
+| 2…9 | 0 | 0 | 0 | — | 0 | 1 | — | `MAC`, `k = 0…7`; el productor todavía no tiene `x[1]`. |
+| 10 | 0 | 0 | 0 | — | 1 | 0 | `y[0] = 1+j` | `OUT` con backpressure: se sostiene. |
+| 11 | 0 | 0 | 0 | — | 1 | 1 | `y[0]` ↑ | Entrega `y[0]`; vuelve a `IDLE`. |
+| 12 | 0 | 0 | 1 | — | 0 | 1 | — | Burbuja: nada cambia. |
+| 13 | 0 | 1 | 1 | `x[1]`, `last` ↑ | 0 | 1 | — | Acepta la última muestra. |
+| 14…21 | 0 | 0 | 0 | — | 0 | 1 | — | `MAC`; `in_ready = 0` hasta cerrar la trama. |
+| 22 | 0 | 0 | 0 | — | 1 | 1 | `y[1] = −15−15j`, `last` ↑ | Fin de trama; el historial vuelve a cero en este flanco. |
+| 23 | 0 | 1 | 1 | `x[0]` ↑ | 0 | 1 | — | Primera muestra de una trama nueva. |
+
 ## Revisión
 
 - [ ] @andres332271 puede escribir un testbench común sin conocer la FSM interna.
