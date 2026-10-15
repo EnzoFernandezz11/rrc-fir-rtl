@@ -4,44 +4,85 @@
 
 **Alcance:** definición de la estrategia y su justificación. El RTL y las mediciones corresponden a C04.
 
-La optimización elegida combina una unidad de producto complejo con cuatro
-multiplicadores reales en paralelo y un diseño aritmético explícito de cada
-multiplicador mediante **Booth radix-4, árbol Wallace y CLA jerárquico**. El
-objetivo es reducir la serialización de las operaciones que intervienen en FFT,
-multiplicación espectral e IFFT. Se incorpora además un **bypass de los twiddles
-triviales**, que evita utilizar el multiplicador para los factores `1` y `±j`.
-Para FFT16 e IFFT16 se elige como objetivo ejecutar **ocho mariposas simultáneas
-por etapa**, aprovechando todos los pares independientes de una etapa radix-2.
-Las **cuatro etapas estarán desplegadas**, con hardware propio y conexiones
-definidas por la FFT, en lugar de reutilizar ocho mariposas entre etapas.
-Se utilizarán **núcleos FFT16 e IFFT16 separados**, cada uno con sus cuatro
-etapas, para que no compitan por una misma estructura transformadora.
-La multiplicación espectral comenzará con **cuatro unidades de producto complejo
-compartidas entre los 16 bins**, organizadas en cuatro tandas. Su cantidad se
-revisará si el calendario y las medidas muestran que limitan la tasa del sistema.
-Entre FFT y productos espectrales, y entre productos e IFFT, se utilizarán
-**dos bancos ping-pong por frontera** para conservar bloques y desacoplar sus
-transferencias.
-La temporización inicial registra la salida de cada etapa radix-2: las tres
-fronteras internas usan registros propios y la última etapa escribe en el banco
-de destino reservado. Las cuatro unidades espectrales aceptarán una tanda por
-ciclo. Se agregan dos buffers de ventanas de entrada y dos de resultados útiles
-de salida; cada cálculo reserva su destino antes de arrancar y luego termina
-sin pausas internas.
-Los buffers X e Y mantendrán **orden natural**. Se conservarán los núcleos
-**DIT radix-2**, aplicando una única permutación fija de índices en la entrada
-de cada transformada, sin intercambios seriales previos a la IFFT.
-La candidata se clasifica como **variante rápida**, con **objetivo inicial de
-100 MHz y período de 10 ns**, pendiente de comprobar en la implementación.
-Se fija además **un bloque completo nuevo cada ocho ciclos en régimen sin
-pausas**, como objetivo de throughput distinto de la latencia de cada bloque.
+**Eje PPA:** desempeño. Se busca aumentar el throughput sostenido mediante
+paralelismo y pipeline, aceptando más operadores, registros e interconexión.
+La candidata es una **variante rápida con objetivo de 100 MHz (10 ns)** y
+**un bloque de ocho muestras nuevas cada ocho ciclos** en régimen sin pausas.
+Ambas cifras son metas para C04, pendientes de implementación y medición.
 
-La elección de cuatro operadores queda condicionada a comprobar que la
-implementación sea realizable y mejore el tiempo de procesamiento. Primero se
-implementará y verificará el RTL, después se medirán sus resultados y recién
-entonces se analizarán técnicas de retiming y, si hace falta, nuevos cortes de
-pipeline. Este documento define ese trabajo; no presenta una candidata ya
-implementada ni mejoras físicas medidas.
+## Decisión propuesta
+
+Se elige una arquitectura **FFT16/IFFT16 paralela por etapas y pipelineada**,
+con núcleos separados y multiplicación espectral parcialmente compartida.
+El método sigue siendo overlap-save con 50 % de superposición: ocho muestras
+de historial, ocho nuevas y ocho salidas útiles por bloque completo.
+
+| Nivel de diseño | Elección | Motivo y costo principal |
+|---|---|---|
+| FFT16 e IFFT16 | Dos núcleos separados; cuatro etapas propias de ocho mariposas cada uno | Evitar la reutilización entre etapas y entre transformadas; aumenta el hardware dedicado. |
+| Aritmética | Cuatro multiplicadores reales Booth radix-4 → Wallace → CLA por producto complejo general | Calcular los cuatro productos simultáneamente; aumenta lógica y conexiones. |
+| Twiddles triviales | Especializar las posiciones con `1` y `±j` | Resolver 22 de las 32 rotaciones de cada núcleo por conexiones y signos, conservando sus sumas/restas. |
+| Productos espectrales | Cuatro unidades complejas para 16 bins, en cuatro tandas consecutivas | Compartir recursos con margen dentro del objetivo de ocho ciclos por bloque. |
+| Pipeline | Registro a la salida de cada etapa radix-2; `II_mul = 1` en la etapa espectral | Separar etapas dependientes y permitir bloques solapados; exige cerrar cada camino a 10 ns. |
+| Almacenamiento y control | Dos ventanas, dos bancos X, dos Y y dos buffers de salida; reserva antes de iniciar | Desacoplar productores y consumidores y conservar datos ante pausas; aumenta memoria y control. |
+| Orden de datos | X e Y en orden natural; bit reversal fijo a la entrada de cada DIT | Eliminar los intercambios seriales previos a IFFT mediante conexiones vectoriales. |
+
+### Diagrama de bloques de la candidata
+
+```mermaid
+flowchart TD
+    IN["Entrada I/Q · valid/ready/last"] --> WIN["Dos ventanas de 16 muestras<br/>8 anteriores + 8 nuevas"]
+    HIST["Historial de 8 muestras<br/>cero al iniciar cada trama"] --> WIN
+    IN --> HIST
+    WIN --> BRF["Conversión a formato de trabajo<br/>y bit reversal fijo"]
+    BRF --> FFT["FFT16 DIT: 4 etapas propias<br/>8 mariposas por etapa · salida registrada"]
+    W["Twiddles constantes<br/>especialización de 1 y ±j"] --> FFT
+    FFT --> X["Bancos X0 / X1<br/>16 bins en orden natural"]
+    X --> MUL["4 productos complejos en paralelo<br/>4 tandas · II_mul = 1"]
+    H["Coeficientes H de 16 bins"] --> MUL
+    MUL --> Y["Bancos Y0 / Y1<br/>16 bins en orden natural"]
+    Y --> BRI["Bit reversal fijo"]
+    BRI --> IFFT["IFFT16 DIT: 4 etapas propias<br/>8 mariposas por etapa · salida registrada"]
+    W --> IFFT
+    IFFT --> SCALE["Posiciones útiles 8…15<br/>escala 1/16 y formato de salida"]
+    SCALE --> OUTBUF["Dos buffers de 8 salidas<br/>p salidas válidas si el bloque es parcial"]
+    OUTBUF --> OUT["Salida I/Q · valid/ready/last"]
+    CTRL["Control: ocupación, reservas,<br/>validez, p, last y reset"] -.-> WIN
+    CTRL -.-> FFT
+    CTRL -.-> X
+    CTRL -.-> MUL
+    CTRL -.-> Y
+    CTRL -.-> IFFT
+    CTRL -.-> OUTBUF
+```
+
+La cuarta etapa de cada núcleo escribe directamente en su destino reservado:
+X para FFT y, tras seleccionar y escalar, el buffer de salida para IFFT.
+Los twiddles de IFFT son los conjugados de los de FFT. El historial avanza
+solo con muestras aceptadas; las reservas y los metadatos acompañan cada bloque.
+
+### Relación con la consigna y alcance de C03
+
+La [consigna vigente](../consigna-actualizada.md) pide una implementación paralela
+y evaluar especialmente FFT, multiplicación espectral e IFFT. La propuesta
+explota los ocho pares independientes de cada etapa radix-2, despliega las cuatro
+etapas y separa ambos núcleos. **La etapa espectral usa paralelismo parcial**:
+cuatro productos simultáneos, frente al máximo estructural de 16. Se justifica
+por la alimentación de una muestra por ciclo y el objetivo de ocho ciclos entre
+bloques; aumentar a ocho o 16 unidades queda sujeto al calendario y las medidas.
+Esta elección debe revisarse explícitamente al evaluar el requisito de mayor
+paralelización posible; no se presenta como máximo paralelismo en los tres bloques.
+
+C03 documenta la opción, la memoria y el compromiso PPA, como pide la
+[issue #18](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18).
+C04 implementará y verificará la candidata antes de analizar retiming o cortes
+adicionales. La propuesta corresponde a D08 de la rama de frecuencia;
+la revisión del equipo y su registro en el contrato siguen pendientes.
+
+**Guía de lectura:** la sección 1 presenta la base; las secciones 2–4 justifican
+la arquitectura y su calendario; la sección 5 compara la candidata completa;
+la sección 6 define su validación. El apéndice A conserva las estimaciones
+parciales de alternativas y el B identifica el material de apoyo.
 
 ## 1. Problema de la implementación actual
 
@@ -774,58 +815,52 @@ Ese corte se evaluará después de medir; no está seleccionado ahora.
 
 ## 5. Mejora esperada y compromiso PPA
 
-La estimación inicial conserva las 64 mariposas de FFT/IFFT, los 16 productos
-espectrales y los otros 31 ciclos por bloque. Supone que el controlador se adapta
-para aprovechar los operadores y mantiene los restantes enlaces de la base.
-Esta comparación aísla el cambio de cantidad de multiplicadores con una mariposa
-a la vez; **no incluye el bypass ni las ocho mariposas simultáneas elegidas**:
+La comparación principal enfrenta la base serial con **la candidata completa**.
+Se usa `II_bloque` para el intervalo entre bloques completos de una misma trama,
+con entrada siempre disponible y salida siempre lista, después del arranque.
 
-| Alternativa de calendario | Ciclos por mariposa | Ciclos por bin | Ciclos por bloque | Aumento de throughput al mismo reloj |
-|---|---:|---:|---:|---:|
-| Base serial de C02 | 7 | 6 | 575 | Referencia |
-| Dos operadores, dos ciclos de cálculo | 5 | 4 | 415 | 38,6 % |
-| Cuatro operadores, productos y combinación en un ciclo | 4 | 3 | 335 | 71,6 % |
-| Cuatro operadores, productos y combinación en dos ciclos sin solapamiento | 5 | 4 | 415 | 38,6 % |
+| Métrica | C02 serial | Candidata C03, pendiente de verificar en C04 |
+|---|---|---|
+| Reloj de evaluación | 10 MHz en la corrida histórica | Objetivo de 100 MHz (10 ns) |
+| `II_bloque` | 575 ciclos, verificados en el benchmark | Objetivo de 8 ciclos |
+| Throughput al mismo reloj `f` | `8 × f / 575` muestras/s | `8 × f / 8 = f` muestras/s; factor teórico **71,875×** |
+| Throughput con los relojes indicados | ≈ 139 130 muestras/s a 10 MHz | Objetivo de 100 000 000 muestras/s a 100 MHz; factor combinado **718,75×** |
+| Latencia | `L = 559` ciclos según el benchmark y la definición contractual | Pendiente de medir con la misma definición; el calendario interno entrega la primera salida 15 ciclos después de disponer de la ventana |
+| Operadores reales de multiplicación | Un operador compartido en RTL | 96 posiciones: 40 en FFT + 16 espectrales + 40 en IFFT, antes de simplificaciones y síntesis |
+| Almacenamiento de datos | Banco de trabajo de 384 bits más historial de 32 bits; conteo parcial | Presupuesto de 4288 bits de datos; excluye control y otros registros indicados en la sección 4 |
+| Recursos FPGA | Resumen histórico: 1875 LUT como lógica, 569 FF y 3 DSP | Pendientes de síntesis e implementación; las posiciones aritméticas no equivalen a DSP físicos |
+| Timing físico | Fmax aproximada de 57,72 MHz derivada de la corrida a 10 MHz; falta el camino detallado | Comprobar setup/hold a 100 MHz e identificar caminos limitantes |
+| Potencia y energía por muestra | Conservar procedencia y limitaciones de la base histórica | Pendientes de actividad representativa y medición comparable |
 
-Son **escenarios parciales anteriores al paralelismo de ocho mariposas**, no
-el presupuesto de la candidata completa ni resultados del RTL optimizado.
-La cifra de 335 ciclos
-depende de completar multiplicación y combinación en un ciclo de cálculo. Un
-pipeline más profundo, un control con operaciones solapadas o la incorporación
-del bypass, de las ocho mariposas y del despliegue exige recalcular el calendario.
-Cada transformada conserva cuatro etapas dependientes, ahora con hardware propio.
-El calendario inicial de la sección anterior presupone un ciclo por etapa y
-cuatro tandas espectrales consecutivas, junto con transferencias y emisión.
-Su intervalo sostenido se verificará en el RTL; no se obtiene sumando los
-ahorros parciales de esta tabla.
-
-El escenario de 335 ciclos representa un 41,7 % menos de tiempo por bloque y
-un 71,6 % más de throughput al mismo reloj. Frente a la candidata de dos
-operadores y 415 ciclos, la ganancia adicional sería del 23,9 % en throughput.
-
-Para comparar implementaciones con relojes diferentes se utilizará el intervalo
-de inicio de bloques completos `II_bloque`, no la latencia individual:
+Los factores de throughput son **relaciones teóricas entre el calendario base y
+la meta**, no mejoras obtenidas. El factor combinado incluye **10× por el cambio
+de reloj** además de `575/8 = 71,875×` por el intervalo entre bloques. No expresa
+una reducción equivalente de la latencia ni garantiza que la candidata cumpla
+100 MHz. Las tasas cuentan muestras complejas de la interfaz del filtro; para
+una cadena con upsampling 2×, 100 Mmuestras/s corresponden a 50 Msímbolos/s QPSK.
 
 ```text
 Throughput = 8 × f_clk / II_bloque
 
-Mejora de throughput =
+Factor de mejora de throughput =
     (575 / II_bloque_nuevo) × (f_clk_nuevo / f_clk_base)
 ```
 
-En la base no solapada, el presupuesto de 575 ciclos por bloque coincide con
-el intervalo sostenido de bloques completos del benchmark. En una arquitectura
-con bloques solapados, la latencia de un bloque y su intervalo de inicio pueden
-ser distintos y deberán informarse por separado. La meta de la candidata es
-`II_bloque = 8` a 100 MHz bajo las condiciones ideales definidas, pendiente de
-comprobar mediante simulación y timing físico.
+La comparación física debe conservar dispositivo, flujo, formatos y estímulos,
+y declarar el reloj de cada corrida. Una corrida adicional de la base a 100 MHz
+permitiría comparar su respuesta a la misma restricción, sin sustituir el registro
+histórico. La Fmax estimada de una implementación a 10 MHz no demuestra cómo
+cerraría ese diseño al implementarlo con una restricción más exigente.
 
-La aceptación de cuatro operadores depende del tiempo de procesamiento
-verificado, del cumplimiento del reloj objetivo y de los recursos necesarios.
-Se espera aumentar la lógica respecto de un operador compartido; área y potencia
-deben medirse. La energía por muestra podría mejorar si disminuye el tiempo de
-procesamiento, pero el aumento de operadores y actividad impide garantizarlo
-antes de contar con mediciones comparables.
+Se espera aumentar la lógica y el almacenamiento respecto de un operador
+compartido. La magnitud final depende de especialización por constantes, síntesis
+y ruteo; no se deduce multiplicando los recursos de C02 por 96. La energía por
+muestra podría mejorar al aumentar la tasa, pero la replicación y la actividad
+impiden garantizarlo antes de medir.
+
+Los escenarios de **415 y 335 ciclos** comparan únicamente cambios de operadores
+sobre un calendario serial y se conservan en el apéndice A. No son el presupuesto
+de esta arquitectura ni se suman sus ahorros a los del pipeline elegido.
 
 ## 6. Plan posterior: RTL, medición y análisis de retiming
 
@@ -887,13 +922,83 @@ se realizarán en **C04**, siguiendo este orden:
    de señales. Eso es una modificación de pipeline, distinta del retiming.
    Repetir la verificación y la comparación temporal después de cada cambio.
 
-Agregar un registro no garantiza mejorar el tiempo total. Como ejemplo de los
-escenarios parciales con una mariposa a la vez, si un corte llevara el calendario
-bloqueante de 335 a 415 ciclos, el reloj debería
-aumentar más del **23,9 %** para mejorar el throughput. Esta relación justifica
-medir primero y elegir después el ajuste temporal.
+El retiming se decidirá con los caminos medidos. Si se agregan registros,
+se actualizarán latencia, reservas y alineación del control, y se verificará
+que el intervalo de ocho ciclos siga siendo sostenible.
 
 Las evidencias y comparaciones de C04 se incorporarán al
 [registro PPA común](../../reports/ppa/frequency.md), conservando la base y
-distinguiendo las predicciones de los resultados obtenidos. Esta nota no acredita
-la implementación de C04 ni la revisión o el cierre administrativo de C03.
+distinguiendo las predicciones de los resultados obtenidos.
+
+### Puntos para la revisión de C03
+
+- Evaluar el compromiso de cuatro unidades espectrales frente a ocho o 16,
+  considerando la consigna y el objetivo de una muestra por ciclo.
+- Revisar el calendario, los accesos vectoriales y las reservas con los buffers
+  elegidos, especialmente ante backpressure y límites de trama.
+- Revisar el costo estructural de 96 multiplicadores reales y 4288 bits de datos,
+  y el plan para comprobar 100 MHz sin cambiar la cuantización de referencia.
+- Registrar la propuesta de frecuencia en D08 al preparar su integración,
+  conservando el estado que tenga la decisión temporal y la revisión del equipo.
+
+Esta nota aporta la decisión escrita para revisión de C03; la implementación,
+la equivalencia y las mejoras físicas de C04 siguen pendientes.
+
+## Apéndice A. Alternativas parciales de multiplicación
+
+La estimación inicial conserva las 64 mariposas de FFT/IFFT, los 16 productos
+espectrales y los otros 31 ciclos por bloque. Supone que el controlador se adapta
+para aprovechar los operadores y mantiene los restantes enlaces de la base.
+Esta comparación aísla el cambio de cantidad de multiplicadores con una mariposa
+a la vez; **no incluye el bypass ni las ocho mariposas simultáneas elegidas**:
+
+| Alternativa de calendario | Ciclos por mariposa | Ciclos por bin | Ciclos por bloque | Aumento de throughput al mismo reloj |
+|---|---:|---:|---:|---:|
+| Base serial de C02 | 7 | 6 | 575 | Referencia |
+| Dos operadores, dos ciclos de cálculo | 5 | 4 | 415 | 38,6 % |
+| Cuatro operadores, productos y combinación en un ciclo | 4 | 3 | 335 | 71,6 % |
+| Cuatro operadores, productos y combinación en dos ciclos sin solapamiento | 5 | 4 | 415 | 38,6 % |
+
+Son **escenarios parciales anteriores al paralelismo de ocho mariposas**, no
+el presupuesto de la candidata completa ni resultados del RTL optimizado.
+La cifra de 335 ciclos
+depende de completar multiplicación y combinación en un ciclo de cálculo. Un
+pipeline más profundo, un control con operaciones solapadas o la incorporación
+del bypass, de las ocho mariposas y del despliegue exige recalcular el calendario.
+Cada transformada conserva cuatro etapas dependientes, ahora con hardware propio.
+El calendario inicial de la sección 4 presupone un ciclo por etapa y
+cuatro tandas espectrales consecutivas, junto con transferencias y emisión.
+Su intervalo sostenido se verificará en el RTL; no se obtiene sumando los
+ahorros parciales de esta tabla.
+
+El escenario de 335 ciclos representa un 41,7 % menos de tiempo por bloque y
+un 71,6 % más de throughput al mismo reloj. Frente a la candidata de dos
+operadores y 415 ciclos, la ganancia adicional sería del 23,9 % en throughput.
+
+Agregar un registro no garantiza mejorar el throughput. En estos escenarios
+bloqueantes, pasar de 335 a 415 ciclos exigiría un aumento de reloj mayor que
+23,9 % para compensar. En la candidata con bloques solapados, la comparación
+se realiza con el `II_bloque` resultante, no con esa latencia parcial.
+
+## Apéndice B. Fundamentos y referencias
+
+El material de la cursada se consultó en `/mnt/datos/marvell/RTL/PPTS`.
+Las referencias siguientes identifican sus resúmenes locales; no forman parte
+del repositorio ni reemplazan la consigna vigente.
+
+| Material del curso | Aplicación en esta decisión |
+|---|---|
+| `Resumen_Modulo_4.md`, secciones 3–7 | CLA jerárquico, compresores CSA, Wallace/Dadda y Booth radix-4; fundamento de la estructura del multiplicador. |
+| `Resumen_Modulo_6.md`, secciones 1–3 | Separación entre planificación en ciclos y timing físico; dependencias de datos y asignación de recursos. |
+| `Resumen_Modulo_7_Arquitecturas_DSP.md`, secciones 5 y 8 | Pipeline, retiming, reutilización de recursos y FFT DIT; fundamento del despliegue y de la distinción entre latencia y tasa. |
+| `Resumen_Modulo_9_Timing_STA_CDC.md`, sección 3 | Análisis de caminos, setup/hold y alineación de datos y control al modificar registros. |
+
+Las decisiones concretas —ocho mariposas por etapa, cuatro unidades espectrales,
+buffers y calendario— son propuestas de este trabajo. El material proporciona
+los criterios para justificarlas, sin demostrar su PPA ni imponer esos valores.
+
+La [PR #49 — B03: Elegir optimización temporal](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/49)
+se toma como referencia de presentación: eje PPA explícito, alternativas,
+comparación base/propuesta y separación entre predicción y verificación.
+Sus cifras y su validación pertenecen al FIR temporal; la candidata de frecuencia
+requiere sus propias evidencias.
