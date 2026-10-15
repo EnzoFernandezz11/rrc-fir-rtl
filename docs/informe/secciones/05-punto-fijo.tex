@@ -1,0 +1,72 @@
+\section{Punto fijo y comparación con punto flotante}\label{sec:punto-fijo}
+
+\subsection{Formatos}
+
+Se usa la notación Q$m.f$: $m$ bits enteros con signo y $f$ fraccionarios, en complemento a 2. Los modelos de punto fijo trabajan con enteros, redondean mitad hacia arriba en cada corte, $(v + 2^{s-1}) \gg s$, y no saturan: los anchos se derivan de cotas de peor caso y el modelo falla si un valor no entra. La tabla~\ref{tab:formatos} resume los formatos.
+
+\begin{table}[h]
+  \centering
+  \caption{Formatos de punto fijo por nodo.}\label{tab:formatos}
+  \begin{tabular}{llcrl}
+    \toprule
+    Nodo & Rama & Formato & Bits & Cota \\
+    \midrule
+    Entrada I/Q & ambas & Q2.0 & 2 & $\{-1, 0, +1\}$ \\
+    Coeficientes $h_q$ & ambas & Q1.7 & 8 & $88/128 = 0{,}6875$ \\
+    Acumulador & tiempo & Q2.7 & 9 & $\sum|h_q| = 234/128$ \\
+    Salida I/Q & ambas & Q2.7 & 9 & $1{,}83$ + error \\
+    Banco \texttt{work} & frecuencia & Q7.5 & 12 & 42,5 \\
+    Twiddles $W$ & frecuencia & Q2.8 & 10 & $\pm1$ \\
+    Espectro $H$ & frecuencia & Q2.8 & 10 & 1,39 \\
+    Producto complejo & frecuencia & Q10.13 & 23 & — \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+En la rama temporal la entrada vale $-1$, 0 o $+1$, así que cada producto es seleccionar o negar $h_q[k]$: no hace falta multiplicador y el acumulador es exacto. Toda la diferencia con el flotante proviene de cuantizar los coeficientes.
+
+En la rama en frecuencia cada valor intermedio es lineal en la ventana de entrada, $v = \sum_n c_n x_n$, de modo que $|\mathrm{Re}\,v|, |\mathrm{Im}\,v| \le \sum_n (|\mathrm{Re}\,c_n| + |\mathrm{Im}\,c_n|)$. Evaluando esa cota en las nueve etapas (cuatro de FFT, el producto por $H$ y cuatro de IFFT) con las constantes ya cuantizadas, y sumando 1 de margen por redondeo, el máximo es 42,5, en la penúltima etapa de la IFFT. Eso fija 7 bits enteros para \texttt{work}. Un caso de prueba construye la ventana QPSK que lleva cada nodo a su máximo y comprueba que no hay desborde y que la cota no sobra un bit.
+
+\subsection{SQNR}
+
+Se mide contra una única referencia para ambas ramas, el FIR temporal flotante con los coeficientes sin cuantizar, de modo que la SQNR incluye el error de cuantizar $h$, $H$ y $W$:
+\begin{equation}
+  \mathrm{SQNR} = 10 \log_{10} \frac{\sum_n |y_\mathrm{ref}[n]|^2}{\sum_n |y_\mathrm{fxp}[n] - y_\mathrm{ref}[n]|^2},
+\end{equation}
+con $y_\mathrm{fxp}$ = salida entera$/2^7$, I y Q juntas como valor complejo y todas las muestras alineadas por índice, sin descarte. Los casos son QPSK 2× con semillas 0 a 4 de 1024 símbolos (2048 muestras cada una); se informa la mínima entre semillas.
+
+\begin{table}[h]
+  \centering
+  \caption{SQNR mínima (dB) de la rama temporal según los bits fraccionarios de coeficientes (filas) y salida (columnas). Barrido con semillas 0 y 1.}\label{tab:barrido}
+  \begin{tabular}{rrrrrr}
+    \toprule
+    coef \textbackslash{} salida & 5 & 6 & 7 & 8 & 9 \\
+    \midrule
+    5 & 29,8 & & & & \\
+    6 & 32,6 & 42,1 & & & \\
+    \textbf{7} & 35,9 & 37,8 & \textbf{44,3} & & \\
+    8 & 35,9 & 42,1 & 43,1 & 47,4 & \\
+    9 & 36,0 & 43,4 & 50,2 & 50,3 & 57,6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{SQNR mínima (dB) de la rama en frecuencia variando un nodo por vez, con coeficientes y salida en 7 bits fraccionarios. Barrido con semillas 0 y 1.}\label{tab:barrido-frec}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Bits fraccionarios & 4 & 5 & 6 & 7 & 8 & 9 \\
+    \midrule
+    \texttt{work} & 39,6 & \textbf{43,0} & 44,2 & 44,5 & 44,5 & 44,5 \\
+    $W$ & 31,0 & 33,6 & 39,2 & 41,4 & \textbf{43,0} & 42,9 \\
+    $H$ & 32,2 & 37,4 & 39,5 & 41,0 & \textbf{43,0} & 42,3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Con 6 bits fraccionarios en coeficientes y salida también se superan los 40\,dB (42,1\,dB en tiempo), pero se eligieron 7 para dejar unos 3\,dB de margen. Con el formato elegido y las cinco semillas, la SQNR mínima es \textbf{44,2\,dB en tiempo} y \textbf{43,0\,dB en frecuencia}. El error de los coeficientes domina: agregar bits a \texttt{work} no mejora más allá de unos 44,5\,dB.
+
+\paragraph{Correspondencia entre ramas en punto fijo.} Las dos ramas redondean en lugares distintos, así que sus salidas fijas no son idénticas: difieren como máximo en 2\,LSB por componente en todos los casos. Por eso cada RTL se compara palabra por palabra con su propio modelo fijo y no con el de la otra rama.
+
+\pendiente{Andrés (A04)}{Comparación flotante/fijo con otros conjuntos de datos además de QPSK (impulso, extremos, tramas cortas), como pide la consigna; posible figura con el error por muestra.}

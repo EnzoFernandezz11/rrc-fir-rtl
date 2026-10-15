@@ -1,0 +1,7 @@
+\section{Introducción}
+
+La consigna pide implementar por separado dos filtros complejos que procesan símbolos QPSK ($\pm1$): un FIR RRCOS de 8 coeficientes con \emph{roll-off} de 0,5 en el dominio del tiempo y un filtro en el dominio de la frecuencia por bloques con superposición del 50\,\%. Para cada uno se pide una versión serie y una paralela (pipeline, sistólica, \emph{folded} u otra), la verificación de la correspondencia entre ambas ramas, la comparación entre punto flotante y punto fijo con distintos conjuntos de datos, un diagrama de bloques con la descripción de cada etapa y un diagrama de Gantt que muestre el aporte de cada integrante.
+
+El equipo agregó dos requisitos medibles: SQNR de al menos 40\,dB y relojes mínimos de 10\,MHz en las variantes lentas y 100\,MHz en las rápidas.
+
+\paragraph{Organización.} La sección~\ref{sec:senales} fija la señal de entrada y los coeficientes; la~\ref{sec:sistema}, el sistema completo y su interfaz; la~\ref{sec:modelos} y la~\ref{sec:punto-fijo}, los modelos de referencia en flotante y en punto fijo; la~\ref{sec:verificacion}, cómo se verifica el RTL. Las secciones~\ref{sec:tiempo} a~\ref{sec:paralelas} describen las implementaciones, la~\ref{sec:ppa} las compara y la~\ref{sec:gantt} muestra la planificación. El apéndice~\ref{app:comandos} lista los comandos que reproducen cada resultado desde el repositorio \repo.

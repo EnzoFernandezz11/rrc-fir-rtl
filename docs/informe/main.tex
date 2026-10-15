@@ -1,0 +1,44 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[spanish,es-noquoting,es-tabla]{babel}
+\usepackage{fontspec}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage[hidelinks]{hyperref}
+
+% Sección sin redactar: responsable y contenido esperado.
+\newcommand{\pendiente}[2]{%
+  \begin{center}\fcolorbox{orange}{orange!8}{\parbox{0.9\linewidth}{%
+    \textbf{Pendiente — #1.} #2}}\end{center}}
+\newcommand{\repo}{\texttt{rrc-fir-rtl}}
+
+\title{Filtro RRCOS complejo de 8 coeficientes:\\
+  implementaciones RTL en tiempo y en frecuencia}
+\author{Andrés Villarreal \and Julián Moreyra \and Enzo Fernández}
+\date{Octubre de 2026 — borrador}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\input{secciones/01-introduccion}
+\input{secciones/02-senales}
+\input{secciones/03-sistema}
+\input{secciones/04-modelos}
+\input{secciones/05-punto-fijo}
+\input{secciones/06-verificacion}
+\input{secciones/07-tiempo}
+\input{secciones/08-frecuencia}
+\input{secciones/09-paralelas}
+\input{secciones/10-ppa}
+\input{secciones/11-gantt}
+\input{secciones/12-conclusiones}
+
+\appendix
+\input{secciones/a-comandos}
+
+\end{document}

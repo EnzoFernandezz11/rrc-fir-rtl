@@ -1,0 +1,9 @@
+\section{Modelos de referencia en punto flotante}\label{sec:modelos}
+
+Cada rama tiene un modelo flotante en Python que sirve de referencia para su versión en punto fijo y, a través de ella, para el RTL.
+
+\paragraph{Rama temporal.} \texttt{fir\_time(x, h)} implementa la convolución directa $y[n] = \sum_k h[k]\,x[n-k]$ con historial inicial en cero, una salida por muestra de entrada y sin cola: una trama de $N$ muestras produce $N$ resultados.
+
+\paragraph{Rama en frecuencia.} \texttt{frequency\_filter} implementa overlap-save con FFT de 16 puntos y avance de 8 muestras: cada bloque concatena las 8 muestras anteriores con las 8 nuevas, multiplica su FFT por $H = \mathrm{DFT}_{16}(h)$ y conserva las últimas 8 muestras de la IFFT. Con 8 coeficientes, las 7 primeras salidas de cada bloque están contaminadas por el solapamiento circular y se descartan; las 8 restantes coinciden con la convolución lineal. La superposición del 50\,\% que pide la consigna corresponde al historial de 8 sobre 16.
+
+\paragraph{Correspondencia entre ramas (A03).} Ambos modelos se compararon con las mismas muestras y la misma tabla de coeficientes en cuatro grupos de casos: los de la rama temporal (impulso, ceros, QPSK 2×), cuatro semillas QPSK de 256 símbolos, todas las longitudes de trama de 0 a 40 muestras e impulsos en cada posición de tres bloques consecutivos. El error máximo fue menor que $2\times10^{-14}$ en todos los casos, en el orden del error de redondeo de doble precisión: en flotante, las dos ramas calculan el mismo filtro.

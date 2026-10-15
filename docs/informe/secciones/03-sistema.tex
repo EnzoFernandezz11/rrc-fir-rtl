@@ -1,0 +1,21 @@
+\section{Sistema e interfaz}\label{sec:sistema}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[node distance=6mm and 8mm, >=Stealth,
+      blk/.style={draw, rounded corners, minimum height=9mm, align=center, font=\small}]
+    \node[blk] (gen) {Generador\\QPSK};
+    \node[blk, right=of gen] (up) {Sobremuestreo\\2×};
+    \node[blk, right=12mm of up, yshift=8mm] (t) {FIR temporal\\(B)};
+    \node[blk, right=12mm of up, yshift=-8mm] (f) {Overlap-save\\FFT16 (C)};
+    \node[blk, right=12mm of t, yshift=-8mm] (cmp) {Comparación\\y SQNR};
+    \draw[->] (gen) -- node[above, font=\scriptsize]{$a[m]$} (up);
+    \draw[->] (up.east) -- ++(4mm,0) |- (t.west);
+    \draw[->] (up.east) -- ++(4mm,0) |- (f.west);
+    \draw[->] (t.east) -- ++(4mm,0) |- (cmp.west);
+    \draw[->] (f.east) -- ++(4mm,0) |- (cmp.west);
+  \end{tikzpicture}
+  \caption{Cadena común a ambas ramas. Los núcleos RTL reciben las muestras $x[n]$ desde vectores generados por los modelos (sección~\ref{sec:verificacion}).}\label{fig:cadena}
+\end{figure}
+
+\pendiente{Julián y Enzo (E03, B01, C01); Andrés integra}{Diagrama de bloques completo exigido por la consigna, con cada etapa descrita. Interfaz común: \texttt{valid}/\texttt{ready} con \texttt{last}, I/Q con signo en puertos separados (entrada Q2.0, salida Q2.7), \texttt{rst} síncrono activo alto, reglas de conteo y trama (una salida por muestra aceptada, sin cola, historial en cero entre tramas). Fuente: \texttt{docs/contratos/interfaz-rtl.md}.}
