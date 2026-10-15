@@ -50,6 +50,66 @@ class FrequencyVectorChecks(unittest.TestCase):
         self.assertIn("esperado (1,0), obtenido (0,0)", result.stdout)
         self.assertIn(str(path), result.stdout)
 
+    def test_overflow_is_checked_at_each_output_handshake(self):
+        bench = self.directory / "overflow.sv"
+        bench.write_text('''`timescale 1ns/1ps
+module overflow;
+    reg clk=0, rst=1, in_valid=0, in_last=0, out_ready=1;
+    always #5 clk=~clk;
+    wire in_ready, out_valid, out_last;
+    wire signed [8:0] out_i, out_q;
+    integer index, imaginary, sent;
+    fir_frequency_serial dut(.clk(clk), .rst(rst), .in_i(2'sd0), .in_q(2'sd0),
+        .in_valid(in_valid), .in_last(in_last), .in_ready(in_ready),
+        .out_i(out_i), .out_q(out_q), .out_valid(out_valid), .out_last(out_last),
+        .out_ready(out_ready));
+    initial begin
+        if (!$value$plusargs("index=%d", index) || !$value$plusargs("imaginary=%d", imaginary))
+            $fatal(1, "Missing test arguments");
+        repeat (2) @(negedge clk);
+        rst=0; in_valid=1; sent=0;
+        while (sent<8) begin
+            @(posedge clk);
+            if (in_ready) sent=sent+1;
+            @(negedge clk);
+            in_last=(sent==7);
+        end
+        in_valid=0; in_last=0;
+        wait(out_valid);
+        while (dut.engine_result_index != index) @(negedge clk);
+        // Corrupt one stored result only after computation, then hold it stalled.
+        out_ready=0;
+        if (imaginary) dut.u_engine.work_q[8+index]=-2048;
+        else dut.u_engine.work_i[8+index]=2047;
+        repeat (3) @(negedge clk);
+        $display("HELD overflow without handshake");
+        out_ready=1;
+        @(posedge clk); #1;
+        $fatal(1, "Overflow was not detected");
+    end
+    initial begin #20000; $fatal(1, "Test timeout"); end
+endmodule
+''')
+        executable = self.directory / "overflow.out"
+        targets = json.loads((ROOT / "config/rtl_targets.json").read_text())["targets"]
+        target = next(t for t in targets if t["name"] == "frequency_serial")
+        compiled = subprocess.run(
+            ["iverilog", "-g2012", "-s", "overflow", "-o", str(executable),
+             *target["sources"], str(bench)],
+            cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30,
+        )
+        self.assertEqual(compiled.returncode, 0, compiled.stdout)
+        for index in range(8):
+            for imaginary in (0, 1):
+                with self.subTest(index=index, imaginary=imaginary):
+                    result = subprocess.run(
+                        ["vvp", str(executable), f"+index={index}", f"+imaginary={imaginary}"],
+                        cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=10,
+                    )
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    self.assertIn("HELD overflow without handshake", result.stdout)
+                    self.assertIn("frequency_block_engine: result overflows output", result.stdout)
+
     def test_invalid_files_fail_with_location(self):
         cases = {
             "vacio": ("", "archivo vacio", 0),
@@ -61,6 +121,7 @@ class FrequencyVectorChecks(unittest.TestCase):
             "salida": ("0 1 0 0 0 0 256 0\n", "fuera de rango", 0),
             "last": ("0 2 0 0 0 0 0 0\n", "fuera de rango", 0),
             "desconocido": ("0 1 x 0 0 0 0 0\n", "valor desconocido", 0),
+            "alta_impedancia": ("0 1 0 0 0 0 0 z\n", "valor desconocido", 0),
             "sin_last": ("0 0 0 0 0 0 0 0\n", "trama sin last", 0),
             "trama_larga": ("".join(f"{n} 0 0 0 0 0 0 0\n" for n in range(2049)),
                             "trama supera 2048", 2048),

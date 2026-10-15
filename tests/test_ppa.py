@@ -1,13 +1,58 @@
 """El conteo XC7 no debe incluir las celdas internas de la biblioteca Yosys."""
 
 import unittest
+import json
+import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from scripts.ppa import TOP, measurement_key, record_run, resource_counts
+from scripts.validate_project import ROOT
 
 
 class PpaResourcesTest(unittest.TestCase):
+    def test_vivado_options_and_report_parsers(self):
+        result = subprocess.run(
+            ["tclsh", "scripts/ppa/vivado/selftest.tcl"], cwd=ROOT,
+            text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=10,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertIn("PASS", result.stdout)
+
+    def test_benchmark_clock_period_and_metrics(self):
+        targets = json.loads((ROOT / "config/rtl_targets.json").read_text())["targets"]
+        target = next(t for t in targets if t["name"] == "frequency_serial")
+        with TemporaryDirectory() as directory:
+            directory = Path(directory)
+            executable = directory / "ppa.out"
+            compiled = subprocess.run(
+                ["iverilog", "-g2012", "-s", "tb_fir_frequency_ppa", "-o", str(executable),
+                 *target["sources"], "tb/frequency/tb_fir_frequency_ppa.sv"],
+                cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30,
+            )
+            self.assertEqual(compiled.returncode, 0, compiled.stdout)
+            vectors = directory / "zeros.txt"
+            vectors.write_text("2048\n" + "0 0 0 0\n" * 2048)
+            for period in (100, 12.5):
+                with self.subTest(period=period):
+                    metrics_path = directory / "metrics.json"
+                    result = subprocess.run(
+                        ["vvp", str(executable), f"+VECTORS={vectors}",
+                         f"+METRICS={metrics_path}", f"+PERIOD_NS={period}"],
+                        cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stdout)
+                    metrics = json.loads(metrics_path.read_text())
+                    self.assertEqual(metrics["clock_period_ns"], period)
+                    self.assertEqual(metrics["output_samples"], 2048)
+                    self.assertEqual(metrics["active_cycles"], 147200)
+                    self.assertEqual(metrics["latency_cycles"], 559)
+                    self.assertEqual(metrics["block_cycles"], 575)
+                    self.assertEqual(metrics["activity_start_ns"], 10 * period)
+                    self.assertEqual(metrics["activity_duration_ns"], 147200 * period)
+                    self.assertAlmostEqual(metrics["throughput_samples_per_second"],
+                                           2048e9 / (147200 * period), places=6)
+
     def test_top_only_and_separate_resources(self):
         stats = {"modules": {
             "\\" + TOP: {"num_cells_by_type": {

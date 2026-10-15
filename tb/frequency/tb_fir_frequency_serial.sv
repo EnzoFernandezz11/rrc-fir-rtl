@@ -330,6 +330,7 @@ module tb_fir_frequency_serial;
                                    index, last, x_i, x_q, yt_i, yt_q, yf_i, yf_q, extra);
                     if (code != 8)
                         $fatal(1, "A05 %s indice %0d: se requieren ocho columnas", path, next_index);
+                    // Icarus conserva X/Z al leer %d en longint; rechazar antes de comparar rangos.
                     if ((^{index, last, x_i, x_q, yt_i, yt_q, yf_i, yf_q}) === 1'bx)
                         $fatal(1, "A05 %s indice %0d: valor desconocido", path, next_index);
                     if (index != next_index)
