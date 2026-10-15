@@ -3,9 +3,14 @@
 // El mismo estímulo por puertos se utiliza con RTL y netlist temporal de Vivado.
 module tb_fir_frequency_ppa;
     localparam integer SAMPLES = 2048;
-    localparam integer PERIOD_NS = 100;
+    real period_ns = 100;
     reg clk = 0;
-    always #(PERIOD_NS/2) clk = ~clk;
+    initial begin
+        if ($value$plusargs("PERIOD_NS=%f", period_ns)) begin
+            if (!(period_ns > 0)) $fatal(1, "PERIOD_NS debe ser positivo");
+        end
+        forever #(period_ns/2.0) clk = ~clk;
+    end
     reg rst = 1;
     reg signed [1:0] in_i = 0, in_q = 0;
     reg in_valid = 0, in_last = 0;
@@ -118,7 +123,7 @@ module tb_fir_frequency_ppa;
             if (out_valid !== 1'b0) $fatal(1, "Salida extra tras completar la trama");
             @(negedge clk);
         end
-        throughput = SAMPLES * 1.0e9 / (active_cycles * PERIOD_NS);
+        throughput = SAMPLES * 1.0e9 / (active_cycles * period_ns);
         if (metrics_path != "") begin
             fd = $fopen(metrics_path, "w");
             if (!fd) $fatal(1, "No se pudo abrir %s", metrics_path);
@@ -127,8 +132,8 @@ module tb_fir_frequency_ppa;
             $fdisplay(fd, "  \"timing_simulation\": %s,", timing_mode ? "true" : "false");
             $fdisplay(fd, "  \"seed\": 1, \"symbols\": 1024, \"samples_per_symbol\": 2,");
             $fdisplay(fd, "  \"input_samples\": %0d, \"output_samples\": %0d,", sent, received);
-            $fdisplay(fd, "  \"clock_period_ns\": %0d, \"active_cycles\": %0d,", PERIOD_NS, active_cycles);
-            $fdisplay(fd, "  \"activity_start_ns\": 1000, \"activity_duration_ns\": %0d,", active_cycles*PERIOD_NS);
+            $fdisplay(fd, "  \"clock_period_ns\": %0.3f, \"active_cycles\": %0d,", period_ns, active_cycles);
+            $fdisplay(fd, "  \"activity_start_ns\": %0.3f, \"activity_duration_ns\": %0.3f,", 10*period_ns, active_cycles*period_ns);
             $fdisplay(fd, "  \"latency_cycles\": %0d, \"block_cycles\": 575, \"blocks\": %0d,", first_output-first_input, SAMPLES/8);
             $fdisplay(fd, "  \"throughput_samples_per_second\": %.9f", throughput);
             $fdisplay(fd, "}");

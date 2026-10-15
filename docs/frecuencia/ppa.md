@@ -73,6 +73,11 @@ scripts\ppa\vivado\run.bat
 
 Puede indicar una carpeta de resultados como argumento, entre comillas si tiene espacios. La versión realmente utilizada se registra en `tool_versions.txt`.
 
+El flujo Vivado acepta top, banco, período y ciclos esperados por argumentos para
+que A07 pueda reutilizarlo. Las [opciones y el contrato del banco PPA](../../scripts/ppa/vivado/README.md)
+detallan cómo incorporar otra variante; los valores por defecto conservan esta
+base serial de frecuencia y el formato de `summary.tsv`.
+
 El flujo de Vivado realiza:
 
 1. Síntesis e implementación out-of-context para `xc7a35tcpg236-1` a 100 ns.

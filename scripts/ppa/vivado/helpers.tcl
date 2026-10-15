@@ -1,4 +1,35 @@
 # Pure Tcl helpers; also exercised by selftest.tcl without Vivado.
+proc ppa_options {arguments} {
+    set options [dict create output "" top fir_frequency_serial bench tb_fir_frequency_ppa \
+        period_ns 100 latency_cycles 559 block_cycles 575 active_cycles 147200 \
+        vectors vectors/ppa_vectors.txt]
+    if {[llength $arguments] && ![string match -* [lindex $arguments 0]]} {
+        dict set options output [lindex $arguments 0]
+        set arguments [lrange $arguments 1 end]
+    }
+    if {[llength $arguments] % 2} {error "Expected option/value pairs after the optional output directory"}
+    foreach {flag value} $arguments {
+        if {$flag ni {-top -bench -period_ns -latency_cycles -block_cycles -active_cycles -vectors}} {
+            error "Unknown PPA option: $flag"
+        }
+        dict set options [string range $flag 1 end] $value
+    }
+    foreach key {top bench} {
+        if {![regexp {^[A-Za-z_][A-Za-z0-9_$]*$} [dict get $options $key]]} {
+            error "Invalid module name for $key"
+        }
+    }
+    set period [dict get $options period_ns]
+    if {![string is double -strict $period] || !($period > 0 && $period < Inf)} {
+        error "period_ns must be finite and positive"
+    }
+    foreach key {latency_cycles block_cycles active_cycles} {
+        set value [dict get $options $key]
+        if {![string is integer -strict $value] || $value <= 0} {error "$key must be a positive integer"}
+    }
+    return $options
+}
+
 proc ppa_read {path} {
     set fh [open $path r]
     fconfigure $fh -encoding utf-8

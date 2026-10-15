@@ -93,6 +93,7 @@ module fir_frequency_serial #(
         .start(engine_start),
         .done(engine_done),
         .result_index(engine_result_index),
+        .result_accept(out_valid && out_ready),
         .result_i(engine_result_i),
         .result_q(engine_result_q)
     );

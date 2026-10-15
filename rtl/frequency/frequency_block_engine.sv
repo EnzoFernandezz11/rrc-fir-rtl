@@ -19,6 +19,7 @@ module frequency_block_engine #(
     input  logic                         start,
     output logic                         done,
     input  logic [2:0]                   result_index,
+    input  logic                         result_accept,
     output logic signed [W_OUT-1:0]      result_i,
     output logic signed [W_OUT-1:0]      result_q
 );
@@ -172,7 +173,7 @@ module frequency_block_engine #(
                 (sum_i[W_WORK] != sum_i[W_WORK-1] || diff_i[W_WORK] != diff_i[W_WORK-1] ||
                  sum_q[W_WORK] != sum_q[W_WORK-1] || diff_q[W_WORK] != diff_q[W_WORK-1]))
                 $fatal(1, "frequency_block_engine: butterfly overflows work");
-            if (done && (scaled_result_i != $signed(result_i) || scaled_result_q != $signed(result_q)))
+            if (result_accept && (scaled_result_i != $signed(result_i) || scaled_result_q != $signed(result_q)))
                 $fatal(1, "frequency_block_engine: result overflows output");
         end
     end
