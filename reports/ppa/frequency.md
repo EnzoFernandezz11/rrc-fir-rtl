@@ -42,9 +42,11 @@ teórico, no una optimización medida.
 
 El throughput de esta arquitectura es `8 × f_clk / 575`: a 10 MHz son
 **139 130 muestras/s**. Bajar ciclos por bloque y subir el reloj son dos formas
-distintas de mejorarlo. Cumplir timing a 10 MHz comprueba el mínimo del serial;
-la Fmax estimada y el camino crítico indican el margen físico. La versión rápida
-deberá implementarse y verificarse con su objetivo de al menos 100 MHz.
+distintas de mejorarlo. Los mínimos dependen de la categoría: **10 MHz para una
+variante lenta y 100 MHz para una rápida**. El serial cumple el mínimo de la
+categoría lenta; la Fmax estimada y el camino crítico indican su margen físico.
+Optimizar el filtro no implica automáticamente clasificarlo como rápido: primero
+se define qué métrica mejorar y en qué categoría se evaluará la nueva variante.
 
 ### Cómo decidir con los reportes de Vivado
 
@@ -57,9 +59,12 @@ deberá implementarse y verificarse con su objetivo de al menos 100 MHz.
 | ¿Qué está gastando potencia? | Desglose por recurso/jerarquía disponible en `power.rpt`, `read_saif.rpt` y `unmatched_saif.rpt` | Buscar los componentes de mayor potencia dinámica y su actividad. Usar energía dinámica por muestra para evaluar el costo del paralelismo. Revisar cobertura SAIF antes de concluir; la estática reportada pertenece al dispositivo completo. |
 
 La base ya pasa la comparación exacta de las 2048 salidas y verifica su calendario.
-El mapeo local confirma un DSP y da recursos preliminares; la distribución física
-por módulo, el cuello de botella de timing y la potencia requieren Vivado.
-Un bloque que ocupa muchos ciclos no necesariamente contiene el camino crítico.
+El mapeo local de Yosys usa un DSP; el resumen recibido de Vivado 2024.2 informa
+**tres DSP**, 1875 LUT como lógica y 569 FF. Son resultados de herramientas y flujos
+distintos; el conteo físico de Vivado se debe usar como referencia para C03/C04,
+con su procedencia declarada. El detalle del camino crítico y de la utilización
+por módulo sigue pendiente de recibir. Un bloque que ocupa muchos ciclos no
+necesariamente contiene el camino crítico.
 
 ### Resultado que debe dejar la próxima issue
 
@@ -78,7 +83,7 @@ tal hasta medirla.
 <!-- serial-measurement:f6adf924bdc38769601ebc7b0a42d7b9eace1b154918537d5a0c7d97eedb5ac6 -->
 ### Frecuencia serial — corrida `20261013T220620013563Z-b9bd2183` (local)
 
-**Estado: verificación local y mapeo lógico completados; PPA físico pendiente de Vivado.**
+**Estado: verificación RTL local completada; área y timing informados en Vivado 2024.2. Simulación temporal incompleta y potencia SAIF pendiente.**
 
 #### Configuración y trazabilidad
 
@@ -128,24 +133,85 @@ Las LUT son la suma de LUT1…LUT6; no equivalen directamente a slices o CLB.
 | MUXF7 | 189 |
 | MUXF8 | 22 |
 
-#### Resultados físicos — Vivado
+#### Resultados físicos recibidos — Vivado 2024.2
 
-| Métrica | Estado |
-|---|---|
-| LUT / FF / DSP / BRAM implementados | Pendiente |
-| WNS a 100 ns / caminos sin constraints | Pendiente |
-| Fmax aproximada de caminos internos | Pendiente |
-| Simulación temporal y anotación SAIF | Pendiente |
-| Potencia dinámica / estática | Pendiente |
-| Energía dinámica por muestra | Pendiente |
-| Versión Vivado / condiciones térmicas | Pendiente |
+Resultados informados por el compañero en Windows el **13/10/2026**, sobre
+Artix-7 `xc7a35tcpg236-1`, out-of-context, con reloj de 100 ns y el benchmark
+A04 de 2048 muestras. Se recibió únicamente su resumen Markdown: **no están
+los reportes originales, logs, netlist, SDF ni checkpoint para auditarlos**.
+El commit, los hashes y el identificador exacto del paquete ejecutado no fueron
+informados; esta evidencia se vincula a la base serial por su configuración
+reportada, sin afirmar identidad de fuentes comprobada.
 
-Se exige WNS ≥ 0 a 100 ns. La estimación de Fmax es `1000/(100 − WNS_ns)` MHz,
-usando caminos internos de setup del mismo reloj; no reemplaza otra implementación a esa frecuencia.
-Energía dinámica por muestra = potencia dinámica / throughput de la ventana SAIF.
+| Métrica | Resultado informado | Procedencia |
+|---|---:|---|
+| Verificación funcional de 2048 muestras | PASS | Simulación comportamental en Vivado, sin SDF |
+| Latencia / ciclos por bloque | 559 / 575 | Simulación comportamental; coincide con la medida local |
+| Ciclos activos / throughput a 10 MHz | 147200 / 139130,435 muestras/s | Simulación comportamental |
+| Timing interno a 10 MHz | Cumple setup y hold | Implementación routed |
+| WNS setup | +82,675 ns | Implementación routed |
+| WHS hold | +0,189 ns | Implementación routed |
+| Fmax aproximada | 57,72 MHz | Derivada de `1000/(100 − 82,675)`; sin barrido |
+| LUT como lógica | 1875 (9,01 %) | Utilización implementada; no se informó LUT total |
+| FF / Slice Registers | 569 (1,37 %) | Utilización implementada |
+| DSP48E1 | 3 (3,33 %) | Utilización implementada |
+| Block RAM | 0 | Utilización implementada |
+| CARRY4 / F7+F8 Muxes | 20 / 238 | Utilización implementada |
+| Potencia total on-chip | 0,070 W | Estimación vectorless sobre `implemented.dcp` |
+| Potencia dinámica | 0,002 W | Estimación vectorless |
+| Potencia estática del dispositivo | 0,068 W | Estimación vectorless |
+| Energía dinámica por muestra | ≈ 14,4 nJ/muestra | Derivada de potencia vectorless y throughput RTL |
+| Confianza de potencia | Media | Según el resumen recibido; actividad interna especificada <25 % |
+| Temperatura de juntura / máxima ambiente | 25,4 °C / 84,6 °C | Condiciones por defecto informadas |
+| Simulación temporal con SDF | No completó; watchdog a 160000 ciclos | Bloqueo informado en Windows + Vivado 2024.2 |
+| Potencia con SAIF | Pendiente | No se obtuvo una simulación temporal completa |
+| Caminos sin constraints / detalle del camino crítico | Pendiente de revisión | No se recibieron esos reportes |
 
-El [análisis de la base serial](frequency.md#análisis-base-serial) reúne el desglose
-de ciclos y los criterios para elegir la próxima optimización.
+La energía vectorless es una referencia provisional. **No se debe usar como
+potencia comparable con actividad del benchmark** ni como medida SAIF. Las
+cifras de potencia están redondeadas en el resumen recibido. La estática
+corresponde al FPGA completo, no solo al filtro.
+
+#### Análisis de estos resultados para C03/C04
+
+- **El serial cumple el mínimo de 10 MHz de una variante lenta**, según los
+  slacks informados. La Fmax aproximada de 57,72 MHz expresa margen físico y
+  no constituye un incumplimiento del serial. Si la candidata se clasifica
+  como rápida, deberá verificar el mínimo de 100 MHz en su propia implementación.
+  Esa condición no se impone únicamente por llamarla optimizada.
+- **FFT e IFFT siguen siendo la primera zona para reducir ciclos**: consumen
+  el 77,9 % del bloque. Reducir esos ciclos puede mejorar el throughput incluso
+  conservando el reloj de 10 MHz. Si se decide aumentar el reloj, el detalle
+  del camino crítico permitirá evaluar dónde simplificar lógica o agregar
+  registros; esa decisión depende del objetivo elegido para C03.
+- **La base física usa tres DSP, no el único DSP del mapeo Yosys.** Los conteos
+  proceden de herramientas distintas; no hay evidencia para atribuir la
+  diferencia únicamente a una versión de Vivado. C03 debe partir del costo
+  físico informado y medir cómo cambia al paralelizar.
+- **La potencia todavía no permite elegir la optimización.** El resumen
+  vectorless atribuye aproximadamente toda la dinámica a `u_engine` y un
+  97 % del total a la estática del dispositivo. Esa distribución debe
+  confirmarse con SAIF y los reportes originales antes de concluir ahorros
+  de energía por muestra.
+
+#### Incidencias del flujo informadas por el compañero
+
+1. Los wrappers `xelab.bat` y `xsim.bat` separaron los argumentos con `=`,
+   rompiendo la anotación `-sdfmax` y los `-testplusarg`. El compañero aplicó
+   en su copia llamadas directas a los ejecutables de
+   `bin/unwrapped/win64.o/`. Ese cambio no está aplicado en los scripts de
+   este repositorio.
+2. Tras corregir los argumentos, la simulación temporal arrancó pero terminó
+   por timeout. El compañero planteó propagación de X por inicialización de
+   FF/GSR/`glbl` como causa posible. **La causa no está confirmada** sin los
+   logs, la netlist y el SDF; tampoco se ha demostrado que sea un defecto de
+   Vivado 2024.2. El PASS comportamental confirma esa prueba funcional, pero
+   no sustituye la simulación temporal.
+3. La implementación produjo área y timing; el compañero obtuvo potencia
+   vectorless por separado desde el checkpoint. El flujo completo con SAIF
+   permanece incompleto. No hubo una ejecución temporal previa de Vivado
+   validada en esta PC: las comprobaciones previas fueron locales con
+   Icarus/Yosys y pruebas Tcl.
 
 #### Evidencia
 
@@ -155,11 +221,13 @@ de ciclos y los criterios para elegir la próxima optimización.
 - [Recursos y primitivas](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/resources.json).
 - [Onda de los primeros cuatro bloques](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/first_blocks.vcd).
 - Logs: `build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/logs/`; incluyen regresión, compilación, simulación y síntesis.
+- [Resumen original recibido de Vivado 2024.2](../../build/ppa/frequency_serial/20261013-vivado2024.2-recibido/resultados_ppa_frequency_serial.md).
+- SHA256 del resumen recibido: `54e01cc87e53d321c744948fbca040b80d9b892c91641bf94fffc647eebfcfcb`.
 - [Procedimiento local y Windows](../../docs/frecuencia/ppa.md).
 
 Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
-`build/`. Los resultados de Vivado se incorporarán al registro común conservando
-las corridas anteriores.
+`build/`. El resumen recibido de Vivado está incorporado arriba, con sus limitaciones
+y procedencia declaradas.
 
 <!-- serial-runs:end -->
 
