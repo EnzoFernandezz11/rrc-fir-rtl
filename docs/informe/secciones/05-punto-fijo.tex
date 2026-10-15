@@ -69,4 +69,35 @@ Con 6 bits fraccionarios en coeficientes y salida también se superan los 40\,dB
 
 \paragraph{Correspondencia entre ramas en punto fijo.} Las dos ramas redondean en lugares distintos, así que sus salidas fijas no son idénticas: difieren como máximo en 2\,LSB por componente en todos los casos. Por eso cada RTL se compara palabra por palabra con su propio modelo fijo y no con el de la otra rama.
 
-\pendiente{Andrés (A04)}{Comparación flotante/fijo con otros conjuntos de datos además de QPSK (impulso, extremos, tramas cortas), como pide la consigna; posible figura con el error por muestra.}
+\subsection{Comparación con distintos conjuntos de datos}
+
+La tabla~\ref{tab:flotante-fijo} compara cada modelo de punto fijo con la referencia flotante en los conjuntos de datos de la sección~\ref{sec:verificacion} y en las cinco semillas QPSK. El error se expresa en LSB de salida ($2^{-7}$) por componente I o Q.
+
+\begin{table}[h]
+  \centering
+  \caption{Punto fijo contra flotante: error máximo y RMS en LSB y SQNR en dB, con el formato elegido.}\label{tab:flotante-fijo}
+  \begin{tabular}{lrrrrrrr}
+    \toprule
+    & & \multicolumn{3}{c}{Tiempo} & \multicolumn{3}{c}{Frecuencia} \\
+    \cmidrule(lr){3-5}\cmidrule(lr){6-8}
+    Caso & Muestras & Máx. & RMS & SQNR & Máx. & RMS & SQNR \\
+    \midrule
+    \texttt{impulso} & 32 & 0,40 & 0,14 & 44,3 & 1,00 & 0,19 & 41,7 \\
+    \texttt{ceros} & 32 & 0 & 0 & — & 0 & 0 & — \\
+    \texttt{extremos\_tiempo} & 16 & 2,09 & 0,97 & 40,9 & 2,40 & 1,00 & 40,6 \\
+    \texttt{extremos\_frecuencia} & 144 & 2,09 & 0,75 & 45,4 & 2,09 & 0,81 & 44,7 \\
+    \texttt{bordes} & 202 & 1,05 & 0,48 & 43,9 & 2,05 & 0,61 & 41,8 \\
+    QPSK, semillas 0–4 & 5 × 2048 & 1,05 & 0,55 & 44,2–44,4 & 2,05–2,24 & 0,64 & 43,0–43,1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Ceros:} ambas ramas dan salida exactamente nula; la SQNR no está definida porque la referencia es nula.
+  \item \textbf{Impulso:} la salida temporal es $h_q$, así que su error es solo el de cuantizar los coeficientes (máximo 0,40\,LSB). La rama en frecuencia agrega el redondeo de $W$, $H$ y \texttt{work} y llega a 1\,LSB.
+  \item \textbf{QPSK:} el resultado es estable entre semillas, con error máximo de 1\,LSB en tiempo y 2\,LSB en frecuencia.
+  \item \textbf{Extremos:} es el caso con menor SQNR (40,6\,dB). La entrada vale $\pm1\pm j$ en todas las muestras, sin los ceros del sobremuestreo, y lleva la salida a su pico de 1,84; ahí los errores de cuantización de los ocho coeficientes se suman con el mismo signo. QPSK 2× no alcanza ese caso: su pico es 0,92.
+  \item \textbf{Bordes:} con tramas de 1 a 25 muestras la rama en frecuencia queda en 41,8\,dB, por debajo de QPSK largo pero sobre el mínimo.
+\end{itemize}
+
+En todos los conjuntos con señal ambas ramas superan los 40\,dB y el error no pasa de 2,5\,LSB; un test del repositorio lo comprueba en cada integración.
