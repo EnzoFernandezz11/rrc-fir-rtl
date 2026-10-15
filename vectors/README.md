@@ -54,3 +54,9 @@ $fclose(fd);
 ```
 
 Las rutas son relativas a la raíz del repo, que es el directorio desde donde la CI corre `vvp`.
+
+## Vectores extendidos C02
+
+C02 genera vectores locales de A03/A04 en `build/frequency_serial_vectors.txt` con `python3 -m scripts.frequency_serial_vectors`; `make smoke` los regenera antes de simular. Incluyen cabecera de formatos, taps/H/W, cantidad de tramas, nombre y longitud de cada trama y filas enteras `x_i x_q y_i y_q`. El RTL compara las salidas aceptadas por índice con `fir_frequency_fxp`. Estos archivos generados no se versionan y complementan los casos oficiales A05.
+
+`make smoke` ejecuta los cinco archivos A05 y `qpsk_s1` contra el RTL de frecuencia, cada uno sin pausas y con burbujas/backpressure. Compara con `yf_i/yf_q` y comprueba `last`, manteniendo el historial independiente entre tramas. El lector y su diagnóstico aislado se describen en [tb/README.md](../tb/README.md).
