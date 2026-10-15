@@ -5,15 +5,16 @@
   \begin{tikzpicture}[node distance=6mm and 8mm, >=Stealth,
       blk/.style={draw, rounded corners, minimum height=9mm, align=center, font=\small}]
     \node[blk] (gen) {Generador\\QPSK};
-    \node[blk, right=of gen] (up) {Sobremuestreo\\2×};
-    \node[blk, right=12mm of up, yshift=8mm] (t) {FIR temporal\\(B)};
-    \node[blk, right=12mm of up, yshift=-8mm] (f) {Overlap-save\\FFT16 (C)};
-    \node[blk, right=12mm of t, yshift=-8mm] (cmp) {Comparación\\y SQNR};
+    \node[blk, right=12mm of gen] (up) {Sobremuestreo\\2×};
+    \node[blk, right=12mm of up, yshift=8mm] (t) {FIR temporal};
+    \node[blk, right=12mm of up, yshift=-8mm] (f) {Overlap-save\\FFT de 16 puntos};
+    % Alto suficiente para recibir ambas ramas con flechas horizontales.
+    \node[blk, minimum height=25mm, anchor=west] (cmp) at ($(f.east |- up)+(12mm,0)$) {Comparación\\y SQNR};
     \draw[->] (gen) -- node[above, font=\scriptsize]{$a[m]$} (up);
     \draw[->] (up.east) -- ++(4mm,0) |- (t.west);
     \draw[->] (up.east) -- ++(4mm,0) |- (f.west);
-    \draw[->] (t.east) -- ++(4mm,0) |- (cmp.west);
-    \draw[->] (f.east) -- ++(4mm,0) |- (cmp.west);
+    \draw[->] (t.east) -- (t.east -| cmp.west);
+    \draw[->] (f.east) -- (f.east -| cmp.west);
   \end{tikzpicture}
   \caption{Cadena común a ambas ramas. Los núcleos RTL reciben las muestras $x[n]$ desde vectores generados por los modelos (sección~\ref{sec:verificacion}).}\label{fig:cadena}
 \end{figure}

@@ -1,7 +1,37 @@
 \section{Introducción}
 
-La consigna pide implementar por separado dos filtros complejos que procesan símbolos QPSK ($\pm1$): un FIR RRCOS de 8 coeficientes con \emph{roll-off} de 0,5 en el dominio del tiempo y un filtro en el dominio de la frecuencia por bloques con superposición del 50\,\%. Para cada uno se pide una versión serie y una paralela (pipeline, sistólica, \emph{folded} u otra), la verificación de la correspondencia entre ambas ramas, la comparación entre punto flotante y punto fijo con distintos conjuntos de datos, un diagrama de bloques con la descripción de cada etapa y un diagrama de Gantt que muestre el aporte de cada integrante.
+La consigna pide implementar por separado dos filtros complejos que procesan símbolos QPSK ($\pm1$): un FIR de raíz de coseno realzado (RRCOS) de 8 coeficientes con \emph{roll-off} de 0,5 en el dominio del tiempo y un filtro en el dominio de la frecuencia por bloques con superposición del 50\,\%. Para cada uno se pide una versión serie y una paralela (pipeline, sistólica, \emph{folded} u otra), la verificación de la correspondencia entre ambas ramas, la comparación entre punto flotante y punto fijo con distintos conjuntos de datos, un diagrama de bloques con la descripción de cada etapa y un diagrama de Gantt que muestre el aporte de cada integrante.
 
-El equipo agregó dos requisitos medibles: SQNR de al menos 40\,dB y relojes mínimos de 10\,MHz en las variantes lentas y 100\,MHz en las rápidas.
+A la consigna se suman dos requisitos medibles: una relación señal a ruido de cuantización (SQNR) de al menos 40\,dB y relojes mínimos de 10\,MHz en las variantes lentas y 100\,MHz en las rápidas.
 
 \paragraph{Organización.} La sección~\ref{sec:senales} fija la señal de entrada y los coeficientes; la~\ref{sec:sistema}, el sistema completo y su interfaz; la~\ref{sec:modelos} y la~\ref{sec:punto-fijo}, los modelos de referencia en flotante y en punto fijo; la~\ref{sec:verificacion}, cómo se verifica el RTL. Las secciones~\ref{sec:tiempo} a~\ref{sec:paralelas} describen las implementaciones, la~\ref{sec:ppa} las compara y la~\ref{sec:gantt} muestra la planificación. El apéndice~\ref{app:comandos} lista los comandos que reproducen cada resultado desde el repositorio \repo.
+
+\subsection{Notación}
+
+La tabla~\ref{tab:glosario} reúne los símbolos que se usan en el resto del informe.
+
+\begin{table}[h]
+  \centering
+  \caption{Símbolos.}\label{tab:glosario}
+  \begin{tabular}{ll}
+    \toprule
+    Símbolo & Significado \\
+    \midrule
+    $b_I$, $b_Q$ & Bits de un símbolo QPSK, para las componentes I y Q \\
+    $a[m]$ & Símbolo QPSK $m$, con valores $\pm1 \pm j$ \\
+    $S$, $N$ & Cantidad de símbolos y de muestras de una trama, $N = 2S$ \\
+    $x[n]$, $y[n]$ & Muestra $n$ de entrada y de salida del filtro \\
+    $T_s$ & Período de símbolo \\
+    $\alpha$ & \emph{Roll-off} del pulso, 0,5 \\
+    $p(t)$ & Pulso RRCOS, con $t$ en unidades de $T_s$ \\
+    $t_k$ & Instante en que se muestrea $p(t)$ para el coeficiente $k$ \\
+    $h[k]$ & Coeficiente $k$ del filtro, en punto flotante \\
+    $h_q[k]$ & Coeficiente $k$ cuantizado, como entero en Q1.7 \\
+    $H$, $W$ & Espectro del filtro, $\mathrm{DFT}_{16}(h)$, y factores de giro de la FFT \\
+    Q$e.f$ & Formato con signo de $e$ bits enteros y $f$ fraccionarios \\
+    $s$ & Cantidad de bits que se descartan en un redondeo \\
+    $y_\mathrm{ref}$, $y_\mathrm{fxp}$ & Salida de referencia en flotante y salida en punto fijo \\
+    LSB & Bit menos significativo de la salida, $2^{-7}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}

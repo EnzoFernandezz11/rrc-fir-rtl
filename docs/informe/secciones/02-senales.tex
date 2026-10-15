@@ -25,7 +25,7 @@ de modo que $S$ símbolos producen $N = 2S$ muestras. Ambas ramas reciben exacta
 
 \subsection{Coeficientes RRCOS}
 
-El roll-off y el sobremuestreo no determinan una tabla única: falta elegir la fase de muestreo y la normalización. Se muestreó el pulso RRCOS en forma cerrada ($\alpha = 0{,}5$, $t$ en períodos de símbolo)
+El roll-off y el sobremuestreo no determinan una tabla única: falta elegir la fase de muestreo y la normalización. Se muestreó el pulso RRCOS en forma cerrada ($\alpha = 0{,}5$, $t$ en unidades del período de símbolo $T_s$)
 \begin{equation}
   p(t) = \frac{\sin\!\big(\pi t(1-\alpha)\big) + 4\alpha t \cos\!\big(\pi t(1+\alpha)\big)}
               {\pi t\,\big(1 - (4\alpha t)^2\big)}
@@ -35,7 +35,7 @@ en la grilla simétrica $t_k = (k - 3{,}5)/2$, $k = 0\ldots7$, sin coeficiente c
   h[k] = \frac{p(t_k)}{\sqrt{\sum_j p(t_j)^2}}, \qquad
   y[n] = \sum_{k=0}^{7} h[k]\, x[n-k].
 \end{equation}
-Los límites $t = 0$ y $t = \pm 1/(4\alpha)$ se evalúan con sus expresiones cerradas. La tabla~\ref{tab:coef} da los valores. El filtro es simétrico, de fase lineal y con retardo de grupo de 3,5 muestras; su ganancia DC es $\sum h = 1{,}4007$ y la salida cumple $|y| \le \sum|h| = 1{,}8445$ por componente.
+Los límites $t = 0$ y $t = \pm 1/(4\alpha)$ se evalúan con sus expresiones cerradas. La tabla~\ref{tab:coef} da los valores. El filtro es simétrico, de fase lineal y con retardo de grupo de 3,5 muestras; su ganancia en continua es $\sum h = 1{,}4007$ y la salida cumple $|y| \le \sum|h| = 1{,}8445$ por componente.
 
 \begin{table}[h]
   \centering
@@ -56,4 +56,4 @@ Los límites $t = 0$ y $t = \pm 1/(4\alpha)$ se evalúan con sus expresiones cer
   \end{tabular}
 \end{table}
 
-Con 8 coeficientes a 2× el pulso abarca solo cuatro símbolos, por lo que la atenuación fuera de banda es pobre. Es una limitación de la consigna, no de la cuantización.
+Con 8 coeficientes a 2× el pulso abarca solo cuatro símbolos, por lo que la atenuación fuera de banda es pobre. Es consecuencia de combinar los 8 coeficientes que fija la consigna con el sobremuestreo 2× elegido por el equipo, no de la cuantización.
