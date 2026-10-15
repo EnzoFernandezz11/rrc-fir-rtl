@@ -23,7 +23,7 @@ hará después, contra esta base y declarando las condiciones de ambas corridas.
 | Reset | Síncrono activo alto, diez ciclos iniciales |
 | Referencia | Modelo fijo A04, comparación exacta de I y Q por índice de salida |
 
-Estos son los ajustes de este flujo local. El vector común A05 y la aprobación conjunta del [contrato PPA](../contratos/verificacion-y-ppa.md) siguen pendientes. La corrida no cambia el estado de ese contrato.
+Estos son los ajustes de este flujo local. A05 está integrado y C02 compara sus archivos oficiales en `make smoke`. El testbench PPA dedicado conserva su formato local A04; su adopción del formato A05 y la aprobación conjunta del [contrato PPA](../contratos/verificacion-y-ppa.md) siguen pendientes. Las corridas históricas conservan su procedencia y no cambian el estado de ese contrato.
 
 ## Ejecutar en la PC local
 

@@ -72,7 +72,7 @@ Riesgos al 14/10:
 | [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | @moreyrajulian | 12/10 | 13/10 | #44 integrado: `L = 9`, `II = 10`, 56 FF estimados. Plan: inicio 08/10, fin 10/10 (+3). |
 | [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | @moreyrajulian | 14/10 | — | #45 en revisión con cambios pedidos: vector matching, `L`/`II` y pausas pasan; falta prueba de reset en medio de trama. Plan: inicio 11/10, fin 15/10. |
 | [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | @EnzoFernandezz11 | 06/10 | 13/10 | #39 integrado tras quitar R01. Plan: fin 11/10 (+2). |
-| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | — | Rama `enzo/c02-rtl-implemntation`, sin PR. Plan: inicio 12/10, fin 19/10. |
+| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | — | Al 15/10, rama `enzo/c02-rtl-implemntation`: `make verify` PASS con A05, 40 pruebas Python y 478 tramas/3120 bloques de frecuencia; pendiente revisión e integración del PR. Plan: inicio 12/10, fin 19/10. |
 | [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | @andres332271 | 14/10 | — | Rama `a/a06-banco-comun`, sin PR: banco común en `tb/common/` y `make regresion`; pasa con el RTL de B02 y C02. Cierra con B02 y C02 integrados. Plan: inicio 15/10 (−1). |
 | [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | Plan: inicio 11/10, fin 13/10. |
 | [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | — |

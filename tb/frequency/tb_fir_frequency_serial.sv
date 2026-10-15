@@ -314,11 +314,67 @@ module tb_fir_frequency_serial;
         end
     endtask
 
+    task automatic run_a05_file(input string path, input bit pauses);
+        integer fd, code, chars, next_index, length, frame_index;
+        longint signed index, last, x_i, x_q, yt_i, yt_q, yf_i, yf_q;
+        reg [4095:0] line, extra;
+        begin
+            fd = $fopen(path, "r");
+            if (!fd) $fatal(1, "A05 %s indice 0: no se pudo abrir", path);
+            next_index = 0; length = 0; frame_index = 0;
+            use_model_expected = 1;
+            while (!$feof(fd)) begin
+                chars = $fgets(line, fd);
+                if (chars > 0) begin
+                    code = $sscanf(line, "%d %d %d %d %d %d %d %d %s",
+                                   index, last, x_i, x_q, yt_i, yt_q, yf_i, yf_q, extra);
+                    if (code != 8)
+                        $fatal(1, "A05 %s indice %0d: se requieren ocho columnas", path, next_index);
+                    if ((^{index, last, x_i, x_q, yt_i, yt_q, yf_i, yf_q}) === 1'bx)
+                        $fatal(1, "A05 %s indice %0d: valor desconocido", path, next_index);
+                    if (index != next_index)
+                        $fatal(1, "A05 %s indice %0d: indice discontinuo %0d", path, next_index, index);
+                    if (last < 0 || last > 1 || x_i < -1 || x_i > 1 || x_q < -1 || x_q > 1 ||
+                        yt_i < -256 || yt_i > 255 || yt_q < -256 || yt_q > 255 ||
+                        yf_i < -256 || yf_i > 255 || yf_q < -256 || yf_q > 255)
+                        $fatal(1, "A05 %s indice %0d: valor fuera de rango", path, next_index);
+                    if (length >= MAX_SAMPLES)
+                        $fatal(1, "A05 %s indice %0d: trama supera %0d muestras", path, next_index, MAX_SAMPLES);
+                    xi[length] = x_i; xq[length] = x_q;
+                    yi[length] = yf_i; yq[length] = yf_q;
+                    length = length + 1;
+                    next_index = next_index + 1;
+                    if (last == 1) begin
+                        frame_name = $sformatf("%s trama=%0d base=%0d", path, frame_index, next_index-length);
+                        run_frame(length, pauses);
+                        frame_index = frame_index + 1;
+                        length = 0;
+                    end
+                end else if (!$feof(fd))
+                    $fatal(1, "A05 %s indice %0d: error de lectura", path, next_index);
+            end
+            $fclose(fd);
+            if (next_index == 0) $fatal(1, "A05 %s indice 0: archivo vacio", path);
+            if (length != 0)
+                $fatal(1, "A05 %s indice %0d: trama sin last", path, next_index-1);
+            use_model_expected = 0;
+            $display("PASS A05 frequency_serial %s: %0d muestras, %0d tramas, pausas=%0d",
+                     path, next_index, frame_index, pauses);
+        end
+    endtask
+
     integer n, k, length, pos, stage;
     integer ar_index, ai_index, br_index, bi_index;
     integer mul_values [0:3];
     logic [31:0] random_state = 32'hc02f1234;
+    string a05_file;
     initial begin
+        if ($value$plusargs("a05_file=%s", a05_file)) begin
+            reset_filter();
+            run_a05_file(a05_file, 0);
+            run_a05_file(a05_file, 1);
+            $finish;
+        end
         load_model_constants();
         check_product_rounding(127, 0);
         check_product_rounding(128, 1);
@@ -416,8 +472,16 @@ module tb_fir_frequency_serial;
             run_frame(8,0);
         end
         run_model_frames();
+        for (stage=0; stage<2; stage=stage+1) begin
+            run_a05_file("vectors/impulso.txt", stage != 0);
+            run_a05_file("vectors/ceros.txt", stage != 0);
+            run_a05_file("vectors/extremos_tiempo.txt", stage != 0);
+            run_a05_file("vectors/extremos_frecuencia.txt", stage != 0);
+            run_a05_file("vectors/bordes.txt", stage != 0);
+            run_a05_file("build/vectors/qpsk_s1.txt", stage != 0);
+        end
         repeat(12) begin @(posedge clk); if(out_valid) $fatal(1,"Salida extra"); end
-        $display("PASS frequency_serial: %0d tramas, %0d bloques; L=559, bloque=575, intervalo=568; formatos A04 y vector matching Python",frames,measured_blocks);
+        $display("PASS frequency_serial: %0d tramas, %0d bloques; L=559, bloque=575, intervalo=568; formatos A04 y vector matching Python/A05",frames,measured_blocks);
         $finish;
     end
 endmodule

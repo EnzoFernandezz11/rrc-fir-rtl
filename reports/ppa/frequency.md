@@ -8,6 +8,8 @@ incorporan a la corrida correspondiente o como una entrada vinculada a su base l
 
 [Procedimiento de medición](../../docs/frecuencia/ppa.md) · [Diagramas RTL](../../docs/frecuencia/diagrams-rtl-modules-unitirarios.md)
 
+**Actualización de verificación C02 — 15/10/2026:** `make verify` pasa con 40 pruebas Python, las dos variantes seriales y, en frecuencia, 478 tramas/3120 bloques. Incluye comparación exacta de los archivos oficiales A05: 426 muestras smoke y 2048 QPSK, cada conjunto sin pausas y con burbujas/backpressure. Se mantienen L=559 y 575 ciclos por bloque completo. Esta comprobación no es una nueva medición PPA; las corridas históricas y sus limitaciones se conservan abajo. No se ejecutó Vivado ni se obtuvo nueva actividad SAIF.
+
 <!-- serial-analysis:start -->
 ## Análisis base serial
 

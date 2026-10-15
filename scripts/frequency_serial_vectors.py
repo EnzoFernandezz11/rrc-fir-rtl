@@ -1,4 +1,4 @@
-"""C02: vectores locales del modelo A04; el formato común de A05 sigue pendiente."""
+"""C02: constantes y regresión extendida A03/A04, complementarias a A05."""
 
 from pathlib import Path
 

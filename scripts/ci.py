@@ -42,6 +42,7 @@ def smoke() -> None:
     if not targets:
         print("ETAPA 0: no hay RTL registrado; smoke validó contrato y herramientas Python, no vector matching")
         return
+    run([sys.executable, "-m", "model.vectors"], "a05-vectors.log")
     for target in targets:
         output = ROOT / "build" / f"{target['name']}.out"
         output.parent.mkdir(parents=True, exist_ok=True)
