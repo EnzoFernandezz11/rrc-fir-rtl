@@ -131,7 +131,7 @@ Con `x[0] = 1` cada celda carga su coeficiente, y con cada cero siguiente la cad
 | 6. Reset | `s_k`, `y_reg`, `out_valid_r` y `out_last` a cero; `in_ready = out_valid = 0` mientras `rst = 1`. |
 | 7. Burbujas | Sin `in_valid` no hay `acepta` y las `s_k` no cambian; el registro de salida se vacía si el receptor lo toma. |
 
-**Riesgo para B04:** el camino `out_ready → in_ready → acepta → habilitación` llega a los ~146 FF. Es legal, pero si Vivado no cierra timing a 100 MHz por esa habilitación, la alternativa es un registro de salida de dos posiciones (*skid buffer*), que deja `in_ready` registrado a cambio de ~19 FF y un ciclo más de `L` en el peor caso.
+**Riesgo para B04:** el camino `out_ready → in_ready → acepta → habilitación` llega a los ~146 FF. Es legal, pero si Vivado no cierra timing a 100 MHz por esa habilitación, la alternativa es un registro de salida de dos posiciones (*skid buffer*), que deja `in_ready` registrado a cambio de ~19 FF y un ciclo más de `L` en el peor caso. Si B04 lo incorpora, hay que volver a verificar `L`, backpressure, `last`, reset y timing, porque cambia el comportamiento por ciclo descrito en esta sección.
 
 ### Secuencia por ciclo
 
@@ -168,14 +168,18 @@ Trama de cuatro muestras, con backpressure, burbuja y una trama nueva a continua
 
 **Compromiso:** la arquitectura gana ×10 en throughput a igual reloj y ÷9 en latencia, a cambio de unas 2,6 veces más registros y 7 veces más sumadores, todos pequeños (9 bits) y sin DSP. El ×100 con los relojes objetivo incluye otro ×10 que no viene del diseño sino de medir la serial a 10 MHz y la sistólica a 100 MHz. El camino crítico de la serial también es corto (selección + suma de 9 bits), así que es posible que la serial cierre a 100 MHz; por eso la comparación de arquitecturas se hace con el throughput máximo `Fmax / II` de cada una (sección 6). La serial ocupa casi todos sus ciclos en recorrer el historial; la sistólica hace el mismo trabajo aritmético en un ciclo, repartido en 8 celdas. Por eso es razonable esperar una energía por muestra similar o menor, pero esa hipótesis solo la confirma la medición de A07.
 
+**Evidencia de la propuesta:** [`model/fir_time_systolic.py`](../model/fir_time_systolic.py) simula ciclo a ciclo estas ecuaciones y el handshake de la sección 4, con productor y receptor que pausan. `python3 -m model.fir_time_systolic` da coincidencia exacta con `yt` y `last` en los cinco vectores smoke y en `qpsk_s1` (2474 muestras), ideal y con pausas, `L = 1` e `II = 1` en todas las muestras del modo ideal y ninguna suma parcial fuera de 9 bits. Verifica la propuesta, no el RTL de B04 ni su timing.
+
 ## 6. Qué verifica B04
 
 - Mismo testbench de B02 adaptado al nuevo módulo, con `L = 1` e `II = 1` esperados: los 5 vectores smoke ideal y con pausas, salida estable (regla 2), reset en medio de trama (regla 6) y la regresión `qpsk_s1` con `+regresion`. El reset en medio de trama se prueba con el arreglo lleno, para que cualquier `s_k` que no se limpie aparezca en `impulso.txt`.
 - Registro en [`config/rtl_targets.json`](../config/rtl_targets.json) con `architecture: "optimized"` y script Yosys.
-- Síntesis Vivado a 100 MHz con WNS ≥ 0 y cifras comparables con B02 en las condiciones de [D05/D06](contratos/verificacion-y-ppa.md#ppa), cuando A07 acepte variantes temporales.
+- Síntesis Vivado a 100 MHz con WNS ≥ 0 y cifras comparables con B02 en las condiciones de [D05/D06](contratos/verificacion-y-ppa.md#ppa), cuando A07 haga la corrida temporal.
 - Comparación con B02 en las mismas condiciones (`CONTRIBUTING.md`): además del cumplimiento del reloj objetivo de cada variante, el throughput máximo `Fmax / II`, con `Fmax = 1 / (T − WNS)` del contrato de verificación, y la energía por muestra, que el contrato define para comparar variantes con relojes distintos. La relación entre los throughputs máximos es la mejora atribuible a la arquitectura.
 
-**Pregunta abierta para A07/I01 (@andres332271, @EnzoFernandezz11):** el Fmax de una corrida a 10 MHz puede ser pesimista, porque con un reloj holgado Vivado no optimiza velocidad. ¿Sintetizamos también las dos seriales (B02 y C02) con `clk_100mhz.xdc` como dato adicional? No reemplaza la medición oficial a 10 MHz; responde si la serial también llegaría a 100 MHz y separa la ganancia de la arquitectura de la del reloj asignado. No está en ningún contrato, así que se decide entre los tres.
+- En la rama en frecuencia el throughput se calcula como `8 × f_clk / II_bloque` ([interfaz](contratos/interfaz-rtl.md#latencia-y-throughput)): el `II` por bloque de C02/C04 no se compara directamente con el `II` por muestra de B02/B04, sino el throughput resultante.
+
+**Seriales a 100 MHz, acordado en la revisión de #49:** el Fmax de una corrida a 10 MHz puede ser pesimista, porque con un reloj holgado Vivado no optimiza velocidad. A07 corre también B02 y C02 con período de 10 ns, con implementación y timing, como dato adicional: no reemplaza la medición oficial a 10 MHz, responde si la serial también llegaría a 100 MHz y separa la ganancia de la arquitectura de la del reloj asignado. Las condiciones de cada corrida quedan identificadas.
 
 ## 7. Dependencias y fuera de alcance
 
@@ -184,6 +188,6 @@ Trama de cuatro muestras, con backpressure, burbuja y una trama nueva a continua
 | B02 | Integrada en [#45](https://github.com/EnzoFernandezz11/rrc-fir-rtl/pull/45) | Base de comparación y testbench a reutilizar. |
 | A04 (D04) | Integrada, decisión «propuesto» | Si cambian los bits fraccionarios, cambian `W_COEF`/`W_ACC` y la tabla `h_q`, no la arquitectura. |
 | A06 | En curso | B04 cierra después de A06 (backlog). |
-| A07 | En curso; hoy mide solo `fir_frequency_serial` | Las cifras PPA de B02 y B04 dependen de que acepte variantes temporales. |
+| A07 | En curso; `run.tcl` parametrizado desde #47; falta la corrida temporal | Las cifras PPA de B02 y B04 dependen de esa corrida. |
 
 Quedan fuera de B03 el RTL y el testbench (B04), las cifras PPA medidas (A07) y la optimización en frecuencia (C03). El nombre de módulo propuesto es `fir_time_systolic`; B04 lo confirma.
