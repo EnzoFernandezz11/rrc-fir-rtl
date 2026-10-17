@@ -1,0 +1,7 @@
+# Mapeo lógico preliminar Artix-7; timing y potencia requieren implementación.
+read_verilog -sv rtl/frequency/complex_mul_serial_control.sv rtl/frequency/complex_mul_serial.sv
+read_verilog -sv rtl/frequency/frequency_block_roms.sv rtl/frequency/frequency_block_engine_control.sv rtl/frequency/frequency_block_engine.sv
+read_verilog -sv rtl/frequency/fir_frequency_serial_control.sv rtl/frequency/fir_frequency_serial.sv
+synth_xilinx -family xc7 -top fir_frequency_serial -flatten -noiopad -noclkbuf
+check -assert
+stat -tech xilinx

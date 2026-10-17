@@ -1,0 +1,14 @@
+# Structural synthesis only; Vivado PPA remains pending.
+read_verilog -sv rtl/frequency/complex_mul_serial_control.sv rtl/frequency/complex_mul_serial.sv
+read_verilog -sv rtl/frequency/frequency_block_roms.sv rtl/frequency/frequency_block_engine_control.sv rtl/frequency/frequency_block_engine.sv
+read_verilog -sv rtl/frequency/fir_frequency_serial_control.sv rtl/frequency/fir_frequency_serial.sv
+hierarchy -check -top fir_frequency_serial
+proc
+flatten
+opt
+check -assert
+select -assert-count 1 t:$mul
+select -assert-none t:$dlatch
+synth -top fir_frequency_serial
+check -assert
+stat

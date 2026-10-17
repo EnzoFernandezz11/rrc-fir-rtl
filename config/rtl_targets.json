@@ -1,4 +1,35 @@
 {
   "schema_version": 1,
-  "targets": []
+  "targets": [
+    {
+      "name": "time_serial",
+      "domain": "time",
+      "architecture": "serial",
+      "rtl_top": "fir_time_serial",
+      "testbench_top": "tb_fir_time_serial",
+      "sources": [
+        "rtl/time/fir_time_serial.sv"
+      ],
+      "testbench": "tb/time/tb_fir_time_serial.sv",
+      "synth_script": "scripts/synth/time_serial.ys"
+    },
+    {
+      "name": "frequency_serial",
+      "domain": "frequency",
+      "architecture": "serial",
+      "rtl_top": "fir_frequency_serial",
+      "testbench_top": "tb_fir_frequency_serial",
+      "sources": [
+        "rtl/frequency/complex_mul_serial_control.sv",
+        "rtl/frequency/complex_mul_serial.sv",
+        "rtl/frequency/frequency_block_roms.sv",
+        "rtl/frequency/frequency_block_engine_control.sv",
+        "rtl/frequency/frequency_block_engine.sv",
+        "rtl/frequency/fir_frequency_serial_control.sv",
+        "rtl/frequency/fir_frequency_serial.sv"
+      ],
+      "testbench": "tb/frequency/tb_fir_frequency_serial.sv",
+      "synth_script": "scripts/synth/frequency_serial.ys"
+    }
+  ]
 }
