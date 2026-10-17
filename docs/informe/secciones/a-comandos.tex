@@ -1,0 +1,22 @@
+\section{Reproducción de resultados}\label{app:comandos}
+
+Todos los comandos se ejecutan desde la raíz del repositorio.
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+  \toprule
+  Resultado & Comando \\
+  \midrule
+  Coeficientes y secuencia QPSK & \texttt{python3 model/qpsk\_rrc.py --seed 1} \\
+  Correspondencia entre ramas en flotante & \texttt{python3 -m tests.test\_a03\_time\_vs\_frequency} \\
+  Barrido de SQNR y formatos & \texttt{python3 -m model.fixed\_point} \\
+  Flotante contra fijo por caso & \texttt{python3 -m model.float\_vs\_fixed} \\
+  Vectores de prueba & \texttt{python3 -m model.vectors} \\
+  Integración: modelos y simulación & \texttt{make smoke} \\
+  Integración completa con síntesis & \texttt{make verify} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\pendiente{Julián y Enzo}{Comandos de las corridas Vivado de PPA.}

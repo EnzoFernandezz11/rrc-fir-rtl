@@ -1,0 +1,138 @@
+\section{Punto fijo y comparación con punto flotante}\label{sec:punto-fijo}
+
+\subsection{Formatos}
+
+Se usa la notación Q$e.f$: $e$ bits enteros con signo y $f$ fraccionarios, en complemento a 2. Los modelos de punto fijo trabajan con enteros y no saturan: los anchos se derivan de cotas de peor caso y el modelo falla si un valor no entra. Cada corte que descarta $s$ bits fraccionarios redondea mitad hacia arriba:
+\begin{equation}
+  v' = \left\lfloor \frac{v + 2^{s-1}}{2^s} \right\rfloor .
+\end{equation}
+La tabla~\ref{tab:formatos} resume los formatos.
+
+\begin{table}[h]
+  \centering
+  \caption{Formatos de punto fijo por nodo. La cota es el máximo valor absoluto por componente.}\label{tab:formatos}
+  \begin{tabular}{llcrl}
+    \toprule
+    Nodo & Rama & Formato & Bits & Cota \\
+    \midrule
+    Entrada I/Q & ambas & Q2.0 & 2 & $\{-1, 0, +1\}$ \\
+    Coeficientes $h_q$ & ambas & Q1.7 & 8 & $88/128 = 0{,}6875$ \\
+    Acumulador & tiempo & Q2.7 & 9 & $\sum|h_q| = 234/128 = 1{,}828$ \\
+    Salida I/Q & ambas & Q2.7 & 9 & $1{,}828$ más el error de redondeo \\
+    Banco \texttt{work} & frecuencia & Q7.5 & 12 & 42,5 \\
+    Factores de giro $W$ & frecuencia & Q2.8 & 10 & 1 \\
+    Espectro $H$ & frecuencia & Q2.8 & 10 & 1,39 \\
+    Producto complejo & frecuencia & Q10.13 & 23 & Ancho de los operandos (12 × 10 bits) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+La cota de la salida en punto fijo, $\sum|h_q| = 1{,}828$, es algo menor que la del filtro flotante, $\sum|h| = 1{,}8445$ (sección~\ref{sec:senales}), porque cuantizar redondea los coeficientes.
+
+En la rama temporal la entrada vale $-1$, 0 o $+1$, por lo que cada producto es seleccionar o negar $h_q[k]$: no hace falta multiplicador y el acumulador es exacto. Toda la diferencia con el flotante proviene de cuantizar los coeficientes.
+
+En la rama en frecuencia cada valor intermedio es lineal en la ventana de entrada, $v = \sum_n c_n x_n$, de modo que $|\mathrm{Re}\,v|, |\mathrm{Im}\,v| \le \sum_n (|\mathrm{Re}\,c_n| + |\mathrm{Im}\,c_n|)$. Evaluando esa cota en las nueve etapas (cuatro de FFT, el producto por $H$ y cuatro de IFFT) con las constantes ya cuantizadas, y sumando 1 de margen por redondeo, el máximo es 42,5, en la penúltima etapa de la IFFT. Eso fija 7 bits enteros para \texttt{work}. Un caso de prueba construye la ventana QPSK que lleva cada nodo a su máximo y comprueba que no hay desborde y que la cota no sobra un bit.
+
+\subsection{SQNR}
+
+Se mide contra una única referencia para ambas ramas, el FIR temporal flotante con los coeficientes sin cuantizar, de modo que la SQNR incluye el error de cuantizar $h$, $H$ y $W$:
+\begin{equation}
+  \mathrm{SQNR} = 10 \log_{10} \frac{\sum_n |y_\mathrm{ref}[n]|^2}{\sum_n |y_\mathrm{fxp}[n] - y_\mathrm{ref}[n]|^2},
+\end{equation}
+con $y_\mathrm{fxp}$ = salida entera$/2^7$, I y Q juntas como valor complejo y todas las muestras alineadas por índice, sin descarte. Los casos son QPSK 2× con semillas 0 a 4 de 1024 símbolos (2048 muestras cada una); se informa la mínima entre semillas. Los barridos de las tablas~\ref{tab:barrido} y~\ref{tab:barrido-frec} y de la figura~\ref{fig:barrido} usan solo las semillas 0 y 1, para acortar el cálculo.
+
+\begin{table}[h]
+  \centering
+  \caption{SQNR mínima (dB) de la rama temporal, semillas 0 y 1.}\label{tab:barrido}
+  \begin{tabular}{rrrrrr}
+    \toprule
+    Bits fraccionarios & \multicolumn{5}{c}{Bits fraccionarios de la salida} \\
+    \cmidrule(lr){2-6}
+    de los coeficientes & 5 & 6 & 7 & 8 & 9 \\
+    \midrule
+    5 & 29,8 & & & & \\
+    6 & 32,6 & 42,1 & & & \\
+    \textbf{7} & 35,9 & 37,8 & \textbf{44,3} & & \\
+    8 & 35,9 & 42,1 & 43,1 & 47,4 & \\
+    9 & 36,0 & 43,4 & 50,2 & 50,3 & 57,6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{SQNR mínima (dB) de la rama en frecuencia variando un nodo por vez, con coeficientes y salida en 7 bits fraccionarios; semillas 0 y 1.}\label{tab:barrido-frec}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Bits fraccionarios & 4 & 5 & 6 & 7 & 8 & 9 \\
+    \midrule
+    \texttt{work} & 39,6 & \textbf{43,0} & 44,2 & 44,5 & 44,5 & 44,5 \\
+    $W$ & 31,0 & 33,6 & 39,2 & 41,4 & \textbf{43,0} & 42,9 \\
+    $H$ & 32,2 & 37,4 & 39,5 & 41,0 & \textbf{43,0} & 42,3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.8\linewidth, height=6.5cm,
+        xlabel={Bits fraccionarios del nodo variado}, ylabel={SQNR mínima (dB)},
+        xmin=3.7, xmax=9.3, ymin=28, ymax=60, xtick={4,...,9},
+        ymajorgrids, grid style={gray!20}, axis line style={gray!60}, tick style={gray!60},
+        legend pos=north west, legend cell align=left, legend style={draw=none, font=\small},
+        every axis plot/.append style={line width=1pt, mark size=2.2pt},
+        /pgf/number format/use comma]
+      \addplot[color=serie1, mark=*] coordinates {(5,29.8) (6,42.1) (7,44.3) (8,47.4) (9,57.6)};
+      \addlegendentry{Tiempo: coeficientes y salida}
+      \addplot[color=serie2, mark=square*] coordinates {(4,39.6) (5,43.0) (6,44.2) (7,44.5) (8,44.5) (9,44.5)};
+      \addlegendentry{Frecuencia: \texttt{work}}
+      \addplot[color=serie3, mark=triangle*] coordinates {(4,31.0) (5,33.6) (6,39.2) (7,41.4) (8,43.0) (9,42.9)};
+      \addlegendentry{Frecuencia: $W$}
+      \addplot[color=serie4, mark=diamond*] coordinates {(4,32.2) (5,37.4) (6,39.5) (7,41.0) (8,43.0) (9,42.3)};
+      \addlegendentry{Frecuencia: $H$}
+      \addplot[gray, dashed, line width=0.8pt, mark=none, forget plot] coordinates {(3.7,40) (9.3,40)};
+      \node[gray, font=\small, anchor=north west] at (axis cs:6.6,39.8) {mínimo de 40\,dB};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{SQNR mínima según los bits fraccionarios, semillas 0 y 1. En tiempo se varían a la vez coeficientes y salida (diagonal de la tabla~\ref{tab:barrido}); en frecuencia, un nodo por vez con el resto en el formato elegido (tabla~\ref{tab:barrido-frec}).}\label{fig:barrido}
+\end{figure}
+
+Con 6 bits fraccionarios en coeficientes y salida también se superan los 40\,dB (42,1\,dB en tiempo), pero se eligieron 7 para dejar unos 3\,dB de margen. Con el formato elegido y las cinco semillas, la SQNR mínima es \textbf{44,2\,dB en tiempo} y \textbf{43,0\,dB en frecuencia}; el 44,3\,dB de la tabla~\ref{tab:barrido} corresponde a las semillas 0 y 1. El error de los coeficientes domina: agregar bits a \texttt{work} no mejora más allá de 44,5\,dB.
+
+\paragraph{Correspondencia entre ramas en punto fijo.} Las dos ramas redondean en lugares distintos, por lo que sus salidas fijas no son idénticas: difieren como máximo en 2\,LSB por componente en todos los casos. Por eso cada RTL se compara palabra por palabra con su propio modelo fijo y no con el de la otra rama.
+
+\subsection{Comparación con distintos conjuntos de datos}
+
+La tabla~\ref{tab:flotante-fijo} compara cada modelo de punto fijo con la referencia flotante en los conjuntos de datos de la sección~\ref{sec:verificacion} y en las cinco semillas QPSK. El error se expresa en LSB por componente I o Q.
+
+\begin{table}[h]
+  \centering
+  \caption{Punto fijo contra flotante con el formato elegido: error máximo y RMS en LSB y SQNR en dB. En \texttt{ceros} la referencia es nula y la SQNR no está definida.}\label{tab:flotante-fijo}
+  \small\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lrrrrrrr}
+    \toprule
+    & & \multicolumn{3}{c}{Tiempo} & \multicolumn{3}{c}{Frecuencia} \\
+    \cmidrule(lr){3-5}\cmidrule(lr){6-8}
+    Caso & Muestras & Máximo & RMS & SQNR & Máximo & RMS & SQNR \\
+    \midrule
+    \texttt{impulso} & 32 & 0,40 & 0,14 & 44,3 & 1,00 & 0,19 & 41,7 \\
+    \texttt{ceros} & 32 & 0 & 0 & no definida & 0 & 0 & no definida \\
+    \texttt{extremos\_tiempo} & 16 & 2,09 & 0,97 & 40,9 & 2,40 & 1,00 & 40,6 \\
+    \texttt{extremos\_frecuencia} & 144 & 2,09 & 0,75 & 45,4 & 2,09 & 0,81 & 44,7 \\
+    \texttt{bordes} & 202 & 1,05 & 0,48 & 43,9 & 2,05 & 0,61 & 41,8 \\
+    QPSK, semillas 0–4 & 5 × 2048 & 1,05 & 0,55 & 44,2–44,4 & 2,05–2,24 & 0,64 & 43,0–43,1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Ceros:} ambas ramas dan salida exactamente nula.
+  \item \textbf{Impulso:} la salida temporal es $h_q$, por lo que su error es solo el de cuantizar los coeficientes (máximo 0,40\,LSB). La rama en frecuencia agrega el redondeo de $W$, $H$ y \texttt{work} y llega a 1,00\,LSB.
+  \item \textbf{QPSK:} el resultado es estable entre semillas, con error máximo de 1,05\,LSB en tiempo y de 2,05 a 2,24\,LSB en frecuencia.
+  \item \textbf{Extremos:} es el caso con menor SQNR (40,6\,dB). La entrada vale $\pm1\pm j$ en todas las muestras, sin los ceros del sobremuestreo, y lleva la salida flotante a su pico de 1,8445; ahí los errores de cuantización de los ocho coeficientes se suman con el mismo signo. QPSK 2× no alcanza ese caso: su pico es 0,922.
+  \item \textbf{Bordes:} con tramas de 1 a 25 muestras la rama en frecuencia queda en 41,8\,dB, por debajo de QPSK largo.
+\end{itemize}
+
+Un test del repositorio comprueba en cada integración que todos los conjuntos con señal superan los 40\,dB y que el error no pasa de 2,5\,LSB.
