@@ -52,6 +52,17 @@ class PpaTableTest(unittest.TestCase):
         self.assertEqual(rows["time_serial @ 10 MHz"].count("no medida"), 5)
         self.assertIn("| — |", rows["time_optimized @ 100 MHz"])  # sin RTL registrado no hay SQNR
 
+    def test_zero_dynamic_power_is_a_bound(self):
+        with TemporaryDirectory() as directory:
+            run = Path(directory) / "time_serial" / "10mhz"
+            run.mkdir(parents=True)
+            (run / "summary.tsv").write_text(SUMMARY.replace("dynamic_power_w\t0.002", "dynamic_power_w\t0.000")
+                                             .replace("throughput_samples_per_second\t139130.4",
+                                                      "throughput_samples_per_second\t1000000"))
+            (run / "tool_versions.txt").write_text("Vivado v2024.2 (64-bit)\n", encoding="utf-8")
+            text = table({"time": 44.25, "frequency": 42.96}, set(), Path(directory))
+        self.assertIn("< 0.5 nJ/muestra", text)
+
     def test_import_run(self):
         with TemporaryDirectory() as directory:
             src, dest = Path(directory) / "corrida", Path(directory) / "reports"

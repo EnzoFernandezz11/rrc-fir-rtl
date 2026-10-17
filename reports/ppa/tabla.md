@@ -4,8 +4,8 @@ Generada con `python3 -m scripts.ppa_table`; no editar a mano. Cada fila sale de
 
 | variante | commit | configuración | SQNR | área | Fmax | latencia | throughput | potencia | herramienta/log |
 |---|---|---|---|---|---|---|---|---|---|
-| time_serial @ 10 MHz | — | — | 44.2 dB | no medida | no medida | no medida | no medida | no medida | — |
-| time_serial @ 100 MHz | — | — | 44.2 dB | no medida | no medida | no medida | no medida | no medida | — |
+| time_serial @ 10 MHz | `1f7e4847` | xc7a35tcpg236-1, OOC, 10 MHz, timing PASS | 44.2 dB | 88 LUT / 57 FF / 0 DSP / 0 BRAM | 163.5 MHz (WNS 93.883 ns) | 9 ciclos | 1 Mmuestras/s | 0.000 W din. / 0.068 W est. / < 0.5 nJ/muestra (SAIF 94 / 211 redes) | Vivado v2024.2 (64-bit); [corrida](time_serial/10mhz/) |
+| time_serial @ 100 MHz | `1f7e4847` | xc7a35tcpg236-1, OOC, 100 MHz, timing PASS | 44.2 dB | 88 LUT / 57 FF / 0 DSP / 0 BRAM | 170.5 MHz (WNS 4.136 ns) | 9 ciclos | 10 Mmuestras/s | 0.002 W din. / 0.068 W est. / 0.2 nJ/muestra (SAIF 94 / 211 redes) | Vivado v2024.2 (64-bit); [corrida](time_serial/100mhz/) |
 | time_optimized @ 100 MHz | — | — | — | no medida | no medida | no medida | no medida | no medida | — |
 | frequency_serial @ 10 MHz | `efb57125` | xc7a35tcpg236-1, OOC, 10 MHz, timing PASS | 43.0 dB | 1875 LUT / 569 FF / 3 DSP / 0 BRAM | 57.7 MHz (WNS 82.675 ns) | 559 ciclos | 0.1391 Mmuestras/s | 0.002 W din. / 0.068 W est. / 14.4 nJ/muestra (SAIF 2696 / 4391 redes) | Vivado v2024.2 (64-bit); [corrida](frequency_serial/10mhz/) |
 | frequency_serial @ 100 MHz | `efb57125` | xc7a35tcpg236-1, OOC, 100 MHz, timing PASS | 43.0 dB | 1874 LUT / 569 FF / 3 DSP / 0 BRAM | 109.9 MHz (WNS 0.901 ns) | 559 ciclos | 1.391 Mmuestras/s | 0.015 W din. / 0.068 W est. / 10.8 nJ/muestra (SAIF 2696 / 4391 redes) | Vivado v2024.2 (64-bit); [corrida](frequency_serial/100mhz/) |

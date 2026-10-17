@@ -69,6 +69,11 @@ def row(name: str, mhz: int, sqnr: dict[str, float], registered: set[str],
         commit = json.loads((run / "source_manifest.json").read_text(encoding="utf-8"))["commit"][:8]
     tool = (run / "tool_versions.txt").read_text(encoding="utf-8").splitlines()[0].strip()
     period = float(m["clock_period_ns"])
+    energy = f"{float(m['energy_dynamic_nj_per_sample']):.3g} nJ/muestra"
+    if float(m["dynamic_power_w"]) == 0:
+        # Vivado redondea a 1 mW: 0.000 W solo acota la dinámica a < 0.5 mW.
+        bound = 0.0005 / float(m["throughput_samples_per_second"]) * 1e9
+        energy = f"< {bound:.2g} nJ/muestra"
     return [
         label,
         f"`{commit}`",
@@ -79,7 +84,7 @@ def row(name: str, mhz: int, sqnr: dict[str, float], registered: set[str],
         f"{m['latency_cycles']} ciclos",
         f"{float(m['throughput_samples_per_second']) / 1e6:.4g} Mmuestras/s",
         f"{m['dynamic_power_w']} W din. / {m['static_power_w']} W est. / "
-        f"{float(m['energy_dynamic_nj_per_sample']):.3g} nJ/muestra "
+        f"{energy} "
         f"(SAIF {m['saif_review'].split(' filas')[0]} redes)",
         f"{tool}; [corrida]({name}/{mhz}mhz/)",
     ]
