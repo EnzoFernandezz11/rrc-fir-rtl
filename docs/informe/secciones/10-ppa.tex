@@ -1,3 +1,42 @@
 \section{Comparación de desempeño}\label{sec:ppa}
 
-\pendiente{Andrés integra (A07, I01); Julián y Enzo aportan corridas}{Tabla de las cuatro variantes medidas en Vivado sobre la misma FPGA, flujo y constraints: SQNR, área (LUT, FF, DSP, BRAM), Fmax, latencia, throughput, potencia con actividad SAIF y energía por muestra. Condiciones de medición y límites (métricas no medidas, potencia estática del dispositivo).}
+Todas las variantes se miden con el mismo flujo de Vivado 2024.2: Artix-7 \texttt{xc7a35tcpg236-1}, síntesis e implementación \emph{out of context} con las estrategias por defecto y una única restricción de reloj sobre \texttt{clk}. El estímulo es el mismo para todas: QPSK con sobremuestreo 2×, semilla 1, 1024 símbolos (2048 muestras), con la entrada siempre disponible y la salida siempre lista. Después del ruteo, la netlist se simula con los retardos SDF del peor caso y se comparan las 2048 salidas con el modelo de punto fijo de su rama. Esa misma simulación mide la latencia y el throughput y genera la actividad SAIF que usa la estimación de potencia.
+
+El reloj oficial es 10\,MHz para las variantes serie y 100\,MHz para las paralelas (sección~\ref{sec:intro}). Las serie se implementan también a 100\,MHz para separar la mejora que aporta la arquitectura de la que aporta el reloj. La tabla~\ref{tab:ppa} reúne las cuatro corridas serie; todas cumplen setup y hold, y la simulación temporal reproduce las 2048 muestras exactas.
+
+\begin{table}[h]
+  \centering
+  \caption{PPA de las variantes serie en Vivado. $L$ es la latencia por muestra; $II$, el intervalo medio entre muestras de salida. La SQNR es la mínima del modelo de punto fijo de cada rama, semillas 0 a 4.}\label{tab:ppa}
+  \begin{tabular}{lrrrr}
+    \toprule
+    & \multicolumn{2}{c}{Tiempo serie} & \multicolumn{2}{c}{Frecuencia serie} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    Reloj & 10\,MHz & 100\,MHz & 10\,MHz & 100\,MHz \\
+    \midrule
+    SQNR (dB) & \multicolumn{2}{c}{44,2} & \multicolumn{2}{c}{43,0} \\
+    LUT & 88 & 88 & 1875 & 1874 \\
+    FF & 57 & 57 & 569 & 569 \\
+    DSP & 0 & 0 & 3 & 3 \\
+    BRAM & 0 & 0 & 0 & 0 \\
+    WNS (ns) & 93,883 & 4,136 & 82,675 & 0,901 \\
+    Fmax estimada (MHz) & 163,5 & 170,5 & 57,7 & 109,9 \\
+    $L$ (ciclos) & 9 & 9 & 559 & 559 \\
+    $II$ (ciclos por muestra) & 10 & 10 & 71,875 & 71,875 \\
+    Throughput (Mmuestras/s) & 1 & 10 & 0,139 & 1,391 \\
+    Potencia dinámica (mW) & $<0{,}5$ & 2 & 2 & 15 \\
+    Energía dinámica (nJ/muestra) & $<0{,}5$ & 0,2 & 14,4 & 10,8 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+En frecuencia el intervalo surge de procesar bloques de 8 muestras cada 575 ciclos ($575/8 = 71{,}875$). La potencia estática es la del dispositivo completo, 68\,mW en las cuatro corridas, y no se incluye en la energía por muestra. La Fmax se estima como $1000/(T - \text{WNS})$\,MHz, con $T$ el período restringido en ns.
+
+\paragraph{Límites de la medición.}
+\begin{itemize}
+  \item La Fmax estimada depende de la restricción: con 100\,ns los caminos cumplen con holgura y Vivado no los acorta; la variante en frecuencia, estimada en 57,7\,MHz a 10\,MHz, cumple 100\,MHz cuando se la restringe a ese período. La cota útil es la de la corrida a 100\,MHz.
+  \item Vivado informa la potencia dinámica con resolución de 1\,mW. Las cifras de pocos mW tienen un error de $\pm 0{,}5$\,mW, que domina la energía por muestra: los 2\,mW de la variante en frecuencia a 10\,MHz corresponden a entre 10,8 y 18,0\,nJ/muestra, por lo que la diferencia con los 10,8\,nJ/muestra a 100\,MHz no es significativa. Con 0,000\,W solo se puede acotar la dinámica por debajo de 0,5\,mW.
+  \item La actividad SAIF cubre parte de las redes: 94 de 211 en tiempo y 2696 de 4391 en frecuencia. Para el resto, Vivado estima la actividad por propagación vectorless.
+  \item El flujo \emph{out of context} no incluye buffers de entrada y salida ni restricciones de I/O; las cifras corresponden al núcleo.
+\end{itemize}
+
+\pendiente{Julián (B04) y Enzo (C04)}{Columnas de las variantes paralelas a 100\,MHz, con el mismo flujo, y su comparación con las serie a igual reloj.}
