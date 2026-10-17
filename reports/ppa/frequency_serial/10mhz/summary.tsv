@@ -1,0 +1,20 @@
+metric	value
+part	xc7a35tcpg236-1
+clock_period_ns	100
+internal_wns_ns	82.675
+internal_whs_ns	0.189
+fmax_estimate_mhz	57.72005772005771
+lut	1875
+ff	569
+dsp	3
+bram_tiles	0
+output_samples	2048
+active_cycles	147200
+latency_cycles	559
+block_cycles	575
+throughput_samples_per_second	139130.434782609
+dynamic_power_w	0.002
+static_power_w	0.068
+energy_dynamic_nj_per_sample	14.37499999999997
+timing_status	PASS
+saif_review	2696 / 4391 filas de redes con fuente SAIF (S); revisar correspondencia oficial
