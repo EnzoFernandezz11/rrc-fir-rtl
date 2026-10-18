@@ -92,9 +92,9 @@ constantes, pero se replica lógica. La comparación física depende del mapeo.
 La ocupación baja de una etapa dedicada es un costo aceptado; no se usa la tasa
 externa como único criterio para dimensionar uno solo de los tres bloques.
 
-La propuesta corresponde a D08 para frecuencia. Su registro en el contrato y
-la revisión del equipo quedan pendientes antes de integrar C03. Esta nota no
-modifica la decisión de la rama temporal.
+La propuesta queda registrada en [D08 del contrato técnico](../contrato-tecnico.md#2-registro-de-decisiones-de-etapa-0)
+para frecuencia, conservando la propuesta de la rama temporal. La revisión
+conjunta del contrato sigue pendiente.
 
 ## 1. Base serial y objetivo de desempeño
 
@@ -608,14 +608,17 @@ requiere medir actividad y potencia. Tampoco se deduce el área comparando
 6. **Ajustar con evidencia.** Si no cierra timing, estudiar retiming o cortes
    adicionales, distinguiendo mover registros de agregar etapas. Recalcular
    latencia, capacidad de buffers y reservas; alargar IFFT puede agotar el margen
-   de los dos destinos de salida. Si no cabe, revisar redes constantes y su
-   mapeo; cualquier cambio de paralelismo debe volver a justificar la consigna.
+   de los dos destinos de salida. Si la ocupación de LUT o el ruteo impiden
+   cumplir 100 MHz, evaluar primero el mapeo de parte de los 110 productos por
+   constante a los **90 DSP48E1 del xc7a35t**, antes de reducir paralelismo.
+   Medir el efecto en LUT, DSP y timing; cualquier cambio de paralelismo debe
+   volver a justificar la consigna.
    Repetir la verificación funcional y temporal después de modificar el diseño.
 
 Los resultados se incorporarán al [registro PPA común](../../reports/ppa/frequency.md).
-Antes de integrar C03 deben revisarse el calendario, los anchos, el presupuesto
-de recursos y el compromiso de paralelismo, y registrarse D08 para frecuencia
-conservando el estado de la decisión temporal y la revisión del equipo.
+La revisión de C03 aprobó el calendario, los anchos, el presupuesto de recursos
+y el compromiso de paralelismo. D08 registra la propuesta de frecuencia y
+conserva la propuesta temporal y la revisión conjunta pendiente del contrato.
 
 Como comprobación de esta nota se contrastaron constantes y conteos con la ROM,
 las redes CSD con multiplicación entera sobre entradas de 13 bits y las
@@ -658,6 +661,7 @@ documentación pública, sin depender de rutas locales del material de cursada:
 | [Modelo fijo](../../model/fixed_point.py) | Referencia numérica para equivalencia y límites. |
 | [Verificación y PPA](../contratos/verificacion-y-ppa.md) y [base medida](../../reports/ppa/frequency.md) | Método de comparación y procedencia de C02. |
 | [AMD UG474: recursos](https://docs.amd.com/r/en-US/ug474_7Series_CLB/7-Series-FPGA-CLB-Resources) | Capacidad de LUT/FF del xc7a35t. |
+| [AMD: Artix-7](https://www.amd.com/en/products/adaptive-socs-and-fpgas/fpga/artix-7.html) | 90 DSP48E1 en el xc7a35t como alternativa de mapeo para aliviar LUT y ruteo. |
 | [AMD UG953: CARRY4](https://docs.amd.com/r/2025.1-English/ug953-vivado-7series-libraries/CARRY4) | Carry dedicado e inferencia aritmética en FPGA. |
 
 CSD y las factorizaciones se explicitan en la sección 2 y la sección 3 para
