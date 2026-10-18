@@ -80,7 +80,7 @@ proc ppa_main {root script_dir output options} {
     write_sdf -process_corner slow implemented.sdf
     ppa_exec xvlog_console.log xvlog --sv --work xil_defaultlib implemented.v $tb [file join $::env(XILINX_VIVADO) data verilog src glbl.v]
     ppa_exec xelab_console.log xelab -debug typical -L simprims_ver -L secureip \
-        -transport_int_delays -pulse_r 0 -pulse_int_r 0 \
+        -transport_int_delays -pulse_r 0 -pulse_int_r 0 -pulse_e 0 -pulse_int_e 0 \
         -sdfmax /${bench}/dut=implemented.sdf xil_defaultlib.$bench xil_defaultlib.glbl -s ppa_timing
     # Generate the scope without relying on simulator environment inheritance.
     ppa_write simulate_run.tcl "set tb /$bench\nset guard_ns [expr {32 * $period}]\nset active_timeout_ns [expr {([dict get $options active_cycles] + 32) * $period}]\nsource [list [file join $script_dir simulate.tcl]]"
