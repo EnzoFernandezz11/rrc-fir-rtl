@@ -153,7 +153,7 @@ module tb_fir_common;
         archivo = ruta;
     endtask
 
-    // Reset de dos ciclos; el monitor no cuenta nada mientras rst = 1.
+    // Reset de un solo flanco, el mínimo de la regla 6; el monitor no cuenta nada mientras rst = 1.
     task automatic resetear();
         @(negedge clk);
         rst = 1;
@@ -165,7 +165,7 @@ module tb_fir_common;
         ciclo = 0;
         visto = 0;
         presentada = -1;
-        repeat (2) @(negedge clk);
+        @(negedge clk);
         rst = 0;
     endtask
 
