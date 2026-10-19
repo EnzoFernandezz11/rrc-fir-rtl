@@ -116,7 +116,8 @@ module tb_fir_time_ppa;
         end
         activity_window = 0;
         active_cycles = cycles;
-        if (sent != SAMPLES || active_cycles != SAMPLES*INTERVAL)
+        // La última salida llega LATENCY ciclos después de aceptar x[SAMPLES-1].
+        if (sent != SAMPLES || active_cycles != (SAMPLES-1)*INTERVAL + LATENCY + 1)
             $fatal(1, "Conteo final incorrecto: entradas=%0d ciclos=%0d", sent, active_cycles);
         in_valid = 0; in_last = 0; in_i = 0; in_q = 0;
         for (guard = 0; guard < 12; guard = guard + 1) begin
