@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.ppa import TOP, measurement_key, record_run, resource_counts
+from scripts.ppa import TOP, measurement_key, record_run, resource_counts, target_settings, package, sha256
 from scripts.validate_project import ROOT
 
 
@@ -53,11 +53,59 @@ class PpaResourcesTest(unittest.TestCase):
                     self.assertAlmostEqual(metrics["throughput_samples_per_second"],
                                            2048e9 / (147200 * period), places=6)
 
+    def test_optimized_benchmark_and_export(self):
+        config = target_settings("frequency_optimized")
+        self.assertEqual(config["clock_period_ns"], 10)
+        with TemporaryDirectory() as directory:
+            directory = Path(directory)
+            executable = directory / "ppa.out"
+            compiled = subprocess.run(
+                ["iverilog", "-g2012", "-s", config["bench"], "-o", str(executable),
+                 *config["sources"], config["bench_path"]], cwd=ROOT,
+                text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30,
+            )
+            self.assertEqual(compiled.returncode, 0, compiled.stdout)
+            vectors = directory / "ppa_vectors.txt"
+            vectors.write_text("2048\n" + "0 0 0 0\n" * 2048)
+            metrics_path = directory / "local_metrics.json"
+            for period in (10, 12.5):
+                result = subprocess.run(
+                    ["vvp", str(executable), f"+VECTORS={vectors}",
+                     f"+METRICS={metrics_path}", f"+PERIOD_NS={period}"], cwd=ROOT,
+                    text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout)
+                metrics = json.loads(metrics_path.read_text())
+                self.assertEqual(metrics["clock_period_ns"], period)
+                self.assertEqual(metrics["active_cycles"], 2074)
+                self.assertEqual(metrics["latency_cycles"], 26)
+                self.assertEqual(metrics["block_cycles"], 8)
+                self.assertEqual(metrics["output_samples"], 2048)
+                self.assertAlmostEqual(metrics["throughput_samples_per_second"], 2048e9/(2074*period), places=6)
+                self.assertAlmostEqual(metrics["sustained_throughput_samples_per_second"], 1e9/period, places=6)
+            # Package must select the optimized source set, clock and measured launch options.
+            import zipfile
+            manifest = {"config": config, "status": "local_pass", "commit": "abc1234",
+                        "inputs_sha256": {name: sha256(ROOT/name) for name in config["sources"]},
+                        "vectors_sha256": sha256(vectors)}
+            (directory / "manifest.json").write_text(json.dumps(manifest))
+            for name in ("resources.json", "summary.md", "diagnosis.txt"):
+                (directory/name).write_text("{}")
+            archive = package(directory)
+            with zipfile.ZipFile(archive) as bundle:
+                self.assertTrue(set(config["sources"]).issubset(bundle.namelist()))
+                self.assertIn("constraints/clk_100mhz.xdc", bundle.namelist())
+                self.assertIn("-Top fir_frequency_optimized", bundle.read("README.md").decode())
+                self.assertIn("-LatencyCycles 26 -BlockCycles 8 -ActiveCycles 2074", bundle.read("README.md").decode())
+            vectors.write_text("changed")
+            with self.assertRaisesRegex(ValueError, "Vectores modificados"):
+                package(directory)
+
     def test_top_only_and_separate_resources(self):
         stats = {"modules": {
             "\\" + TOP: {"num_cells_by_type": {
                 "LUT2": 3, "LUT6": 4, "FDRE": 5, "FDSE": 2,
-                "DSP48E1": 1, "RAMB18E1": 2, "CARRY4": 9, "MUXF7": 7,
+                "DSP48E1": 1, "RAMB18E1": 2, "RAM32M": 168, "CARRY4": 9, "MUXF7": 7,
                 "$scopeinfo": 6,
             }},
             "\\LUT6": {"num_cells_by_type": {"$lut": 200}},
@@ -65,6 +113,7 @@ class PpaResourcesTest(unittest.TestCase):
         result = resource_counts(stats)
         self.assertEqual((result["LUT"], result["FF"], result["DSP48E1"]), (7, 7, 1))
         self.assertEqual((result["RAMB18E1"], result["RAMB36E1"]), (2, 0))
+        self.assertEqual(result["RAM32M"], 168)
         self.assertEqual((result["CARRY4"], result["MUXF7"], result["MUXF8"]), (9, 7, 0))
         stats["modules"]["\\" + TOP]["num_cells_by_type"]["$mul"] = 1
         with self.assertRaisesRegex(ValueError, "sin mapear"):
@@ -91,6 +140,18 @@ class PpaResourcesTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "marcador"):
                 record_run("third", "new entry", "third", report)
             self.assertEqual(report.read_text(encoding="utf-8"), "Historial sin marcador")
+
+    def test_optimized_run_preserves_serial_history(self):
+        with TemporaryDirectory() as directory:
+            report = Path(directory) / "frequency.md"
+            original = "Serial evidence\n<!-- serial-runs:end -->\nOptimized\n<!-- optimized-runs:end -->\n"
+            report.write_text(original)
+            record_run("new", "# Frecuencia optimizada — corrida `new` (local)\n\nResults", "key", report,
+                       architecture="optimized")
+            document = report.read_text()
+            self.assertTrue(document.startswith("Serial evidence\n<!-- serial-runs:end -->"))
+            self.assertIn("<!-- optimized-measurement:key -->", document)
+            self.assertLess(document.index("Optimized"), document.index("Results"))
 
     def test_measurement_identity_ignores_documentation_but_tracks_rtl_and_results(self):
         manifest = {"inputs_sha256": {"rtl/top.sv": "rtl-v1", "reports/ppa/frequency.md": "docs-v1"},

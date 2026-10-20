@@ -1,5 +1,9 @@
 # Vivado en Windows
 
+Para un ZIP de C04, usar primero la invocación específica del README en la raíz
+del paquete: selecciona top, banco, período de 10 ns y ciclos medidos. Ejecutar
+sin opciones selecciona la base serial de 100 ns descrita a continuación.
+
 Extraer el ZIP completo y abrir una consola con Vivado en `PATH` (por ejemplo,
 ejecutando `settings64.bat` de su instalacion). Desde la raiz del paquete:
 
@@ -51,8 +55,9 @@ incluir `output_samples`, `clock_period_ns`, `active_cycles`, `latency_cycles`,
 XDC generado como a la simulacion; SAIF, SDF, Fmax y resumen usan la variante
 elegida. Los limites de espera escalan con el periodo y los ciclos activos
 esperados. `configuration.txt` registra estos ajustes y `summary.tsv` conserva
-sus mismas filas para A07. El ZIP actual contiene la base de frecuencia; para
-otra variante deben incluirse tambien su RTL, banco y vectores.
+sus mismas filas para A07. `python3 scripts/ppa.py package --target frequency_optimized` empaqueta C04 con
+su RTL, banco, vectores e invocación específica; sin `--target` empaqueta la base
+serial.
 
 No requiere Python. El lanzador usa PowerShell incluido en Windows para crear
 la carpeta antes de iniciar Vivado y guardar `vivado.log` y `vivado.jou` completos.

@@ -1,4 +1,36 @@
-# PPA del núcleo serial de frecuencia
+# PPA de los núcleos de frecuencia
+
+## C04: variante optimizada
+
+```sh
+python3 scripts/ppa.py local --target frequency_optimized
+python3 scripts/ppa.py package --target frequency_optimized
+```
+
+Cada comando ejecuta la regresión común, el benchmark por puertos y el mapeo XC7.
+`package` agrega el ZIP; no hace falta ejecutar `local` antes. El target serial
+sigue siendo el predeterminado de `make ppa-local` y `make ppa-package`.
+
+C04 usa `fir_frequency_optimized`, `tb_fir_frequency_optimized_ppa` y el objetivo
+10 ns / 100 MHz. Las salidas quedan en `build/ppa/frequency_optimized/<corrida>/`.
+El benchmark exige 2048 resultados exactos, latencia 26, II de bloque 8 y 2074
+ciclos activos. Reporta por separado el throughput sostenido (100 Mmuestras/s
+al reloj objetivo) y el efectivo incluyendo llenado/vaciado (≈98,746 Mmuestras/s).
+La energía usa este último, sobre la misma ventana SAIF.
+
+El ZIP `frequency_optimized_vivado.zip` contiene un README con la invocación
+específica y los ciclos medidos. Desde su raíz, en una consola Vivado:
+
+```bat
+scripts\ppa\vivado\run.bat -Top fir_frequency_optimized -Bench tb_fir_frequency_optimized_ppa -PeriodNs 10 -LatencyCycles 26 -BlockCycles 8 -ActiveCycles 2074 -Vectors vectors/ppa_vectors.txt
+```
+
+Se reutilizan implementación, SDF, SAIF y reportes del flujo existente. El cierre
+físico exige setup/hold satisfactorios a 10 ns, recursos dentro del dispositivo,
+simulación temporal correcta y revisión de cobertura SAIF. El mapeo Yosys y las
+pruebas RTL no demuestran que se alcancen 100 MHz. Ver el [contrato C04](c04-implementacion.md).
+
+## Base serial y procedimiento común
 
 El flujo mide `fir_frequency_serial` completo. En la PC local se verifican las salidas, se miden ciclos y se obtiene un mapeo lógico para Artix-7. El paquete para Windows completa implementación, simulación temporal y estimación de potencia en Vivado.
 

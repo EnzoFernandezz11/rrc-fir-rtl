@@ -1,0 +1,9 @@
+# Preliminary Artix-7 mapping, not physical timing.
+read_verilog -sv rtl/frequency_optimized/frequency_csd_mul.sv rtl/frequency_optimized/frequency_complex_const.sv rtl/frequency_optimized/frequency_butterfly.sv rtl/frequency_optimized/frequency_fft16.sv rtl/frequency_optimized/frequency_spectral16.sv rtl/frequency_optimized/frequency_output_scale.sv rtl/frequency_optimized/fir_frequency_optimized_control.sv rtl/frequency_optimized/fir_frequency_optimized.sv
+hierarchy -check -top fir_frequency_optimized
+proc
+opt
+select -assert-none t:$mul t:$dlatch
+synth_xilinx -family xc7 -top fir_frequency_optimized -flatten -noiopad -noclkbuf
+check -assert
+stat -tech xilinx

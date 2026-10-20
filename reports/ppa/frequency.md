@@ -235,4 +235,185 @@ y procedencia declaradas.
 
 ## Frecuencia optimizada
 
-Pendiente de implementación y medición en C03/C04. Aquí se registrarán sus corridas, el análisis de resultados y la comparación con la base serial bajo condiciones declaradas.
+Implementación C04 según [contrato y aceptación](../../docs/frecuencia/c04-implementacion.md).
+Las corridas locales verifican funcionalidad y mapeo lógico; timing y potencia
+físicos requieren ejecutar el paquete externo de Vivado a 10 ns.
+
+<!-- optimized-measurement:58ea6c1fecb9cc05975ecca28a626ab5285548e6fd8a9f85b3138bdff19bcefc -->
+### Frecuencia optimizada — corrida `20261019T211022140213Z-65526490` (local)
+
+**Estado: verificación local y mapeo lógico completados; PPA físico pendiente de Vivado.**
+
+#### Configuración y trazabilidad
+
+| Dato | Valor |
+|---|---|
+| Corrida UTC | `20261019T211022140213Z-65526490` |
+| Commit base | `655264905f1552cf4974ae7986b11e944b49f127` |
+| Cambios locales al iniciar | Sí; consultar estado y hashes del manifiesto |
+| Módulo | `fir_frequency_optimized` completo |
+| FPGA | Basys3 / Artix-7 `xc7a35tcpg236-1` |
+| Reloj objetivo | 100 MHz / 10 ns |
+| Implementación prevista | Out-of-context, estrategias por defecto |
+| Formato | A04: entrada 2/F0, trabajo 12/F5, coeficientes 10/F8, salida 9/F7 |
+| Estímulo | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras |
+| Interfaz | Entrada disponible, salida siempre lista |
+| Vectores | Modelo fijo A04; regresión funcional incluye A05 |
+| Yosys | `Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)` |
+| Icarus | `Icarus Verilog version 12.0 (stable) ()` |
+
+#### Verificación y rendimiento funcional
+
+Regresión `smoke` y comparación exacta de las 2048 salidas: **PASS**.
+La simulación RTL usa 10 ns; la capacidad física de operar a ese período se comprueba en Vivado.
+
+| Medición | Resultado |
+|---|---|
+| Muestras aceptadas / verificadas | 2048 / 2048 |
+| Bloques completos | 256 |
+| Latencia por muestra | 26 ciclos = 0.26 µs |
+| Intervalo entre bloques (8 muestras) | 8 ciclos = 0.08 µs |
+| Ventana de procesamiento, sin reset | 2074 ciclos = 0.02074 ms |
+| Throughput efectivo a 100 MHz | 98746383.799 muestras/s |
+| Throughput sostenido a reloj objetivo (sin pausas) | 100000000.000 muestras/s |
+
+#### Recursos preliminares — Yosys XC7
+
+Conteo de primitivas del núcleo aplanado, sin buffers de entrada/salida ni de reloj.
+Las LUT son la suma de LUT1…LUT6; no equivalen directamente a slices o CLB.
+
+| Recurso | Cantidad |
+|---|---|
+| LUT | 7493 |
+| FF | 5140 |
+| DSP48E1 | 0 |
+| RAMB18E1 | 0 |
+| RAMB36E1 | 0 |
+| CARRY4 | 1750 |
+| MUXF7 | 103 |
+| MUXF8 | 6 |
+
+#### Resultados físicos — Vivado
+
+| Métrica | Estado |
+|---|---|
+| LUT / FF / DSP / BRAM implementados | Pendiente |
+| WNS a 10 ns / caminos sin constraints | Pendiente |
+| Fmax aproximada de caminos internos | Pendiente |
+| Simulación temporal y anotación SAIF | Pendiente |
+| Potencia dinámica / estática | Pendiente |
+| Energía dinámica por muestra | Pendiente |
+| Versión Vivado / condiciones térmicas | Pendiente |
+
+Se exige WNS ≥ 0 a 10 ns y WHS ≥ 0. La estimación de Fmax es `1000/(10 − WNS_ns)` MHz,
+usando caminos internos de setup del mismo reloj; no reemplaza otra implementación a esa frecuencia.
+Energía dinámica por muestra = potencia dinámica / throughput de la ventana SAIF.
+
+El [análisis de la base serial](frequency.md#análisis-base-serial) reúne el desglose
+de ciclos y los criterios para elegir la próxima optimización.
+
+#### Evidencia
+
+- Corrida: `build/ppa/frequency_optimized/20261019T211022140213Z-65526490/`.
+- [Manifiesto y hashes](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/manifest.json).
+- [Métricas del benchmark](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/local_metrics.json).
+- [Recursos y primitivas](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/resources.json).
+- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/first_blocks.vcd).
+- Logs: `build/ppa/frequency_optimized/20261019T211022140213Z-65526490/logs/`; incluyen regresión, compilación, simulación y síntesis.
+- [Procedimiento local y Windows](../../docs/frecuencia/ppa.md).
+
+Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
+`build/`. Los resultados de Vivado se incorporarán al registro común conservando
+las corridas anteriores.
+
+<!-- optimized-measurement:a1cf4bdc1643649d03cc6fa7f3e6522d1ed2ff21518f5fda5a2a43de381521c8 -->
+### Frecuencia optimizada — corrida `20261019T211415637404Z-65526490` (local)
+
+**Estado: verificación local y mapeo lógico completados; PPA físico pendiente de Vivado.**
+
+#### Configuración y trazabilidad
+
+| Dato | Valor |
+|---|---|
+| Corrida UTC | `20261019T211415637404Z-65526490` |
+| Commit base | `655264905f1552cf4974ae7986b11e944b49f127` |
+| Cambios locales al iniciar | Sí; consultar estado y hashes del manifiesto |
+| Módulo | `fir_frequency_optimized` completo |
+| FPGA | Basys3 / Artix-7 `xc7a35tcpg236-1` |
+| Reloj objetivo | 100 MHz / 10 ns |
+| Implementación prevista | Out-of-context, estrategias por defecto |
+| Formato | A04: entrada 2/F0, trabajo 12/F5, coeficientes 10/F8, salida 9/F7 |
+| Estímulo | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras |
+| Interfaz | Entrada disponible, salida siempre lista |
+| Vectores | Modelo fijo A04; regresión funcional incluye A05 |
+| Yosys | `Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)` |
+| Icarus | `Icarus Verilog version 12.0 (stable) ()` |
+
+#### Verificación y rendimiento funcional
+
+Regresión `smoke` y comparación exacta de las 2048 salidas: **PASS**.
+La simulación RTL usa 10 ns; la capacidad física de operar a ese período se comprueba en Vivado.
+
+| Medición | Resultado |
+|---|---|
+| Muestras aceptadas / verificadas | 2048 / 2048 |
+| Bloques completos | 256 |
+| Latencia por muestra | 26 ciclos = 0.26 µs |
+| Intervalo entre bloques (8 muestras) | 8 ciclos = 0.08 µs |
+| Ventana de procesamiento, sin reset | 2074 ciclos = 0.02074 ms |
+| Throughput efectivo a 100 MHz | 98746383.799 muestras/s |
+| Throughput sostenido a reloj objetivo (sin pausas) | 100000000.000 muestras/s |
+
+#### Recursos preliminares — Yosys XC7
+
+Conteo de primitivas del núcleo aplanado, sin buffers de entrada/salida ni de reloj.
+Las LUT son la suma de LUT1…LUT6 de lógica; no incluyen RAM distribuida ni
+equivalen directamente a slices o CLB. RAM32M cuenta primitivas de memoria
+distribuida por separado, no bits ni LUT. El desglose completo está en resources.json.
+
+| Recurso | Cantidad |
+|---|---|
+| LUT | 7493 |
+| FF | 5140 |
+| DSP48E1 | 0 |
+| RAMB18E1 | 0 |
+| RAMB36E1 | 0 |
+| RAM32M | 168 |
+| CARRY4 | 1750 |
+| MUXF7 | 103 |
+| MUXF8 | 6 |
+
+#### Resultados físicos — Vivado
+
+| Métrica | Estado |
+|---|---|
+| LUT / FF / DSP / BRAM implementados | Pendiente |
+| WNS a 10 ns / caminos sin constraints | Pendiente |
+| Fmax aproximada de caminos internos | Pendiente |
+| Simulación temporal y anotación SAIF | Pendiente |
+| Potencia dinámica / estática | Pendiente |
+| Energía dinámica por muestra | Pendiente |
+| Versión Vivado / condiciones térmicas | Pendiente |
+
+Se exige WNS ≥ 0 a 10 ns y WHS ≥ 0. La estimación de Fmax es `1000/(10 − WNS_ns)` MHz,
+usando caminos internos de setup del mismo reloj; no reemplaza otra implementación a esa frecuencia.
+Energía dinámica por muestra = potencia dinámica / throughput de la ventana SAIF.
+
+El [análisis de la base serial](frequency.md#análisis-base-serial) reúne el desglose
+de ciclos y los criterios para elegir la próxima optimización.
+
+#### Evidencia
+
+- Corrida: `build/ppa/frequency_optimized/20261019T211415637404Z-65526490/`.
+- [Manifiesto y hashes](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/manifest.json).
+- [Métricas del benchmark](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/local_metrics.json).
+- [Recursos y primitivas](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/resources.json).
+- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/first_blocks.vcd).
+- Logs: `build/ppa/frequency_optimized/20261019T211415637404Z-65526490/logs/`; incluyen regresión, compilación, simulación y síntesis.
+- [Procedimiento local y Windows](../../docs/frecuencia/ppa.md).
+
+Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
+`build/`. Los resultados de Vivado se incorporarán al registro común conservando
+las corridas anteriores.
+
+<!-- optimized-runs:end -->

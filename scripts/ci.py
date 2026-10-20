@@ -43,11 +43,11 @@ def smoke() -> None:
         print("ETAPA 0: no hay RTL registrado; smoke validó contrato y herramientas Python, no vector matching")
         return
     run([sys.executable, "-m", "model.vectors"], "a05-vectors.log")
+    if any(target["domain"] == "frequency" for target in targets):
+        run([sys.executable, "-m", "scripts.frequency_serial_vectors"], "frequency_serial-vectors.log")
     for target in targets:
         output = ROOT / "build" / f"{target['name']}.out"
         output.parent.mkdir(parents=True, exist_ok=True)
-        if target["name"] == "frequency_serial":
-            run([sys.executable, "-m", "scripts.frequency_serial_vectors"], "frequency_serial-vectors.log")
         run(
             [
                 "iverilog", "-g2012", "-Wall", "-s", target["testbench_top"],
