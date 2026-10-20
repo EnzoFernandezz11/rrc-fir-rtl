@@ -54,7 +54,7 @@ Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigi
 Riesgos al 20/10:
 
 - **Rama temporal:** B04 empezó el 19/10, 3 días después del plan, y todavía no tiene rama publicada. Sus 9 días terminan el 27/10 y la holgura hasta I01 (29/10) baja de 4 días a 1.
-- **Rama en frecuencia:** C04 empezó el 19/10, un día antes del plan; si mantiene los 9 días termina el 27/10, después del corte del 26/10. La rama ya pasa el vector matching A05 y el banco común en local, así que el corte se cumpliría si se integra antes. La síntesis Yosys XC7 da 7493 LUT (≈ 36 % del xc7a35t), muy por debajo del ≈ 77 % estimado en C03. Falta la evidencia de Vivado a 10 ns, que es el riesgo principal.
+- **Rama en frecuencia:** C04 empezó el 19/10, un día antes del plan; si mantiene los 9 días termina el 27/10, después del corte del 26/10. La rama ya pasa el vector matching A05 y el banco común en local, así que el corte se cumpliría si se integra antes. La síntesis Yosys XC7 da 7493 LUT (≈ 36 % del xc7a35t), muy por debajo del ≈ 77 % estimado en C03. Falta la evidencia de Vivado a 10 ns, que es el riesgo principal; Enzo la prevé para el 23/10.
 - **Modelos e integración:** A06 y A07 se integraron el 20/10; B04 y C04 se suman a la tabla PPA con el mismo flujo de Vivado. I03 no empezó (plan 20/10) aunque sus dependencias cerraron el 15/10.
 
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
@@ -75,9 +75,9 @@ Riesgos al 20/10:
 | [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | 15/10 | #47 integrado: vector matching A05, `L = 559`, 575 ciclos por bloque, `run.tcl` parametrizado. Plan: fin 19/10 (−4). |
 | [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | @andres332271 | 14/10 | 20/10 | #53 integrado: `make regresion` pasa con B02 y C02 (vector matching, reset en trama de un solo flanco y pausas). Plan: inicio 15/10 (−1), fin 19/10 (+1). |
 | [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | @moreyrajulian | 15/10 | 16/10 | #49 integrado: sistólica en forma transpuesta, `II = 1`, `L = 1`, 100 MHz; D08 temporal propuesto. Plan: inicio 11/10, fin 13/10 (+3). |
-| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | @moreyrajulian | 19/10 | — | Inicio informado en #54; sin rama publicada al 20/10. Plan: inicio 16/10 (+3), fin 24/10. |
+| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | @moreyrajulian | 19/10 | — | Inicio confirmado en #55; sin rama publicada al 20/10, prevista para el 21/10. Plan: inicio 16/10 (+3), fin 24/10. |
 | [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | @EnzoFernandezz11 | 15/10 | 18/10 | #50 integrado: FFT/IFFT desplegadas, 16 productos espectrales con H fijo y redes CSD, 100 MHz; D08 registrado en 373c76f. Plan: inicio 12/10, fin 13/10 (+5). |
-| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | @EnzoFernandezz11 | 19/10 | — | Rama `e/c04-rtl-optimized` sin PR (primer commit 19/10): vector matching A05 y banco común pasan en local, `L = 26`, `II = 8` por bloque. Falta Vivado a 10 ns. Plan: inicio 20/10 (−1), fin 28/10. |
+| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | @EnzoFernandezz11 | 19/10 | — | Rama `e/c04-rtl-optimized` sin PR (primer commit 19/10): vector matching A05 y banco común pasan en local, `L = 26`, `II = 8` por bloque. Inicio confirmado en #55; falta Vivado a 10 ns, prevista para el 23/10. Plan: inicio 20/10 (−1), fin 28/10. |
 | [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | @andres332271 | 14/10 | — | #52 integrado el 20/10: tabla PPA desde Vivado con B02 y C02 a 10 y 100 MHz y banco PPA temporal, con la corrección de #51 (18/10). Queda abierta hasta importar B04 y C04 con `--import`. Plan: inicio 11/10 (+3), fin 28/10. |
 | [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
 | [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | @andres332271 | 15/10 | — | #48 en borrador: secciones 1–6 y PPA serial redactadas; faltan 7–9 (Julián y Enzo), Gantt y conclusiones. Plan: inicio 14/10 (+1). |
