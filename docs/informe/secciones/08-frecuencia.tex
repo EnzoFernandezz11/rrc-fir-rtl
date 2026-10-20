@@ -2,11 +2,11 @@
 
 \pendiente{Enzo revisa}{Borrador redactado por Andrés a partir de \texttt{docs/\allowbreak frecuencia/\allowbreak arquitectura-rtl-frecuencia-serial.md} (C01) y del RTL de C02. Corregir lo que haga falta y quitar este recuadro.}
 
-La variante serie implementa el overlap-save de la sección~\ref{sec:modelos} con un único multiplicador real que comparten la FFT, el producto espectral y la IFFT. Por cada bloque de ocho muestras nuevas arma una ventana de 16 con las ocho anteriores, calcula FFT16, multiplica por $H[k]$, calcula IFFT16 y entrega las posiciones 8 a 15. Si la trama termina con $p < 8$ muestras nuevas, completa la ventana con ceros y entrega solo $p$ resultados, de modo que mantiene una salida por muestra aceptada y no emite cola.
+La variante serie implementa el overlap-save de la sección~\ref{sec:modelos} con un único multiplicador real que comparten la FFT, el producto espectral y la IFFT. Por cada bloque de ocho muestras nuevas arma una ventana de 16 con las ocho anteriores, calcula su FFT de 16 puntos, multiplica por $H[k]$, calcula la IFFT y entrega las posiciones 8 a 15. Si la trama termina con $N_p < 8$ muestras nuevas, completa la ventana con ceros y entrega solo $N_p$ resultados, de modo que mantiene una salida por muestra aceptada y no emite cola.
 
 \subsection{Arquitectura}
 
-El núcleo se divide en tres bloques, cada uno con su FSM en un módulo aparte (tabla~\ref{tab:frec-modulos}).
+El núcleo se divide en tres bloques, cada uno con su máquina de estados en un módulo aparte (tabla~\ref{tab:frec-modulos}).
 
 \begin{table}[h]
   \centering
@@ -25,9 +25,9 @@ El núcleo se divide en tres bloques, cada uno con su FSM en un módulo aparte (
 
 \paragraph{Banco de trabajo y FFT.} El motor guarda la ventana en \texttt{work} en orden de bits invertidos, de modo que la FFT de diezmado en tiempo deja el espectro en orden natural. Una tabla fija de 32 entradas da, para cada mariposa, las dos direcciones del banco y el índice de $W$; la misma tabla y la misma mariposa sirven para la IFFT, que usa $W$ conjugado. Entre el producto espectral y la IFFT, seis intercambios vuelven a poner el espectro en orden de bits invertidos. La escala de $1/16$ de la IFFT se aplica al leer cada resultado, junto con la conversión a Q2.7.
 
-\paragraph{Multiplicador compartido.} \texttt{complex\_mul\_serial} calcula $a \cdot b$ acumulando cuatro productos reales en los dos registros de salida: $p_I = a_I b_I - a_Q b_Q$ y $p_Q = a_I b_Q + a_Q b_I$. Una mariposa ocupa 7 ciclos (producto y escritura de $A \pm W B$) y un producto espectral, 6. $H$ y $W$ son constantes Q2.8 generadas desde los coeficientes cuantizados comunes, de modo que ambas ramas parten del mismo filtro; los formatos internos son los de la tabla~\ref{tab:formatos}.
+\paragraph{Multiplicador compartido.} \texttt{complex\_mul\_serial} calcula $r = u \cdot v$ acumulando cuatro productos reales en los dos registros de salida: $r_I = u_I v_I - u_Q v_Q$ y $r_Q = u_I v_Q + u_Q v_I$. Una mariposa ocupa 7 ciclos (producto y escritura de $A \pm W B$) y un producto espectral, 6. $H$ y $W$ son constantes Q2.8 generadas desde los coeficientes cuantizados comunes, de modo que ambas ramas parten del mismo filtro; los formatos internos son los de la tabla~\ref{tab:formatos}.
 
-\paragraph{Control.} El bloque superior recorre cinco estados: copia del historial al banco, captura de las muestras nuevas, relleno con ceros si la trama terminó antes de ocho, cálculo y emisión. Durante la copia, el cálculo y la emisión mantiene \texttt{in\_ready} en cero, por lo que no captura el bloque siguiente mientras procesa el actual. Al entregar el último resultado de una trama pone el historial en cero.
+\paragraph{Control.} El bloque superior recorre seis estados: copia del historial al banco, captura de las muestras nuevas, relleno con ceros si la trama terminó antes de ocho, arranque del motor, cálculo y emisión. Durante la copia, el cálculo y la emisión mantiene \texttt{in\_ready} en cero, por lo que no captura el bloque siguiente mientras procesa el actual. Al entregar el último resultado de una trama pone el historial en cero.
 
 \subsection{Presupuesto de ciclos}
 
@@ -40,10 +40,10 @@ El núcleo se divide en tres bloques, cada uno con su FSM en un módulo aparte (
     \midrule
     Copia del historial & 8 & Una posición por ciclo \\
     Captura de muestras nuevas & 8 & Una muestra o un cero por ciclo \\
-    FFT16 & 224 & 32 mariposas $\times$ 7 \\
-    Producto espectral & 96 & 16 bins $\times$ 6 \\
+    FFT & 224 & 32 mariposas $\times$ 7 \\
+    Producto espectral & 96 & 16 componentes espectrales $\times$ 6 \\
     Reordenamiento & 6 & Un intercambio por ciclo \\
-    IFFT16 & 224 & 32 mariposas $\times$ 7 \\
+    IFFT & 224 & 32 mariposas $\times$ 7 \\
     Fin del cálculo a emisión & 1 & Detección del fin del motor \\
     Emisión & 8 & Una salida por ciclo \\
     \midrule
@@ -52,7 +52,7 @@ El núcleo se divide en tres bloques, cada uno con su FSM en un módulo aparte (
   \end{tabular}
 \end{table}
 
-Un bloque completo ocupa 575 ciclos (tabla~\ref{tab:frec-ciclos}) y uno parcial de $p$ muestras, $567 + p$. La latencia es $L = 559$ ciclos para cualquier muestra del bloque, porque las ocho se aceptan en ciclos consecutivos y sus resultados también salen en ciclos consecutivos. Dentro de un bloque las muestras se aceptan en ciclos consecutivos, y entre bloques el intervalo es de 568 ciclos; en promedio, $575/8 = 71{,}875$ ciclos por muestra, es decir 0,139\,Mmuestras/s a 10\,MHz. La versión inicial del diseño usaba 655 ciclos por bloque; acumular los productos reales en los registros de salida del multiplicador ahorró 80 (12\,\%).
+Un bloque completo ocupa 575 ciclos (tabla~\ref{tab:frec-ciclos}) y uno parcial de $N_p$ muestras, $567 + N_p$. La latencia es $L = 559$ ciclos para cualquier muestra del bloque, porque las ocho se aceptan en ciclos consecutivos y sus resultados también salen en ciclos consecutivos. Entre bloques el intervalo es de 568 ciclos; en promedio, $575/8 = 71{,}875$ ciclos por muestra, es decir 0,139\,Mmuestras/s a 10\,MHz. La versión inicial del diseño usaba 655 ciclos por bloque; acumular los productos reales en los registros de salida del multiplicador ahorró 80 (12\,\%).
 
 \subsection{Verificación}
 

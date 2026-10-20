@@ -2,11 +2,11 @@
 
 \pendiente{Julián revisa}{Borrador redactado por Andrés a partir de \texttt{docs/\allowbreak arquitectura-rtl-tiempo-serial.md} (B01) y del RTL de B02. Corregir lo que haga falta y quitar este recuadro.}
 
-La variante serie calcula $y[n] = \sum_{k=0}^{7} h_q[k]\,x[n-k]$ recorriendo los ocho coeficientes de a uno, un coeficiente por ciclo, con un único acumulador por componente. Es la base contra la que se mide la variante paralela (sección~\ref{sec:paralelas}), por lo que prioriza la simplicidad sobre el desempeño. El módulo es \texttt{fir\_time\_serial}.
+La variante serie calcula $y[n] = \sum_{k=0}^{7} h_q[k]\,x[n-k]$ recorriendo los ocho coeficientes, uno por ciclo, con un único acumulador por componente. Es la base contra la que se mide la variante paralela (sección~\ref{sec:paralelas}), por lo que prioriza la simplicidad sobre el desempeño. El módulo es \texttt{fir\_time\_serial}.
 
 \subsection{Camino de datos}
 
-Dos propiedades de la consigna simplifican el circuito. Los coeficientes son reales, de modo que I y Q no se mezclan: el núcleo son dos FIR reales idénticos que comparten el control, el contador de coeficientes y la tabla. Y la entrada vale $-1$, 0 o $+1$, así que cada producto $h_q[k]\,x$ es $+h_q[k]$, $-h_q[k]$ o 0: una selección y una negación, sin multiplicador (sección~\ref{sec:punto-fijo}).
+Dos propiedades de la consigna simplifican el circuito. Los coeficientes son reales, de modo que I y Q no se mezclan: el núcleo son dos FIR reales idénticos que comparten el control, el contador de coeficientes y la tabla. Además, la entrada vale $-1$, 0 o $+1$, por lo que cada producto $h_q[k]\,x$ es $+h_q[k]$, $-h_q[k]$ o 0: una selección y una negación, sin multiplicador (sección~\ref{sec:punto-fijo}).
 
 \begin{figure}[h]
   \centering
@@ -18,7 +18,7 @@ Dos propiedades de la consigna simplifican el circuito. Los coeficientes son rea
     \node[blk, right=of sel] (acc) {Acumulador\\9 bits};
     \node[blk, below=of mux] (k) {Contador $k$};
     \node[blk, below=of sel] (rom) {Tabla $h_q[k]$\\$8 \times 8$ bits};
-    \node[blk, below=of hist] (fsm) {FSM};
+    \node[blk, below=of hist] (fsm) {Máquina\\de estados};
     \draw[<-] (hist.west) -- ++(-8mm,0) node[left, font=\scriptsize]{$x[n]$};
     \draw[->] (hist) -- node[above, font=\scriptsize]{$x[n-k]$} (mux);
     \draw[->] (mux) -- (sel);
@@ -28,16 +28,16 @@ Dos propiedades de la consigna simplifican el circuito. Los coeficientes son rea
     \draw[->] (k) -- (k -| rom.west);
     \draw[->] (rom) -- (sel);
     \draw[->, dashed] (fsm) -- (hist);
-    \draw[->, dashed] (fsm) -- (k);
+    \draw[->, dashed] (fsm) -- (fsm -| k.west);
   \end{tikzpicture}
-  \caption{Camino de datos de una componente de la variante temporal serie. I y Q tienen cada una su historial, multiplexor, selección y acumulador; el contador, la tabla y la FSM son comunes.}\label{fig:tiempo-serie}
+  \caption{Camino de datos de una componente de la variante temporal serie. I y Q tienen cada una su historial, multiplexor, selección y acumulador; el contador, la tabla y la máquina de estados son comunes.}\label{fig:tiempo-serie}
 \end{figure}
 
 El historial es un registro de desplazamiento: la posición $k$ guarda $x[n-k]$, y al aceptar una muestra esta entra en la posición 0 y la posición 7 se descarta. La tabla de coeficientes es lógica combinacional, sin memoria. El acumulador de 9 bits no desborda en ningún paso, porque toda suma parcial está acotada por $\sum|h_q| = 234 < 256$; al terminar los ocho coeficientes contiene $y[n]$ y funciona también como registro de salida.
 
 \subsection{Control y cronograma}
 
-La FSM tiene tres estados. En \texttt{IDLE} el núcleo tiene \texttt{in\_ready} en alto; al aceptar una muestra la desplaza en el historial, pone el acumulador y el contador en cero, guarda \texttt{in\_last} y pasa a \texttt{MAC}. En \texttt{MAC} suma un coeficiente por ciclo en I y Q a la vez, y tras el octavo pasa a \texttt{OUT}. En \texttt{OUT} presenta $y[n]$ con \texttt{out\_valid} en alto y lo sostiene hasta que el receptor lo acepta; si era el último de la trama, pone el historial en cero en ese mismo flanco. \texttt{in\_ready} y \texttt{out\_valid} salen del estado registrado, sin depender de \texttt{in\_valid} ni de \texttt{out\_ready}, como exige la interfaz.
+La máquina de estados tiene tres estados. En \texttt{IDLE} el núcleo tiene \texttt{in\_ready} en alto; al aceptar una muestra la desplaza en el historial, pone el acumulador y el contador en cero, guarda \texttt{in\_last} y pasa a \texttt{MAC}. En \texttt{MAC} suma un coeficiente por ciclo en I y Q a la vez, y tras el octavo pasa a \texttt{OUT}. En \texttt{OUT} presenta $y[n]$ con \texttt{out\_valid} en alto y lo sostiene hasta que el receptor lo acepta; si era el último de la trama, pone el historial en cero en ese mismo flanco. \texttt{in\_ready} y \texttt{out\_valid} salen del estado registrado, sin depender de \texttt{in\_valid} ni de \texttt{out\_ready}, como exige la interfaz.
 
 \begin{table}[h]
   \centering
@@ -54,11 +54,11 @@ La FSM tiene tres estados. En \texttt{IDLE} el núcleo tiene \texttt{in\_ready} 
   \end{tabular}
 \end{table}
 
-La latencia es $L = 9$ ciclos, de la aceptación de $x[n]$ al primer ciclo con $y[n]$ válido, y el intervalo entre muestras es $II = 10$ ciclos (1 de aceptación, 8 de acumulación y 1 de entrega). El throughput es $f_\text{clk}/10$: 1\,Mmuestra/s a 10\,MHz.
+La latencia es $L = 9$ ciclos, de la aceptación de $x[n]$ al primer ciclo con $y[n]$ válido, y el intervalo entre muestras es $II = 10$ ciclos (1 de aceptación, 8 de acumulación y 1 de entrega). El throughput es $f_\text{clk}/10$: 1\,Mmuestras/s a 10\,MHz.
 
 \subsection{Recursos}
 
-El diseño previó 56 registros: 32 de historial (dos de $8 \times 2$ bits), 18 de acumuladores, 3 del contador, 2 de estado y 1 para el \texttt{last} guardado; ningún multiplicador, DSP ni BRAM. La implementación en Vivado usa 57 registros y 88 LUT (tabla~\ref{tab:ppa}).
+El diseño previó 56 registros: 32 de historial (dos de $8 \times 2$ bits), 18 de acumuladores, 3 del contador, 2 de estado y 1 para la marca de fin de trama guardada; ningún multiplicador, bloque DSP ni memoria de bloque (BRAM). La implementación en Vivado usa 57 registros y 88 tablas de búsqueda (LUT) (tabla~\ref{tab:ppa}).
 
 \subsection{Verificación}
 
