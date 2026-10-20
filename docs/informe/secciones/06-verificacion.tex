@@ -25,7 +25,7 @@ Los cinco primeros (426 muestras) corren en cada integración; \texttt{qpsk\_s1}
 
 \subsection{Banco de pruebas común}
 
-Además del banco de pruebas propio de cada variante, un único banco común (\texttt{tb/common/tb\_fir\_common.sv}) verifica todas las variantes registradas con los mismos vectores y las mismas pruebas de protocolo. El diseño bajo prueba se elige al compilar; el banco solo conoce la interfaz común y la rama, que decide si compara contra la salida temporal o contra la de frecuencia. Por cada archivo de vectores hace tres corridas:
+Además del banco de pruebas propio de cada variante, un único banco común (\texttt{tb/\allowbreak common/\allowbreak tb\_fir\_common.sv}) verifica todas las variantes registradas con los mismos vectores y las mismas pruebas de protocolo. El diseño bajo prueba se elige al compilar; el banco solo conoce la interfaz común y la rama, que decide si compara contra la salida temporal o contra la de frecuencia. Por cada archivo de vectores hace tres corridas:
 
 \begin{enumerate}
   \item \textbf{Reset en medio de una trama:} retiene la salida para dejar un resultado pendiente y aplica un reset de un ciclo. La corrida siguiente no debe ver ese resultado ni usar el historial anterior.
