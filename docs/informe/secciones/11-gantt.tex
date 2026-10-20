@@ -1,0 +1,88 @@
+\section{Planificación y seguimiento}\label{sec:gantt}
+
+El trabajo se dividió en 23 tareas con dependencias explícitas: cada una arranca recién cuando terminan las que necesita, y una prueba automática falla si el plan rompe alguna dependencia. El plan se armó el 03/10 y se ajustó el 05/10 para terminar el 29/10, un día antes de la presentación. El avance real se registró en \texttt{docs/gantt.md} el 07, 12, 14, 17 y 20/10, con la fecha del primer commit como inicio y la de integración a la rama principal como fin. La tabla~\ref{tab:tareas} lista las tareas y la figura~\ref{fig:gantt} compara el plan con el avance real al 20/10.
+
+\begin{table}[h]
+  \centering
+  \small
+  \caption{Tareas del plan. La letra indica el grupo: E, contrato y planificación; A, modelos y precisión; B, filtro temporal; C, filtro en frecuencia; I, integración y presentación.}\label{tab:tareas}
+  \begin{tabular}{ll@{\hspace{2em}}ll}
+    \toprule
+    ID & Tarea & ID & Tarea \\
+    \midrule
+    E00 & Registrar consigna y requisitos & B01 & Diseño del filtro temporal serie \\
+    E01 & Definir el filtro en frecuencia & B02 & RTL temporal serie \\
+    E02 & Cerrar coeficientes y formato numérico & B03 & Elegir la optimización temporal \\
+    E03 & Cerrar interfaz RTL y medición PPA & B04 & RTL temporal optimizado \\
+    G01 & Mantener el Gantt planificado y real & C01 & Diseño del filtro en frecuencia serie \\
+    A01 & Generar QPSK y coeficientes RRCOS & C02 & RTL en frecuencia serie \\
+    A02 & Modelo flotante temporal & C03 & Elegir la optimización en frecuencia \\
+    A03 & Modelo flotante en frecuencia & C04 & RTL en frecuencia optimizado \\
+    A04 & Anchos de punto fijo & I01 & Comparar las cuatro variantes \\
+    A05 & Vectores de prueba & I02 & Informe técnico \\
+    A06 & Banco de pruebas común & I03 & Filminas y demostración \\
+    A07 & Tabla PPA automatizada & & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Días de octubre; x = (día - 3) * 0,45 cm. Fin exclusivo, como en docs/gantt.md.
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[y=-0.42cm, font=\scriptsize]
+    % Grilla semanal, fecha del registro, corte de C04 y entrega.
+    \foreach \d in {5,12,19,26} {
+      \draw[gray!25] ({(\d-3)*0.45},-1.3) -- ({(\d-3)*0.45},27.6);
+      \node[gray, above] at ({(\d-3)*0.45},-1.3) {\d/10};
+    }
+    \draw[black!70] ({(21-3)*0.45},-1.3) -- ({(21-3)*0.45},27.6) node[below] {registro 20/10};
+    \draw[black!70, dashed] ({(26-3)*0.45},-1.3) -- ({(26-3)*0.45},27.6) node[below] {corte C04};
+    \draw[black!70, thick] ({(30-3)*0.45},-1.3) -- ({(30-3)*0.45},27.6) node[below] {entrega};
+    % fila/tarea/plan inicio/plan fin/real inicio/real fin/color/terminada
+    \foreach \y/\t/\ps/\pe/\rs/\re/\c/\ok in {
+        0/E00/5/6/5/8/serie1/1, 1/E01/5/7/5/9/serie3/1, 2/E02/5/8/7/9/serie1/1,
+        3/E03/8/11/9/10/serie2/1, 4/G01/5/30/3/21/serie1/0,
+        6/A01/5/7/7/9/serie1/1, 7/A02/7/9/7/10/serie1/1, 8/A03/9/12/12/13/serie1/1,
+        9/A04/9/13/12/13/serie1/1, 10/A05/13/15/12/14/serie1/1, 11/A06/15/20/14/21/serie1/1,
+        12/A07/11/29/14/21/serie1/0,
+        14/B01/8/11/12/14/serie2/1, 15/B02/11/16/14/15/serie2/1, 16/B03/11/14/15/17/serie2/1,
+        17/B04/16/25/19/21/serie2/0,
+        19/C01/7/12/6/14/serie3/1, 20/C02/12/20/12/16/serie3/1, 21/C03/12/14/15/19/serie3/1,
+        22/C04/20/29/19/21/serie3/0,
+        24/I01/29/30/0/0/serie1/0, 25/I02/14/30/15/21/serie1/0, 26/I03/20/30/0/0/serie1/0} {
+      \node[anchor=east] at (-0.1,\y) {\t};
+      \draw[gray!60, fill=gray!15] ({(\ps-3)*0.45},\y-0.42) rectangle ({(\pe-3)*0.45},\y-0.05);
+      \ifnum\rs>0
+        \ifnum\ok=1
+          \fill[\c] ({(\rs-3)*0.45},\y+0.05) rectangle ({(\re-3)*0.45},\y+0.42);
+        \else
+          \fill[\c!45] ({(\rs-3)*0.45},\y+0.05) rectangle ({(\re-3)*0.45},\y+0.42);
+        \fi
+      \fi
+    }
+    % Grupos.
+    \foreach \y/\g in {-0.1/Contrato y planificación, 5.9/Modelos y precisión (Andrés),
+        13.9/Filtro temporal (Julián), 18.9/Filtro en frecuencia (Enzo), 23.9/Integración y presentación}
+      \node[anchor=south west, font=\scriptsize\bfseries, inner sep=0] at (0,\y-0.55) {\g};
+    % Leyenda.
+    \begin{scope}[yshift=-29.2*0.42cm]
+      \draw[gray!60, fill=gray!15] (0,0) rectangle (0.5,0.2); \node[right] at (0.5,0.1) {plan};
+      \fill[serie1] (1.8,0) rectangle (2.3,0.2); \node[right] at (2.3,0.1) {Andrés};
+      \fill[serie2] (3.8,0) rectangle (4.3,0.2); \node[right] at (4.3,0.1) {Julián};
+      \fill[serie3] (5.6,0) rectangle (6.1,0.2); \node[right] at (6.1,0.1) {Enzo};
+      \fill[gray!75] (7.2,0) rectangle (7.7,0.2); \node[right] at (7.7,0.1) {terminada};
+      \fill[gray!30] (9.4,0) rectangle (9.9,0.2); \node[right] at (9.9,0.1) {en curso};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Plan (barra gris, arriba) y avance real (barra de color, abajo) al 20/10, por responsable real. Las barras claras siguen abiertas; I01 e I03 no empezaron.}\label{fig:gantt}
+\end{figure}
+
+\paragraph{Avance al 20/10.} 21 de 23 tareas iniciadas, 16 integradas y 2 verificadas: las dos variantes serie coinciden palabra por palabra con los vectores en el banco de pruebas común. Según el plan deberían haber empezado 22; faltan las filminas (I03). En el corte intermedio del 16/10 la meta era 20 iniciadas y se llegó a 19, porque el RTL temporal optimizado (B04) no había empezado.
+
+\paragraph{Desvíos.}
+\begin{itemize}
+  \item \textbf{Contrato:} la definición del filtro en frecuencia (E01) y el cierre de coeficientes y formato numérico (E02) terminaron uno y dos días tarde, lo que retrasó el inicio de los modelos y de los diseños serie.
+  \item \textbf{Modelos:} la generación de QPSK y coeficientes (A01) y el modelo flotante temporal (A02) terminaron uno o dos días tarde; el modelo flotante en frecuencia, los anchos de punto fijo y los vectores (A03 a A05) recuperaron el atraso haciéndose en paralelo el 12 y 13/10. El banco de pruebas común (A06) cerró un día tarde: en la revisión se corrigió la prueba de reset en trama, que usaba un reset de dos ciclos en vez de uno.
+  \item \textbf{Filtro temporal:} el diseño serie (B01) empezó cuatro días después del plan, pero su RTL (B02) se hizo en un día, de modo que la variante serie terminó en fecha. La elección de la optimización (B03) cerró tres días tarde y el RTL optimizado (B04) empezó el 19/10, también tres días tarde; con sus nueve días termina el 27/10 y la holgura hasta la comparación final (I01) baja de cuatro días a uno.
+  \item \textbf{Filtro en frecuencia:} el diseño serie (C01) cerró dos días tarde, después de separar del diseño la generación de QPSK, pero su RTL (C02) se integró el 15/10, cuatro días antes del plan. La elección de la optimización (C03) cerró cinco días tarde porque la revisión pidió paralelizar el producto espectral y usar multiplicadores por constante para llegar a 100\,MHz. El RTL optimizado (C04) empezó el 19/10, un día antes del plan; es la única tarea en el camino crítico sin holgura, y si no coincide con los vectores antes del corte del 26/10 se presenta la variante serie en frecuencia contra la temporal optimizada.
+\end{itemize}

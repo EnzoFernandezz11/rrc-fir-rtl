@@ -1,0 +1,61 @@
+\section{Filtro en frecuencia serie}\label{sec:frecuencia}
+
+\pendiente{Enzo revisa}{Borrador redactado por Andrés a partir de \texttt{docs/\allowbreak frecuencia/\allowbreak arquitectura-rtl-frecuencia-serial.md} (C01) y del RTL de C02. Corregir lo que haga falta y quitar este recuadro.}
+
+La variante serie implementa el overlap-save de la sección~\ref{sec:modelos} con un único multiplicador real que comparten la FFT, el producto espectral y la IFFT. Por cada bloque de ocho muestras nuevas arma una ventana de 16 con las ocho anteriores, calcula su FFT de 16 puntos, multiplica por $H[k]$, calcula la IFFT y entrega las posiciones 8 a 15. Si la trama termina con $N_p < 8$ muestras nuevas, completa la ventana con ceros y entrega solo $N_p$ resultados, de modo que mantiene una salida por muestra aceptada y no emite cola.
+
+\subsection{Arquitectura}
+
+El núcleo se divide en tres bloques, cada uno con su máquina de estados en un módulo aparte (tabla~\ref{tab:frec-modulos}).
+
+\begin{table}[h]
+  \centering
+  \caption{Módulos de la variante en frecuencia serie.}\label{tab:frec-modulos}
+  \begin{tabular}{lp{9cm}}
+    \toprule
+    Módulo & Función \\
+    \midrule
+    \texttt{fir\_frequency\_serial} & Interfaz externa, historial de ocho muestras, relleno con ceros y emisión de resultados. \\
+    \texttt{frequency\_block\_engine} & Banco \texttt{work} de 16 posiciones complejas y mariposa; secuencia FFT, producto espectral, reordenamiento e IFFT. \\
+    \texttt{frequency\_block\_roms} & Tablas constantes: 16 valores de $H$, 8 factores de giro $W$ y las 32 operaciones de la FFT. \\
+    \texttt{complex\_mul\_serial} & Producto complejo con un solo multiplicador real en cuatro ciclos. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Banco de trabajo y FFT.} El motor guarda la ventana en \texttt{work} en orden de bits invertidos, de modo que la FFT de diezmado en tiempo deja el espectro en orden natural. Una tabla fija de 32 entradas da, para cada mariposa, las dos direcciones del banco y el índice de $W$; la misma tabla y la misma mariposa sirven para la IFFT, que usa $W$ conjugado. Entre el producto espectral y la IFFT, seis intercambios vuelven a poner el espectro en orden de bits invertidos. La escala de $1/16$ de la IFFT se aplica al leer cada resultado, junto con la conversión a Q2.7.
+
+\paragraph{Multiplicador compartido.} \texttt{complex\_mul\_serial} calcula $r = u \cdot v$ acumulando cuatro productos reales en los dos registros de salida: $r_I = u_I v_I - u_Q v_Q$ y $r_Q = u_I v_Q + u_Q v_I$. Una mariposa ocupa 7 ciclos (producto y escritura de $A \pm W B$) y un producto espectral, 6. $H$ y $W$ son constantes Q2.8 generadas desde los coeficientes cuantizados comunes, de modo que ambas ramas parten del mismo filtro; los formatos internos son los de la tabla~\ref{tab:formatos}.
+
+\paragraph{Control.} El bloque superior recorre seis estados: copia del historial al banco, captura de las muestras nuevas, relleno con ceros si la trama terminó antes de ocho, arranque del motor, cálculo y emisión. Durante la copia, el cálculo y la emisión mantiene \texttt{in\_ready} en cero, por lo que no captura el bloque siguiente mientras procesa el actual. Al entregar el último resultado de una trama pone el historial en cero.
+
+\subsection{Presupuesto de ciclos}
+
+\begin{table}[h]
+  \centering
+  \caption{Ciclos de un bloque completo con entrada siempre disponible y salida siempre lista.}\label{tab:frec-ciclos}
+  \begin{tabular}{lrl}
+    \toprule
+    Fase & Ciclos & Desglose \\
+    \midrule
+    Copia del historial & 8 & Una posición por ciclo \\
+    Captura de muestras nuevas & 8 & Una muestra o un cero por ciclo \\
+    FFT & 224 & 32 mariposas $\times$ 7 \\
+    Producto espectral & 96 & 16 componentes espectrales $\times$ 6 \\
+    Reordenamiento & 6 & Un intercambio por ciclo \\
+    IFFT & 224 & 32 mariposas $\times$ 7 \\
+    Fin del cálculo a emisión & 1 & Detección del fin del motor \\
+    Emisión & 8 & Una salida por ciclo \\
+    \midrule
+    Total & 575 & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Un bloque completo ocupa 575 ciclos (tabla~\ref{tab:frec-ciclos}) y uno parcial de $N_p$ muestras, $567 + N_p$. La latencia es $L = 559$ ciclos para cualquier muestra del bloque, porque las ocho se aceptan en ciclos consecutivos y sus resultados también salen en ciclos consecutivos. Entre bloques el intervalo es de 568 ciclos; en promedio, $575/8 = 71{,}875$ ciclos por muestra, es decir 0,139\,Mmuestras/s a 10\,MHz. La versión inicial del diseño usaba 655 ciclos por bloque; acumular los productos reales en los registros de salida del multiplicador ahorró 80 (12\,\%).
+
+\subsection{Verificación}
+
+Además del banco común, el banco de pruebas propio de la variante compara cada resultado con el modelo de punto fijo de la rama en 478 tramas: los casos de la sección~\ref{sec:verificacion}, longitudes de 0 a 40 muestras, impulsos en cada posición de tres bloques, ventanas de peor caso y cinco semillas QPSK de 1024 símbolos, con y sin pausas en la entrada y la salida. Todas coinciden palabra por palabra, con $L = 559$, 575 ciclos por bloque e intervalo de 568 ciclos. La simulación detecta además cualquier desborde en productos, mariposas y salida; no se produjo ninguno. Pruebas aparte verifican la tabla de operaciones contra una DFT independiente y el multiplicador con operandos extremos, operaciones consecutivas y reset.
+
+De las 32 mariposas de cada transformada, 15 tienen $W = 1$ y 7 tienen $W = -j$: podrían evitar el multiplicador con una identidad o un intercambio de I y Q. Esa mejora y la paralelización quedan para la variante optimizada (sección~\ref{sec:paralelas}).

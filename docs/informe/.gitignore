@@ -1,0 +1,6 @@
+*.aux
+*.toc
+*.fls
+*.fdb_latexmk
+*.xdv
+main.pdf
