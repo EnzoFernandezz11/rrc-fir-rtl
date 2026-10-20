@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Avance real:** 2026-10-07, 2026-10-12 y 2026-10-14. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Avance real:** 2026-10-07, 2026-10-12, 2026-10-14 y 2026-10-17. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -49,13 +49,13 @@ G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entr
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
 
-**Al 14/10:** 16 de 23 tareas iniciadas (E00–E03, G01, A01–A07, B01, B02, C01 y C02), 11 integradas (E00–E03, A01–A05, B01 y C01) y 0 verificadas. Según el plan deberían haber empezado 18: faltan B03, C03 e I02. A06 empezó un día antes de lo previsto. B02 pasa el vector matching en su PR (#45), pero cuenta como verificada recién al integrarse. Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
+**Al 17/10:** 19 de 23 tareas iniciadas (todas salvo B04, C04, I01 e I03), 14 integradas (E00–E03, A01–A05, B01–B03, C01 y C02) y 2 verificadas (B02 y C02: vector matching A05 integrado, también en el banco común de A06). Según el plan deberían haber empezado 20: falta B04 (plan 16/10). En revisión: A06 (#53), A07 (#52), C03 (#50, aprobada) y la corrección del flujo PPA (#51). Las fechas son locales; GitHub muestra UTC, y un PR abierto de noche puede figurar con el día siguiente.
 
-Riesgos al 14/10:
+Riesgos al 17/10:
 
-- **Rama temporal:** B01 se integró el 13/10, 3 días después del plan, y B02 (#45) está en revisión con cambios pedidos; su plan cierra el 15/10. B03 no empezó (plan 11–13/10) y B04 necesita B02 y B03. Si los dos cierran el 17/10, B04 termina el 26/10 y la holgura hasta I01 (29/10) baja de 4 a 2 días.
-- **Rama en frecuencia:** C01 se integró el 13/10, 2 días después del plan, pero C02 empezó en paralelo el 12/10 como estaba previsto (rama sin PR). C04 sigue sin holgura: C02 tiene que cerrar el 19/10. C03 no empezó (plan 12–13/10); no frena a C04 mientras termine antes que C02.
-- **Modelos:** A01–A05 integradas; A05 cerró un día antes del plan. A06 y A07 empezaron el 14/10, en ramas sin PR. A07 arrancó 3 días tarde y es dependencia de I01: la tabla se arma con el flujo Vivado de C02, que hoy solo mide `fir_frequency_serial`; hasta que acepte otras variantes no hay cifras de B02/B04. I02 no empezó (plan 14/10).
+- **Rama temporal:** B02 cerró el 14/10 y B03 el 16/10, 3 días después del plan. B04 no empezó (plan 16/10); si arranca el 18/10, sus 9 días terminan el 26/10 y la holgura hasta I01 (29/10) baja de 4 a 2 días.
+- **Rama en frecuencia:** C02 se integró el 15/10, 4 días antes del plan, y C03 está aprobada. Si C04 arranca el 18/10, termina el 26/10, el mismo día del corte, y gana 2 días de holgura frente al plan (inicio 20/10). La propuesta de C03 estima ≈ 77 % de las LUT del xc7a35t, lo que deja poco margen; C04 debe sintetizar pronto las redes constantes.
+- **Modelos e integración:** A06 y A07 tienen PR; la tabla PPA ya mide B02 y C02 en Vivado, y B04/C04 se suman con el mismo flujo. I03 puede empezar antes del 20/10 porque sus dependencias ya cerraron. Hay tres PR esperando revisión (#51, #52, #53).
 
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
 |---|---|---|---|---|
@@ -63,26 +63,28 @@ Riesgos al 14/10:
 | [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | @EnzoFernandezz11 | 05/10 | 08/10 | #28 integrado. Plan: fin 06/10 (+2 días). |
 | [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | @andres332271 | 07/10 | 08/10 | #33 integrado; D02/D03 siguen propuestos hasta la revisión conjunta. Plan: fin 07/10 (+1). |
 | [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | @moreyrajulian | 09/10 | 09/10 | #38 integrado; D03, D05 y D06 siguen propuestos. Plan: fin 10/10 (−1). |
-| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27, #34, #43 y este registro. Actualizar semanalmente. |
+| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27, #34, #43, #46 y este registro. Actualizar semanalmente. |
 | [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | @andres332271 | 07/10 | 08/10 | #32 integrado. Plan: fin 06/10 (+2). |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | @andres332271 | 07/10 | 09/10 | #35 integrado. Plan: fin 08/10 (+1). |
 | [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | @andres332271 | 12/10 | 12/10 | #40 integrado; error máx. entre modelos flotantes < 2e-14. Plan: fin 11/10 (+1). |
 | [A04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/9) | @andres332271 | 12/10 | 12/10 | #41 integrado: salida Q2.7 (9 bits), SQNR 44,2/43,0 dB. Plan: fin 12/10. |
 | [A05](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/10) | @andres332271 | 12/10 | 13/10 | #42 integrado. Plan: inicio 13/10, fin 14/10 (−1). |
 | [B01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/11) | @moreyrajulian | 12/10 | 13/10 | #44 integrado: `L = 9`, `II = 10`, 56 FF estimados. Plan: inicio 08/10, fin 10/10 (+3). |
-| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | @moreyrajulian | 14/10 | — | #45 en revisión con cambios pedidos: vector matching, `L`/`II` y pausas pasan; falta prueba de reset en medio de trama. Plan: inicio 11/10, fin 15/10. |
+| [B02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/12) | @moreyrajulian | 14/10 | 14/10 | #45 integrado: vector matching, `L = 9`, `II = 10`, pausas y reset en medio de trama. Plan: fin 15/10 (−1). |
 | [C01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/13) | @EnzoFernandezz11 | 06/10 | 13/10 | #39 integrado tras quitar R01. Plan: fin 11/10 (+2). |
-| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | — | Rama `enzo/c02-rtl-implemntation`, sin PR. Plan: inicio 12/10, fin 19/10. |
-| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | @andres332271 | 14/10 | — | Rama `a/a06-banco-comun`, sin PR: banco común en `tb/common/` y `make regresion`; pasa con el RTL de B02 y C02. Cierra con B02 y C02 integrados. Plan: inicio 15/10 (−1). |
-| [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | — | — | — | Plan: inicio 11/10, fin 13/10. |
-| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | — |
-| [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | — | — | — | Plan: inicio 12/10, fin 13/10. |
-| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | — | — | — | Camino crítico hasta I01. |
-| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | @andres332271 | 14/10 | — | Rama `a/a07-tabla-ppa`, sin PR: `scripts/ppa_table.py` arma la tabla desde el `summary.tsv` del flujo Vivado de C02. Plan: inicio 11/10 (+3). |
+| [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | 15/10 | #47 integrado: vector matching A05, `L = 559`, 575 ciclos por bloque, `run.tcl` parametrizado. Plan: fin 19/10 (−4). |
+| [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | @andres332271 | 14/10 | — | #53 en revisión: `make regresion` pasa con B02 y C02 integrados (vector matching, reset en trama y pausas). Plan: inicio 15/10 (−1), fin 19/10. |
+| [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | @moreyrajulian | 15/10 | 16/10 | #49 integrado: sistólica en forma transpuesta, `II = 1`, `L = 1`, 100 MHz; D08 temporal propuesto. Plan: inicio 11/10, fin 13/10 (+3). |
+| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | — | — | — | Plan: inicio 16/10, fin 24/10. Sus dependencias cerraron el 16/10. |
+| [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | @EnzoFernandezz11 | 15/10 | — | #50 aprobado el 17/10: FFT/IFFT desplegadas, 16 productos espectrales con H fijo y redes CSD, 100 MHz. Falta pasar la base a `main` y registrar D08. Plan: inicio 12/10, fin 13/10 (+3). |
+| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | — | — | — | Plan: inicio 20/10. Camino crítico hasta I01; puede arrancar al integrarse C03. |
+| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | @andres332271 | 14/10 | — | #52 en revisión: tabla PPA desde Vivado con B02 y C02 a 10 y 100 MHz y banco PPA temporal; B04/C04 se agregan con `--import`. Incluye la corrección de #51. Plan: inicio 11/10 (+3), fin 28/10. |
 | [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
-| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | — | — | — | Borrador temprano; conclusiones tras I01. Plan: inicio 14/10. |
-| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Presentación 30/10. |
+| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | @andres332271 | 15/10 | — | #48 en borrador: secciones 1–6 y PPA serial redactadas; faltan 7–9 (Julián y Enzo), Gantt y conclusiones. Plan: inicio 14/10 (+1). |
+| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Plan: inicio 20/10 (B02 y C02 ya integradas). Presentación 30/10. |
 
 ## Corte del viernes 16/10
 
 Meta: 20 de 23 tareas con evidencia de inicio (87 %). Es el máximo que permite el plan sin violar dependencias; solo I01 y C04 (y por lo tanto el cierre de I03) dependen de resultados posteriores. El avance real se comunica separado en tres cifras: **iniciadas**, **integradas** y **verificadas**. La cantidad de tarjetas movidas no sustituye el vector matching. Si E01 o C02 se retrasan, registrar la causa y ajustar fechas y responsable; no empezar C04 sin C02 para mejorar el porcentaje.
+
+**Resultado al 16/10:** 19 de 23 iniciadas (83 %); faltó B04, cuyas dependencias cerraron ese mismo día. Integradas: 14; verificadas: 2.
