@@ -113,19 +113,23 @@ python3 scripts/ppa.py package --target frequency_optimized
 ```
 
 `package` vuelve a ejecutar smoke y conserva sus logs junto al benchmark y al
-mapeo XC7. Los resultados y limitaciones físicas se registran en
-[`reports/ppa/frequency.md`](../../reports/ppa/frequency.md).
+mapeo. Los resultados se registran en [`reports/ppa/frequency.md`](../../reports/ppa/frequency.md).
+La medición local actual usa SKY130 HD; sus áreas son áreas de celdas y no
+incluyen STA, ruteo ni potencia. El período de 10 ns citado por el benchmark es
+solo de simulación. Para el flujo y sus límites, ver la [guía PPA](ppa.md).
 
-## Mapeo lógico local y limitaciones
+## Evidencia histórica de mapeo XC7 y limitaciones
 
-Yosys XC7 produjo 7493 LUT de lógica, 5140 FF, 1750 CARRY4, 168 RAM32M,
-0 DSP48E1 y 0 BRAM. RAM32M es memoria distribuida, contada por separado de las
+La corrida histórica de Yosys XC7 produjo 7493 LUT de lógica, 5140 FF, 1750
+CARRY4, 168 RAM32M, 0 DSP48E1 y 0 BRAM. RAM32M es memoria distribuida, contada por separado de las
 LUT1…LUT6; no debe omitirse al comparar área. Yosys infiere bancos anchos de dos
 palabras a partir de los arrays de registros: conserva accesos vectoriales y la
 semántica de reservas. No se reemplazó el datapath por una RAM serial de pocos
 puertos. El presupuesto nominal de 7984 bits de C03 no es un conteo físico de FF.
 
-El benchmark local de 2048 muestras midió 2074 ciclos activos: 98,746 millones
-de muestras/s efectivos a reloj objetivo de 100 MHz, frente a 100 millones/s
-sostenidos. Estas cifras temporales provienen de simulación RTL; setup/hold,
-ruteo, potencia y frecuencia alcanzable permanecen pendientes de Vivado externo.
+El benchmark de simulación local de 2048 muestras midió 2074 ciclos activos:
+98,746 millones de muestras/s efectivos al período simulado de 10 ns, frente a
+100 millones/s sostenidos según ese reloj simulado. Estas cifras no validan
+operación física a 100 MHz. El área citada arriba es mapeo lógico XC7 histórico,
+no una medida SKY130; timing físico, ruteo y potencia requieren evidencia del
+flujo correspondiente.

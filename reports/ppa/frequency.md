@@ -1,141 +1,175 @@
-# Resultados y análisis PPA del filtro en frecuencia
+# Resultados PPA de frecuencia: C02 y C04
 
-Este es el registro común de las corridas **seriales y optimizadas**. Cada entrada
-identifica variante, revisión, configuración, herramientas y evidencias. Las
-nuevas medidas se agregan conservando las anteriores; las ejecuciones equivalentes
-con el mismo diseño, configuración, herramientas, vector y resultados se registran una sola vez; las medidas de Vivado se
-incorporan a la corrida correspondiente o como una entrada vinculada a su base local.
+> **Regla obligatoria de mantenimiento:** mostrar únicamente la **última corrida exitosa de cada variante**. Una nueva corrida reemplaza íntegramente su sección, incluso si reproduce los mismos valores; no se agregan históricos ni resúmenes duplicados. Cada resultado debe enlazar configuración, biblioteca, hashes y logs. Las corridas anteriores permanecen en `build/ppa/`. Una corrida fallida no reemplaza resultados válidos. **Excepción explícita:** conservar la referencia histórica Vivado de C02 al final, identificada como FPGA.
 
-[Procedimiento de medición](../../docs/frecuencia/ppa.md) · [Diagramas RTL](../../docs/frecuencia/diagrams-rtl-modules-unitirarios.md)
+Medición vigente: **ASIC SKY130 HD, 130 nm, TT / 25 °C / 1,8 V**, mediante Yosys.
+La simulación RTL y la síntesis miden aspectos distintos: ciclos y exactitud por
+un lado; celdas y área Liberty por el otro. Timing físico y potencia ASIC no están
+medidos. Los objetivos de 10 MHz (C02) y 100 MHz (C04) no son frecuencias alcanzadas.
 
-**Actualización de verificación C02 — 15/10/2026:** `make verify` pasa con 40 pruebas Python, las dos variantes seriales y, en frecuencia, 478 tramas/3120 bloques. Incluye comparación exacta de los archivos oficiales A05: 426 muestras smoke y 2048 QPSK, cada conjunto sin pausas y con burbujas/backpressure. Se mantienen L=559 y 575 ciclos por bloque completo. Esta comprobación no es una nueva medición PPA; las corridas históricas y sus limitaciones se conservan abajo. No se ejecutó Vivado ni se obtuvo nueva actividad SAIF.
+[Procedimiento y comandos](../../docs/frecuencia/ppa.md).
 
 <!-- serial-analysis:start -->
-## Análisis base serial
+## Comparación de arquitecturas
 
-Esta corrida establece la referencia del serial para decidir qué optimizar. La
-comparación posterior será contra esta base, conservando FPGA, flujo, formatos,
-vector y condiciones de medida; se declarará cualquier cambio de reloj. El
-objetivo es mejorar throughput, área o energía por muestra con evidencia.
+C02 comparte un motor: FFT16 (224 ciclos), producto espectral (96),
+reordenamiento (6), IFFT16 (224) y preparación/emisión (25), total **575 ciclos
+por bloque de ocho**. C04 despliega FFT, producto e IFFT con pipeline y bancos
+dobles, para un intervalo de **8 ciclos por bloque** sin pausas.
 
-### Dónde se gastan los ciclos
+El throughput sostenido se compara como `8 × f_clk / II_bloque`. A igual reloj,
+la ganancia arquitectónica es `575/8 = 71,875×`. Comparar los objetivos de
+10 y 100 MHz agrega otro factor diez, condicionado al cierre temporal ASIC.
+La latencia de 559 frente a 26 ciclos es una métrica distinta del intervalo.
 
-El benchmark verifica **575 ciclos por bloque de ocho muestras**, con entrada
-disponible y salida siempre lista. El desglose siguiente se deriva del calendario
-del controlador actual; no son contadores independientes de cada fase:
-
-| Trabajo por bloque | Cálculo | Ciclos | Fracción del bloque |
-|---|---|---:|---:|
-| FFT16 | 32 mariposas × 7 ciclos | 224 | 39,0 % |
-| Productos espectrales | 16 bins × 6 ciclos | 96 | 16,7 % |
-| Reordenamiento antes de IFFT | 6 intercambios | 6 | 1,0 % |
-| IFFT16 | 32 mariposas × 7 ciclos | 224 | 39,0 % |
-| Preparación, captura, emisión y transiciones externas al motor | 575 − 550 | 25 | 4,3 % |
-| **Total** | **550 del motor + 25 externos** | **575** | **100 %** |
-
-**El motor ocupa el 95,7 % del bloque; FFT e IFFT juntas, el 77,9 %.**
-La primera hipótesis para mejorar throughput es reducir ciclos de las mariposas
-y del multiplicador compartido. C03 debe estudiar el paralelismo de FFT,
-productos e IFFT. El bypass de twiddles triviales puede complementar ese estudio,
-manteniendo los cortes y redondeos A04. Reducir únicamente la preparación y la
-emisión tiene poco alcance: incluso eliminar idealmente los 25 ciclos externos
-daría como máximo 575/550 = **1,045×** throughput al mismo reloj. Es un límite
-teórico, no una optimización medida.
-
-El throughput de esta arquitectura es `8 × f_clk / 575`: a 10 MHz son
-**139 130 muestras/s**. Bajar ciclos por bloque y subir el reloj son dos formas
-distintas de mejorarlo. Los mínimos dependen de la categoría: **10 MHz para una
-variante lenta y 100 MHz para una rápida**. El serial cumple el mínimo de la
-categoría lenta; la Fmax estimada y el camino crítico indican su margen físico.
-Optimizar el filtro no implica automáticamente clasificarlo como rápido: primero
-se define qué métrica mejorar y en qué categoría se evaluará la nueva variante.
-
-### Cómo decidir con los reportes de Vivado
-
-| Pregunta | Evidencia que se debe leer | Decisión que permite tomar |
-|---|---|---|
-| ¿Cumple el reloj y dónde está el camino más lento? | WNS/WHS, `timing_critical.rpt`, diez caminos de `timing_setup.rpt` y `check_timing.rpt` | Registrar origen, destino, retardo de datos, niveles lógicos y reparto lógica/ruteo. Si predominan selectores, sumadores o acumulación, evaluar registros o simplificación en ese tramo; si predomina ruteo, revisar fanout y distribución. La ubicación concreta queda pendiente de esos reportes. |
-| ¿Qué bloque consume LUT y FF? | `utilization_hierarchical.rpt` junto con `utilization.rpt` | Identificar los módulos dominantes y examinar sus bancos, multiplexores, ROM y control. Las filas padre incluyen descendientes: no sumarlas como recursos independientes. |
-| ¿La memoria necesita otra implementación? | FF/LUT del motor, BRAM utilizada y accesos de `work_i/q` | El banco work tiene nominalmente 16 × 2 × 12 = 384 bits. Evaluar RAM solo si almacenamiento o selección dominan; sus puertos y escrituras simultáneas deben soportar las mariposas. Cero BRAM por sí solo no demuestra un problema. |
-| ¿Conviene duplicar multiplicadores? | DSP del núcleo, ciclos de mariposas/bins, timing y energía | El serial comparte un multiplicador real. Más unidades pueden reducir ciclos, pero requieren medir LUT/FF/DSP, nuevo timing y energía antes de afirmar una mejora de PPA. |
-| ¿Qué está gastando potencia? | Desglose por recurso/jerarquía disponible en `power.rpt`, `read_saif.rpt` y `unmatched_saif.rpt` | Buscar los componentes de mayor potencia dinámica y su actividad. Usar energía dinámica por muestra para evaluar el costo del paralelismo. Revisar cobertura SAIF antes de concluir; la estática reportada pertenece al dispositivo completo. |
-
-La base ya pasa la comparación exacta de las 2048 salidas y verifica su calendario.
-El mapeo local de Yosys usa un DSP; el resumen recibido de Vivado 2024.2 informa
-**tres DSP**, 1875 LUT como lógica y 569 FF. Son resultados de herramientas y flujos
-distintos; el conteo físico de Vivado se debe usar como referencia para C03/C04,
-con su procedencia declarada. El detalle del camino crítico y de la utilización
-por módulo sigue pendiente de recibir. Un bloque que ocupa muchos ciclos no
-necesariamente contiene el camino crítico.
-
-### Resultado que debe dejar la próxima issue
-
-Antes de implementar C04, C03 debe registrar: **métrica a mejorar → evidencia de
-la base → cambio propuesto → mejora esperada → costo esperado en recursos**.
-Después se medirá la candidata contra esta corrida: ciclos/bloque, throughput,
-latencia, WNS/Fmax, LUT/FF/DSP/BRAM y energía por muestra, verificando las mismas
-salidas y SQNR ≥ 40 dB. Si cambia la aritmética, se deben justificar y verificar
-los nuevos formatos y redondeos. Una predicción se mantendrá identificada como
-tal hasta medirla.
-
+El área SKY130 se compara únicamente entre mediciones hechas con la misma
+biblioteca, corner y flujo. Las cifras LUT/DSP de Vivado describen una FPGA y no
+se convierten en área ASIC. Los bancos sin macros SRAM se sintetizan a registros
+y lógica. La potencia y la energía por muestra requieren una evaluación posterior.
 <!-- serial-analysis:end -->
 
-## Corridas seriales
+## Última corrida C02 — frecuencia serial
 
-<!-- serial-measurement:f6adf924bdc38769601ebc7b0a42d7b9eace1b154918537d5a0c7d97eedb5ac6 -->
-### Frecuencia serial — corrida `20261013T220620013563Z-b9bd2183` (local)
+<!-- serial-runs:start -->
 
-**Estado: verificación RTL local completada; área y timing informados en Vivado 2024.2. Simulación temporal incompleta y potencia SAIF pendiente.**
+<!-- serial-measurement:179d3c94f3fa36caff5acd295626c5179a0b6a644bb4dfde81e2b0430d1fca5d -->
+### Frecuencia serial — corrida `20261022T111500117337Z-ee4a4eb1` (SKY130)
 
-#### Configuración y trazabilidad
+**PASS RTL, síntesis ASIC y simulación funcional de netlist SKY130. Timing físico y potencia no medidos.**
 
-| Dato | Valor |
+| Configuración | Valor |
 |---|---|
-| Corrida UTC | `20261013T220620013563Z-b9bd2183` |
-| Commit base | `b9bd2183af88fe8c5aec073f5ef5fc55143bc6ab` |
-| Cambios locales al iniciar | Sí; consultar estado y hashes del manifiesto |
-| Módulo | `fir_frequency_serial` completo |
-| FPGA | Basys3 / Artix-7 `xc7a35tcpg236-1` |
-| Reloj objetivo | 10 MHz / 100 ns |
-| Implementación prevista | Out-of-context, estrategias por defecto |
-| Formato | A04: entrada 2/F0, trabajo 12/F5, coeficientes 10/F8, salida 9/F7 |
-| Estímulo | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras |
-| Interfaz | Entrada disponible, salida siempre lista |
-| Vectores | Modelo A04 local; formato común A05 pendiente |
+| Commit base | `ee4a4eb1596519f412b13d8871df0a5ae64ed28b` |
+| Cambios locales al iniciar | Sí; fuentes identificadas por hashes |
+| Top | `fir_frequency_serial` |
+| Tecnología / biblioteca | SKY130, 130 nm / `sky130_fd_sc_hd` |
+| Corner | TT, 25 °C, 1,8 V |
+| Liberty SHA256 | `8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135` |
+| Flujo | Yosys aplanado + dfflibmap + ABC; sin placement ni routing |
+| Reloj de simulación / objetivo | 10 MHz / 100 ns; sin cierre temporal demostrado |
+| Formatos I/Q | Entrada 2/F0; trabajo 12/F5; constantes 10/F8; salida 9/F7 |
+| Benchmark | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras; sin pausas |
 | Yosys | `Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)` |
 | Icarus | `Icarus Verilog version 12.0 (stable) ()` |
 
-#### Verificación y rendimiento funcional
-
-Regresión `smoke` y comparación exacta de las 2048 salidas: **PASS**.
-La simulación RTL usa 100 ns; la capacidad física de operar a ese período se comprueba en Vivado.
+#### Resultados actuales
 
 | Medición | Resultado |
+|---|---:|
+| Muestras aceptadas / exactas | 2048 / 2048 |
+| Latencia | 559 ciclos |
+| Intervalo por bloque de ocho muestras | 575 ciclos |
+| Ciclos activos del benchmark | 147200 |
+| Throughput sostenido al reloj supuesto | 139130.435 muestras/s |
+| Throughput efectivo al reloj supuesto | 139130.435 muestras/s |
+| Celdas estándar totales | 4474 |
+| Flip-flops | 610 |
+| Celdas combinacionales | 3864 |
+| Área de celdas | 38448.124800 µm² |
+
+La regresión común `smoke` pasó antes del benchmark. La netlist mapeada también
+verificó las 2048 salidas y reprodujo exactamente las métricas RTL usando los
+modelos funcionales SKY130, sin retardos ni SDF. Esta prueba no verifica timing.
+El área es la suma de áreas
+Liberty de las instancias mapeadas, no el área final de un chip. Los bancos se
+mapean a lógica y registros; no se incluyen macros SRAM. La síntesis no impone
+un objetivo de retardo a ABC: no demuestra 10/100 MHz ni produce WNS/Fmax.
+Las tasas en muestras/s suponen el reloj indicado; los ciclos se miden en RTL.
+
+Pendientes ASIC: STA con restricciones de reloj/E/S, setup/hold, implementación
+física con parasíticos y potencia con actividad representativa. Una corrida
+Vivado posterior mide FPGA y se informa como referencia separada.
+
+#### Evidencia reproducible
+
+- [Manifiesto, versiones y hashes](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/manifest.json).
+- [Métricas RTL](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/local_metrics.json) y [celdas/área por tipo](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/resources.json).
+- [Métricas de netlist](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/gate_metrics.json) y [log del benchmark de netlist](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/logs/gate_benchmark.log).
+- [Estadística Yosys original](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/cells.json) y [netlist SKY130](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/mapped.v).
+- [Script de la corrida](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/synthesis.ys) y [biblioteca utilizada](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/sky130_fd_sc_hd__tt_025C_1v80.lib).
+- [Log de síntesis](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/logs/yosys.log) y [benchmark](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/logs/benchmark.log).
+- [Regresión Python](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/logs/regression/python-tests.log) y [regresión C02/C04](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/logs/regression/).
+- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/first_blocks.vcd).
+- [Procedimiento](../../docs/frecuencia/ppa.md).
+
+Sólo esta última corrida exitosa ocupa la sección; las anteriores permanecen en `build/ppa/`.
+
+<!-- serial-runs:end -->
+
+## Última corrida C04 — frecuencia optimizada
+
+<!-- optimized-runs:start -->
+
+<!-- optimized-measurement:f4e845ec0e39190c0d239507506605a7d1474595a335ef734cb0fc8a9df24989 -->
+### Frecuencia optimizada — corrida `20261022T111804284811Z-ee4a4eb1` (SKY130)
+
+**PASS RTL, síntesis ASIC y simulación funcional de netlist SKY130. Timing físico y potencia no medidos.**
+
+| Configuración | Valor |
 |---|---|
-| Muestras aceptadas / verificadas | 2048 / 2048 |
-| Bloques completos | 256 |
-| Latencia por muestra | 559 ciclos = 55.9 µs |
-| Intervalo entre bloques (8 muestras) | 575 ciclos = 57.5 µs |
-| Ventana de procesamiento, sin reset | 147200 ciclos = 14.72 ms |
-| Throughput a 10 MHz | 139130.435 muestras/s |
+| Commit base | `ee4a4eb1596519f412b13d8871df0a5ae64ed28b` |
+| Cambios locales al iniciar | Sí; fuentes identificadas por hashes |
+| Top | `fir_frequency_optimized` |
+| Tecnología / biblioteca | SKY130, 130 nm / `sky130_fd_sc_hd` |
+| Corner | TT, 25 °C, 1,8 V |
+| Liberty SHA256 | `8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135` |
+| Flujo | Yosys aplanado + dfflibmap + ABC; sin placement ni routing |
+| Reloj de simulación / objetivo | 100 MHz / 10 ns; sin cierre temporal demostrado |
+| Formatos I/Q | Entrada 2/F0; trabajo 12/F5; constantes 10/F8; salida 9/F7 |
+| Benchmark | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras; sin pausas |
+| Yosys | `Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)` |
+| Icarus | `Icarus Verilog version 12.0 (stable) ()` |
 
-#### Recursos preliminares — Yosys XC7
+#### Resultados actuales
 
-Conteo de primitivas del núcleo aplanado, sin buffers de entrada/salida ni de reloj.
-Las LUT son la suma de LUT1…LUT6; no equivalen directamente a slices o CLB.
+| Medición | Resultado |
+|---|---:|
+| Muestras aceptadas / exactas | 2048 / 2048 |
+| Latencia | 26 ciclos |
+| Intervalo por bloque de ocho muestras | 8 ciclos |
+| Ciclos activos del benchmark | 2074 |
+| Throughput sostenido al reloj supuesto | 100000000.000 muestras/s |
+| Throughput efectivo al reloj supuesto | 98746383.799 muestras/s |
+| Celdas estándar totales | 48353 |
+| Flip-flops | 6562 |
+| Celdas combinacionales | 41791 |
+| Área de celdas | 383355.168000 µm² |
 
-| Recurso | Cantidad |
-|---|---|
-| LUT | 1507 |
-| FF | 610 |
-| DSP48E1 | 1 |
-| RAMB18E1 | 0 |
-| RAMB36E1 | 0 |
-| CARRY4 | 49 |
-| MUXF7 | 189 |
-| MUXF8 | 22 |
+La regresión común `smoke` pasó antes del benchmark. La netlist mapeada también
+verificó las 2048 salidas y reprodujo exactamente las métricas RTL usando los
+modelos funcionales SKY130, sin retardos ni SDF. Esta prueba no verifica timing.
+El área es la suma de áreas
+Liberty de las instancias mapeadas, no el área final de un chip. Los bancos se
+mapean a lógica y registros; no se incluyen macros SRAM. La síntesis no impone
+un objetivo de retardo a ABC: no demuestra 10/100 MHz ni produce WNS/Fmax.
+Las tasas en muestras/s suponen el reloj indicado; los ciclos se miden en RTL.
 
-#### Resultados físicos recibidos — Vivado 2024.2
+Pendientes ASIC: STA con restricciones de reloj/E/S, setup/hold, implementación
+física con parasíticos y potencia con actividad representativa. Una corrida
+Vivado posterior mide FPGA y se informa como referencia separada.
+
+#### Evidencia reproducible
+
+- [Manifiesto, versiones y hashes](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/manifest.json).
+- [Métricas RTL](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/local_metrics.json) y [celdas/área por tipo](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/resources.json).
+- [Métricas de netlist](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/gate_metrics.json) y [log del benchmark de netlist](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/logs/gate_benchmark.log).
+- [Estadística Yosys original](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/cells.json) y [netlist SKY130](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/mapped.v).
+- [Script de la corrida](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/synthesis.ys) y [biblioteca utilizada](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/sky130_fd_sc_hd__tt_025C_1v80.lib).
+- [Log de síntesis](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/logs/yosys.log) y [benchmark](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/logs/benchmark.log).
+- [Regresión Python](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/logs/regression/python-tests.log) y [regresión C02/C04](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/logs/regression/).
+- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/first_blocks.vcd).
+- [Procedimiento](../../docs/frecuencia/ppa.md).
+
+Sólo esta última corrida exitosa ocupa la sección; las anteriores permanecen en `build/ppa/`.
+
+<!-- optimized-runs:end -->
+
+## Referencia histórica preservada — C02 en Vivado 2024.2
+
+Esta sección corresponde a **FPGA Artix-7**, no a SKY130. Se conserva por pedido
+de Enzo como antecedente; el actualizador de corridas locales no la modifica.
+No constituye medición ASIC ni puede completar su cierre de timing/potencia.
+
 
 Resultados informados por el compañero en Windows el **13/10/2026**, sobre
 Artix-7 `xc7a35tcpg236-1`, out-of-context, con reloj de 100 ns y el benchmark
@@ -174,7 +208,7 @@ potencia comparable con actividad del benchmark** ni como medida SAIF. Las
 cifras de potencia están redondeadas en el resumen recibido. La estática
 corresponde al FPGA completo, no solo al filtro.
 
-#### Análisis de estos resultados para C03/C04
+### Interpretación de la referencia histórica
 
 - **El serial cumple el mínimo de 10 MHz de una variante lenta**, según los
   slacks informados. La Fmax aproximada de 57,72 MHz expresa margen físico y
@@ -196,7 +230,7 @@ corresponde al FPGA completo, no solo al filtro.
   confirmarse con SAIF y los reportes originales antes de concluir ahorros
   de energía por muestra.
 
-#### Incidencias del flujo informadas por el compañero
+### Incidencias informadas del flujo FPGA
 
 1. Los wrappers `xelab.bat` y `xsim.bat` separaron los argumentos con `=`,
    rompiendo la anotación `-sdfmax` y los `-testplusarg`. El compañero aplicó
@@ -215,205 +249,9 @@ corresponde al FPGA completo, no solo al filtro.
    validada en esta PC: las comprobaciones previas fueron locales con
    Icarus/Yosys y pruebas Tcl.
 
-#### Evidencia
 
-- Corrida: `build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/`.
-- [Manifiesto y hashes](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/manifest.json).
-- [Métricas del benchmark](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/local_metrics.json).
-- [Recursos y primitivas](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/resources.json).
-- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/first_blocks.vcd).
-- Logs: `build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/logs/`; incluyen regresión, compilación, simulación y síntesis.
-- [Resumen original recibido de Vivado 2024.2](../../build/ppa/frequency_serial/20261013-vivado2024.2-recibido/resultados_ppa_frequency_serial.md).
-- SHA256 del resumen recibido: `54e01cc87e53d321c744948fbca040b80d9b892c91641bf94fffc647eebfcfcb`.
-- [Procedimiento local y Windows](../../docs/frecuencia/ppa.md).
+### Evidencia histórica
 
-Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
-`build/`. El resumen recibido de Vivado está incorporado arriba, con sus limitaciones
-y procedencia declaradas.
-
-<!-- serial-runs:end -->
-
-## Frecuencia optimizada
-
-Implementación C04 según [contrato y aceptación](../../docs/frecuencia/c04-implementacion.md).
-Las corridas locales verifican funcionalidad y mapeo lógico; timing y potencia
-físicos requieren ejecutar el paquete externo de Vivado a 10 ns.
-
-<!-- optimized-measurement:58ea6c1fecb9cc05975ecca28a626ab5285548e6fd8a9f85b3138bdff19bcefc -->
-### Frecuencia optimizada — corrida `20261019T211022140213Z-65526490` (local)
-
-**Estado: verificación local y mapeo lógico completados; PPA físico pendiente de Vivado.**
-
-#### Configuración y trazabilidad
-
-| Dato | Valor |
-|---|---|
-| Corrida UTC | `20261019T211022140213Z-65526490` |
-| Commit base | `655264905f1552cf4974ae7986b11e944b49f127` |
-| Cambios locales al iniciar | Sí; consultar estado y hashes del manifiesto |
-| Módulo | `fir_frequency_optimized` completo |
-| FPGA | Basys3 / Artix-7 `xc7a35tcpg236-1` |
-| Reloj objetivo | 100 MHz / 10 ns |
-| Implementación prevista | Out-of-context, estrategias por defecto |
-| Formato | A04: entrada 2/F0, trabajo 12/F5, coeficientes 10/F8, salida 9/F7 |
-| Estímulo | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras |
-| Interfaz | Entrada disponible, salida siempre lista |
-| Vectores | Modelo fijo A04; regresión funcional incluye A05 |
-| Yosys | `Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)` |
-| Icarus | `Icarus Verilog version 12.0 (stable) ()` |
-
-#### Verificación y rendimiento funcional
-
-Regresión `smoke` y comparación exacta de las 2048 salidas: **PASS**.
-La simulación RTL usa 10 ns; la capacidad física de operar a ese período se comprueba en Vivado.
-
-| Medición | Resultado |
-|---|---|
-| Muestras aceptadas / verificadas | 2048 / 2048 |
-| Bloques completos | 256 |
-| Latencia por muestra | 26 ciclos = 0.26 µs |
-| Intervalo entre bloques (8 muestras) | 8 ciclos = 0.08 µs |
-| Ventana de procesamiento, sin reset | 2074 ciclos = 0.02074 ms |
-| Throughput efectivo a 100 MHz | 98746383.799 muestras/s |
-| Throughput sostenido a reloj objetivo (sin pausas) | 100000000.000 muestras/s |
-
-#### Recursos preliminares — Yosys XC7
-
-Conteo de primitivas del núcleo aplanado, sin buffers de entrada/salida ni de reloj.
-Las LUT son la suma de LUT1…LUT6; no equivalen directamente a slices o CLB.
-
-| Recurso | Cantidad |
-|---|---|
-| LUT | 7493 |
-| FF | 5140 |
-| DSP48E1 | 0 |
-| RAMB18E1 | 0 |
-| RAMB36E1 | 0 |
-| CARRY4 | 1750 |
-| MUXF7 | 103 |
-| MUXF8 | 6 |
-
-#### Resultados físicos — Vivado
-
-| Métrica | Estado |
-|---|---|
-| LUT / FF / DSP / BRAM implementados | Pendiente |
-| WNS a 10 ns / caminos sin constraints | Pendiente |
-| Fmax aproximada de caminos internos | Pendiente |
-| Simulación temporal y anotación SAIF | Pendiente |
-| Potencia dinámica / estática | Pendiente |
-| Energía dinámica por muestra | Pendiente |
-| Versión Vivado / condiciones térmicas | Pendiente |
-
-Se exige WNS ≥ 0 a 10 ns y WHS ≥ 0. La estimación de Fmax es `1000/(10 − WNS_ns)` MHz,
-usando caminos internos de setup del mismo reloj; no reemplaza otra implementación a esa frecuencia.
-Energía dinámica por muestra = potencia dinámica / throughput de la ventana SAIF.
-
-El [análisis de la base serial](frequency.md#análisis-base-serial) reúne el desglose
-de ciclos y los criterios para elegir la próxima optimización.
-
-#### Evidencia
-
-- Corrida: `build/ppa/frequency_optimized/20261019T211022140213Z-65526490/`.
-- [Manifiesto y hashes](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/manifest.json).
-- [Métricas del benchmark](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/local_metrics.json).
-- [Recursos y primitivas](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/resources.json).
-- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_optimized/20261019T211022140213Z-65526490/first_blocks.vcd).
-- Logs: `build/ppa/frequency_optimized/20261019T211022140213Z-65526490/logs/`; incluyen regresión, compilación, simulación y síntesis.
-- [Procedimiento local y Windows](../../docs/frecuencia/ppa.md).
-
-Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
-`build/`. Los resultados de Vivado se incorporarán al registro común conservando
-las corridas anteriores.
-
-<!-- optimized-measurement:a1cf4bdc1643649d03cc6fa7f3e6522d1ed2ff21518f5fda5a2a43de381521c8 -->
-### Frecuencia optimizada — corrida `20261019T211415637404Z-65526490` (local)
-
-**Estado: verificación local y mapeo lógico completados; PPA físico pendiente de Vivado.**
-
-#### Configuración y trazabilidad
-
-| Dato | Valor |
-|---|---|
-| Corrida UTC | `20261019T211415637404Z-65526490` |
-| Commit base | `655264905f1552cf4974ae7986b11e944b49f127` |
-| Cambios locales al iniciar | Sí; consultar estado y hashes del manifiesto |
-| Módulo | `fir_frequency_optimized` completo |
-| FPGA | Basys3 / Artix-7 `xc7a35tcpg236-1` |
-| Reloj objetivo | 100 MHz / 10 ns |
-| Implementación prevista | Out-of-context, estrategias por defecto |
-| Formato | A04: entrada 2/F0, trabajo 12/F5, coeficientes 10/F8, salida 9/F7 |
-| Estímulo | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras |
-| Interfaz | Entrada disponible, salida siempre lista |
-| Vectores | Modelo fijo A04; regresión funcional incluye A05 |
-| Yosys | `Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)` |
-| Icarus | `Icarus Verilog version 12.0 (stable) ()` |
-
-#### Verificación y rendimiento funcional
-
-Regresión `smoke` y comparación exacta de las 2048 salidas: **PASS**.
-La simulación RTL usa 10 ns; la capacidad física de operar a ese período se comprueba en Vivado.
-
-| Medición | Resultado |
-|---|---|
-| Muestras aceptadas / verificadas | 2048 / 2048 |
-| Bloques completos | 256 |
-| Latencia por muestra | 26 ciclos = 0.26 µs |
-| Intervalo entre bloques (8 muestras) | 8 ciclos = 0.08 µs |
-| Ventana de procesamiento, sin reset | 2074 ciclos = 0.02074 ms |
-| Throughput efectivo a 100 MHz | 98746383.799 muestras/s |
-| Throughput sostenido a reloj objetivo (sin pausas) | 100000000.000 muestras/s |
-
-#### Recursos preliminares — Yosys XC7
-
-Conteo de primitivas del núcleo aplanado, sin buffers de entrada/salida ni de reloj.
-Las LUT son la suma de LUT1…LUT6 de lógica; no incluyen RAM distribuida ni
-equivalen directamente a slices o CLB. RAM32M cuenta primitivas de memoria
-distribuida por separado, no bits ni LUT. El desglose completo está en resources.json.
-
-| Recurso | Cantidad |
-|---|---|
-| LUT | 7493 |
-| FF | 5140 |
-| DSP48E1 | 0 |
-| RAMB18E1 | 0 |
-| RAMB36E1 | 0 |
-| RAM32M | 168 |
-| CARRY4 | 1750 |
-| MUXF7 | 103 |
-| MUXF8 | 6 |
-
-#### Resultados físicos — Vivado
-
-| Métrica | Estado |
-|---|---|
-| LUT / FF / DSP / BRAM implementados | Pendiente |
-| WNS a 10 ns / caminos sin constraints | Pendiente |
-| Fmax aproximada de caminos internos | Pendiente |
-| Simulación temporal y anotación SAIF | Pendiente |
-| Potencia dinámica / estática | Pendiente |
-| Energía dinámica por muestra | Pendiente |
-| Versión Vivado / condiciones térmicas | Pendiente |
-
-Se exige WNS ≥ 0 a 10 ns y WHS ≥ 0. La estimación de Fmax es `1000/(10 − WNS_ns)` MHz,
-usando caminos internos de setup del mismo reloj; no reemplaza otra implementación a esa frecuencia.
-Energía dinámica por muestra = potencia dinámica / throughput de la ventana SAIF.
-
-El [análisis de la base serial](frequency.md#análisis-base-serial) reúne el desglose
-de ciclos y los criterios para elegir la próxima optimización.
-
-#### Evidencia
-
-- Corrida: `build/ppa/frequency_optimized/20261019T211415637404Z-65526490/`.
-- [Manifiesto y hashes](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/manifest.json).
-- [Métricas del benchmark](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/local_metrics.json).
-- [Recursos y primitivas](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/resources.json).
-- [Onda de los primeros cuatro bloques](../../build/ppa/frequency_optimized/20261019T211415637404Z-65526490/first_blocks.vcd).
-- Logs: `build/ppa/frequency_optimized/20261019T211415637404Z-65526490/logs/`; incluyen regresión, compilación, simulación y síntesis.
-- [Procedimiento local y Windows](../../docs/frecuencia/ppa.md).
-
-Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
-`build/`. Los resultados de Vivado se incorporarán al registro común conservando
-las corridas anteriores.
-
-<!-- optimized-runs:end -->
+- [Resumen original recibido](../../build/ppa/frequency_serial/20261013-vivado2024.2-recibido/resultados_ppa_frequency_serial.md).
+- SHA256 del resumen: `54e01cc87e53d321c744948fbca040b80d9b892c91641bf94fffc647eebfcfcb`.
+- [Manifiesto de la base local serial](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/manifest.json); no se confirmó identidad con las fuentes ejecutadas en Windows.

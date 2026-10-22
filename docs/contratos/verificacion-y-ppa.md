@@ -36,25 +36,31 @@ El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como 
 
 ## PPA
 
-**Propuesta E03 (D05, D06):** todas las variantes se miden con **Vivado** sobre la misma FPGA Xilinx, con el mismo flujo y las mismas constraints. La CI no tiene Vivado: el `full` de Yosys sigue sirviendo para comprobar que el RTL es sintetizable, pero las cifras PPA salen de las corridas Vivado registradas en `reports/`.
+**Actualización de Enzo del 22/10/2026 (C02 y C04):** la comparación local vigente
+es ASIC **SKY130 HD de 130 nm**, con biblioteca `sky130_fd_sc_hd__tt_025C_1v80.lib`
+(TT, 25 °C, 1,8 V). Yosys sintetiza y mapea ambas variantes con el mismo flujo;
+se registran celdas, flip-flops, área de celdas en µm², versiones y SHA256 de la
+biblioteca y fuentes. El área es una suma Liberty; no incluye floorplan, ruteo,
+árbol de reloj ni macros SRAM. El flujo vigente no mide timing ni potencia ASIC.
+La adopción y medición de este mismo flujo en las variantes temporales queda pendiente.
 
-| Condición común | Valor propuesto |
-|---|---|
-| Herramienta | Vivado, versión anotada en cada reporte. |
-| Dispositivo | Artix-7 `xc7a35tcpg236-1` (placa Basys3). |
-| Flujo | Síntesis e implementación (place & route) **out-of-context** del núcleo: sin pines de E/S ni drivers del testbench, para medir solo el filtro. Estrategias por defecto. |
-| Constraints | Solo el reloj: `constraints/clk_100mhz.xdc` (período 10 ns) para variantes rápidas y `constraints/clk_10mhz.xdc` (100 ns) para lentas. |
-| Corner y temperatura | Los que Vivado usa por defecto para el dispositivo (grado de velocidad −1, condiciones típicas de `report_power`). |
+La simulación mantiene comparación exacta A04/A05 y mide latencia e intervalo.
+Los mínimos objetivo siguen siendo 10 MHz para lentas y 100 MHz para rápidas;
+el reloj configurado en el banco no demuestra que el circuito cierre timing.
+Fmax/WNS/setup/hold requieren STA y restricciones declaradas. Para resultados
+físicos hacen falta implementación y parasíticos. Potencia dinámica/estática y
+energía por muestra requieren biblioteca, actividad y condiciones comparables;
+se reportan como no medidas hasta disponer de esa evidencia.
 
-| Métrica | Definición y herramienta |
-|---|---|
-| Área | `report_utilization` después de implementar: LUT, FF, DSP48 y BRAM. Se reportan las cuatro cifras, sin convertirlas a un único número. |
-| Performance | `report_timing_summary` después de implementar, al reloj objetivo de la variante: debe cumplir WNS ≥ 0. Fmax = 1 / (T − WNS). Latencia `L`, `II` y throughput `f_clk / II` según el [contrato de interfaz](interfaz-rtl.md#latencia-y-throughput), medidos en simulación. |
-| Potencia | `report_power` después de implementar, con actividad **SAIF** de una simulación del diseño implementado en xsim con el mismo vector QPSK (semilla y longitud de A05), al reloj objetivo de la variante. Se reportan la potencia dinámica y la estática por separado, y la **energía por muestra** = P_dinámica / throughput, que permite comparar variantes con relojes distintos. |
+Vivado/Artix-7 queda como referencia FPGA independiente. Se conserva el resumen
+histórico C02 recibido de Windows y el generador de paquetes para futuras
+comparaciones FPGA. Sus LUT, DSP, timing y potencia no se convierten a cifras ASIC.
 
-El reloj mínimo es 100 MHz para variantes rápidas y 10 MHz para lentas, confirmado por Enzo el 7/10/2026; verificar timing a la frecuencia de operación elegida. Una estimación sin SAIF (actividad por defecto o *vectorless*) se puede anotar como referencia, pero no es potencia comparable.
-
-La tabla final tendrá columnas `variante`, `commit`, `configuración`, `SQNR`, `área`, `Fmax`, `latencia`, `throughput`, `potencia`, `herramienta/log`. Si una métrica no se puede medir con las herramientas disponibles, dejarla como «no medida» y explicar la limitación. No presentar el mapeo lógico de Yosys como Fmax medido ni una estimación sin actividad como potencia comparable.
+**Mantenimiento de resultados:** `reports/ppa/frequency.md` muestra solamente la
+última corrida exitosa de cada variante, reemplazando la anterior incluso cuando
+es equivalente. Los artefactos anteriores quedan en `build/ppa/`; la referencia
+histórica Vivado C02 se conserva fuera de las regiones reemplazables. No actualizar
+resultados con una corrida fallida. Ver el [procedimiento](../frecuencia/ppa.md).
 
 ## Condiciones para aprobar
 

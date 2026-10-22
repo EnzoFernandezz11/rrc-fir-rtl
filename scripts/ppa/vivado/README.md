@@ -66,9 +66,10 @@ Requiere Vivado con soporte de Artix-7 y sus herramientas
 guarda en `build/ppa/frequency_serial/<UTC>-<commit>-vivado/`. Nunca sobrescribe
 una corrida existente. Para leer los resultados, abrir **`summary.md`** de esa
 carpeta: contiene las metricas finales y la referencia local anterior. Tras
-revisarlo, incorporar los resultados a la corrida correspondiente del registro
-`reports/ppa/frequency.md` en el repositorio, conservando el historial serial y
-la seccion de la variante optimizada.
+revisarlo, incorporar la última medición FPGA identificando su corrida de origen
+en `reports/ppa/frequency.md`, separada de las mediciones ASIC SKY130. Respetar
+la regla del informe: última corrida por variante y tecnología, sin acumular
+resúmenes; conservar la referencia histórica Vivado C02 expresamente indicada.
 
 El resumen tambien incluye el diagnostico para elegir C03/C04: desglose de
 ciclos del serial, peor camino interno de setup (`timing_critical.rpt`) y

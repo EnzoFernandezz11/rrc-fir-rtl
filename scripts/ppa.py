@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Benchmark local reproducible y paquete portátil para Vivado en Windows."""
+"""Benchmark RTL, síntesis SKY130 y paquete de referencia FPGA para Vivado."""
 
 from __future__ import annotations
 
@@ -21,12 +21,14 @@ TOP = "fir_frequency_serial"
 TB = "tb_fir_frequency_ppa"
 REPORT = ROOT / "reports/ppa/frequency.md"
 CONFIG = {
-    "top": TOP, "part": "xc7a35tcpg236-1", "clock_period_ns": 100,
-    "clock_mhz": 10, "flow": "out_of_context", "format": "A04",
+    "top": TOP, "technology": "SKY130", "clock_period_ns": 100,
+    "clock_mhz": 10, "flow": "standard_cell_synthesis", "format": "A04",
     "seed": 1, "symbols": 1024, "samples": 2048,
     "input_available": True, "output_ready": True,
-    "vectors": "local A04; A05 pendiente",
+    "vectors": "modelo fijo A04; regresión A05",
 }
+
+LIBRARY = "sky130_fd_sc_hd__tt_025C_1v80"
 
 
 def sha256(path: Path) -> str:
@@ -52,23 +54,47 @@ def capture(command: list[str]) -> str:
                                    text=True).strip()
 
 
-def resource_counts(stats: dict, top: str = TOP) -> dict:
-    # El diseño está aplanado: contar sólo el top evita sumar módulos de biblioteca.
-    cells = stats["modules"]["\\" + top]["num_cells_by_type"]
-    unknown = [name for name in cells if name.startswith("$") and name != "$scopeinfo"]
+def sky130_library(raw: str | None = None) -> Path:
+    selected = raw or os.environ.get("SKY130_LIB")
+    if selected:
+        path = Path(selected).expanduser().resolve()
+    else:
+        root = Path.home() / ".volare"
+        suffix = f"sky130A/libs.ref/sky130_fd_sc_hd/lib/{LIBRARY}.lib"
+        candidates = {p.resolve() for p in (root / "volare/sky130/versions").glob(f"*/{suffix}")}
+        if (root / suffix).is_file():
+            candidates.add((root / suffix).resolve())
+        if len(candidates) != 1:
+            raise ValueError("Indicar --liberty o SKY130_LIB: se requiere una biblioteca SKY130 HD TT única")
+        path = candidates.pop()
+    if not path.is_file() or path.name != f"{LIBRARY}.lib":
+        raise ValueError(f"Se requiere el archivo {LIBRARY}.lib: {path}")
+    return path
+
+
+def liberty_flops(library: Path) -> set[str]:
+    cells = re.split(r'\bcell\s*\(\s*"?([\w]+)"?\s*\)\s*\{', library.read_text())
+    return {name for name, body in zip(cells[1::2], cells[2::2])
+            if re.search(r"\bff\s*\(", body)}
+
+
+def resource_counts(stats: dict, top: str, flop_types: set[str]) -> dict:
+    # Contar sólo el top aplanado; los módulos de biblioteca no son instancias.
+    module = stats["modules"]["\\" + top]
+    cells = {name: count for name, count in module["num_cells_by_type"].items()
+             if name != "$scopeinfo"}
+    unknown = [name for name in cells if not name.startswith("sky130_fd_sc_hd__")]
     if unknown:
-        raise ValueError(f"Celdas sin mapear: {unknown}")
-    return {
-        "LUT": sum(cells.get(f"LUT{i}", 0) for i in range(1, 7)),
-        "FF": sum(n for name, n in cells.items() if name.startswith("FD")),
-        "DSP48E1": cells.get("DSP48E1", 0),
-        "RAMB18E1": cells.get("RAMB18E1", 0),
-        "RAMB36E1": cells.get("RAMB36E1", 0),
-        "RAM32M": cells.get("RAM32M", 0),
-        "CARRY4": cells.get("CARRY4", 0),
-        "MUXF7": cells.get("MUXF7", 0), "MUXF8": cells.get("MUXF8", 0),
-        "primitives": cells,
-    }
+        raise ValueError(f"Celdas sin mapear a SKY130 HD: {unknown}")
+    area = module.get("area")
+    if not isinstance(area, (int, float)) or area <= 0:
+        raise ValueError("Falta área de celdas válida en stat -liberty")
+    total = sum(cells.values())
+    flops = sum(count for name, count in cells.items()
+                if name in flop_types)
+    return {"cells": total, "flip_flops": flops,
+            "combinational_cells": total - flops, "cell_area_um2": area,
+            "cells_by_type": cells}
 
 
 def measurement_key(manifest: dict, metrics: dict, resources: dict) -> str:
@@ -76,123 +102,95 @@ def measurement_key(manifest: dict, metrics: dict, resources: dict) -> str:
                if path.startswith(("rtl/", "model/", "config/", "tb/", "constraints/", "scripts/synth/"))}
     measurement = {"sources": sources, "config": manifest["config"],
                    "tools": manifest["tools"], "vectors": manifest["vectors_sha256"],
-                   "metrics": metrics, "resources": resources}
+                   "metrics": metrics, "resources": resources,
+                   "liberty_sha256": manifest.get("library", {}).get("sha256")}
     return hashlib.sha256(json.dumps(measurement, sort_keys=True).encode()).hexdigest()
 
 
 def record_run(run_id: str, result: str, key: str, report: Path = REPORT,
                architecture: str = "serial") -> None:
     document = report.read_text(encoding="utf-8")
-    marker = f"<!-- {architecture}-runs:end -->"
-    if document.count(marker) != 1:
-        raise ValueError(f"El registro PPA debe conservar el marcador de corridas {architecture}")
-    measurement = f"<!-- {architecture}-measurement:{key} -->"
-    if measurement in document:
-        return
-    label = "optimizada" if architecture == "optimized" else "serial"
-    heading = f"### Frecuencia {label} — corrida `{run_id}` (local)"
-    if heading in document:
-        raise ValueError(f"La corrida {run_id} ya está registrada")
+    start = f"<!-- {architecture}-runs:start -->"
+    end = f"<!-- {architecture}-runs:end -->"
+    if document.count(start) != 1 or document.count(end) != 1:
+        raise ValueError(f"El registro PPA debe conservar los marcadores de corridas {architecture}")
+    left, right = document.index(start) + len(start), document.index(end)
+    if right < left:
+        raise ValueError("Marcadores de corridas fuera de orden")
     entry = re.sub(r"(?m)^(#+) ", r"##\1 ", result).strip()
-    report.write_text(document.replace(marker, measurement + "\n" + entry + "\n\n" + marker), encoding="utf-8")
+    replacement = f"\n\n<!-- {architecture}-measurement:{key} -->\n{entry}\n\n"
+    # Incluso una medición equivalente reemplaza la anterior: siempre la última corrida exitosa.
+    report.write_text(document[:left] + replacement + document[right:], encoding="utf-8")
 
 
 def summary(run_dir: Path, manifest: dict, metrics: dict, resources: dict,
             report_dir: Path = REPORT.parent) -> str:
     config = manifest["config"]
     label = "optimizada" if config.get("target") == "frequency_optimized" else "serial"
-    rows = "\n".join(f"| {name} | {value} |" for name, value in resources.items()
-                     if name != "primitives")
     period = metrics["clock_period_ns"]
-    timing = "\n".join((
-        f"| Muestras aceptadas / verificadas | {metrics['input_samples']} / {metrics['output_samples']} |",
-        f"| Bloques completos | {metrics['blocks']} |",
-        f"| Latencia por muestra | {metrics['latency_cycles']} ciclos = {metrics['latency_cycles'] * period / 1000:g} µs |",
-        f"| Intervalo entre bloques (8 muestras) | {metrics['block_cycles']} ciclos = {metrics['block_cycles'] * period / 1000:g} µs |",
-        f"| Ventana de procesamiento, sin reset | {metrics['active_cycles']} ciclos = {metrics['activity_duration_ns'] / 1e6:g} ms |",
-        f"| Throughput efectivo a {1000/period:g} MHz | {metrics['throughput_samples_per_second']:.3f} muestras/s |",
-    ))
-    if "sustained_throughput_samples_per_second" in metrics:
-        timing += (f"\n| Throughput sostenido a reloj objetivo (sin pausas) | "
-                   f"{metrics['sustained_throughput_samples_per_second']:.3f} muestras/s |")
-    location = run_dir.relative_to(ROOT).as_posix()
+    sustained = 8e9 / (metrics["block_cycles"] * period)
     evidence = Path(os.path.relpath(run_dir, report_dir)).as_posix()
     guide = Path(os.path.relpath(ROOT / "docs/frecuencia/ppa.md", report_dir)).as_posix()
-    analysis = Path(os.path.relpath(REPORT, report_dir)).as_posix()
-    return f"""# Frecuencia {label} — corrida `{run_dir.name}` (local)
+    return f"""# Frecuencia {label} — corrida `{run_dir.name}` (SKY130)
 
-**Estado: verificación local y mapeo lógico completados; PPA físico pendiente de Vivado.**
+**PASS RTL, síntesis ASIC y simulación funcional de netlist SKY130. Timing físico y potencia no medidos.**
 
-## Configuración y trazabilidad
-
-| Dato | Valor |
+| Configuración | Valor |
 |---|---|
-| Corrida UTC | `{run_dir.name}` |
 | Commit base | `{manifest['commit']}` |
-| Cambios locales al iniciar | {'Sí; consultar estado y hashes del manifiesto' if manifest['git_status'] else 'No'} |
-| Módulo | `{config["top"]}` completo |
-| FPGA | Basys3 / Artix-7 `{config['part']}` |
-| Reloj objetivo | {1000/period:g} MHz / {period:g} ns |
-| Implementación prevista | Out-of-context, estrategias por defecto |
-| Formato | A04: entrada 2/F0, trabajo 12/F5, coeficientes 10/F8, salida 9/F7 |
-| Estímulo | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras |
-| Interfaz | Entrada disponible, salida siempre lista |
-| Vectores | Modelo fijo A04; regresión funcional incluye A05 |
+| Cambios locales al iniciar | {'Sí; fuentes identificadas por hashes' if manifest['git_status'] else 'No'} |
+| Top | `{config['top']}` |
+| Tecnología / biblioteca | SKY130, 130 nm / `sky130_fd_sc_hd` |
+| Corner | TT, 25 °C, 1,8 V |
+| Liberty SHA256 | `{manifest['library']['sha256']}` |
+| Flujo | Yosys aplanado + dfflibmap + ABC; sin placement ni routing |
+| Reloj de simulación / objetivo | {1000/period:g} MHz / {period:g} ns; sin cierre temporal demostrado |
+| Formatos I/Q | Entrada 2/F0; trabajo 12/F5; constantes 10/F8; salida 9/F7 |
+| Benchmark | QPSK 2×, semilla 1, 1024 símbolos, 2048 muestras; sin pausas |
 | Yosys | `{manifest['tools']['yosys']}` |
 | Icarus | `{manifest['tools']['iverilog']}` |
 
-## Verificación y rendimiento funcional
-
-Regresión `smoke` y comparación exacta de las 2048 salidas: **PASS**.
-La simulación RTL usa {period:g} ns; la capacidad física de operar a ese período se comprueba en Vivado.
+## Resultados actuales
 
 | Medición | Resultado |
-|---|---|
-{timing}
+|---|---:|
+| Muestras aceptadas / exactas | {metrics['input_samples']} / {metrics['output_samples']} |
+| Latencia | {metrics['latency_cycles']} ciclos |
+| Intervalo por bloque de ocho muestras | {metrics['block_cycles']} ciclos |
+| Ciclos activos del benchmark | {metrics['active_cycles']} |
+| Throughput sostenido al reloj supuesto | {sustained:.3f} muestras/s |
+| Throughput efectivo al reloj supuesto | {metrics['throughput_samples_per_second']:.3f} muestras/s |
+| Celdas estándar totales | {resources['cells']} |
+| Flip-flops | {resources['flip_flops']} |
+| Celdas combinacionales | {resources['combinational_cells']} |
+| Área de celdas | {resources['cell_area_um2']:.6f} µm² |
 
-## Recursos preliminares — Yosys XC7
+La regresión común `smoke` pasó antes del benchmark. La netlist mapeada también
+verificó las 2048 salidas y reprodujo exactamente las métricas RTL usando los
+modelos funcionales SKY130, sin retardos ni SDF. Esta prueba no verifica timing.
+El área es la suma de áreas
+Liberty de las instancias mapeadas, no el área final de un chip. Los bancos se
+mapean a lógica y registros; no se incluyen macros SRAM. La síntesis no impone
+un objetivo de retardo a ABC: no demuestra 10/100 MHz ni produce WNS/Fmax.
+Las tasas en muestras/s suponen el reloj indicado; los ciclos se miden en RTL.
 
-Conteo de primitivas del núcleo aplanado, sin buffers de entrada/salida ni de reloj.
-Las LUT son la suma de LUT1…LUT6 de lógica; no incluyen RAM distribuida ni
-equivalen directamente a slices o CLB. RAM32M cuenta primitivas de memoria
-distribuida por separado, no bits ni LUT. El desglose completo está en resources.json.
+Pendientes ASIC: STA con restricciones de reloj/E/S, setup/hold, implementación
+física con parasíticos y potencia con actividad representativa. Una corrida
+Vivado posterior mide FPGA y se informa como referencia separada.
 
-| Recurso | Cantidad |
-|---|---|
-{rows}
+## Evidencia reproducible
 
-## Resultados físicos — Vivado
-
-| Métrica | Estado |
-|---|---|
-| LUT / FF / DSP / BRAM implementados | Pendiente |
-| WNS a {period:g} ns / caminos sin constraints | Pendiente |
-| Fmax aproximada de caminos internos | Pendiente |
-| Simulación temporal y anotación SAIF | Pendiente |
-| Potencia dinámica / estática | Pendiente |
-| Energía dinámica por muestra | Pendiente |
-| Versión Vivado / condiciones térmicas | Pendiente |
-
-Se exige WNS ≥ 0 a {period:g} ns y WHS ≥ 0. La estimación de Fmax es `1000/({period:g} − WNS_ns)` MHz,
-usando caminos internos de setup del mismo reloj; no reemplaza otra implementación a esa frecuencia.
-Energía dinámica por muestra = potencia dinámica / throughput de la ventana SAIF.
-
-El [análisis de la base serial]({analysis}#análisis-base-serial) reúne el desglose
-de ciclos y los criterios para elegir la próxima optimización.
-
-## Evidencia
-
-- Corrida: `{location}/`.
-- [Manifiesto y hashes]({evidence}/manifest.json).
-- [Métricas del benchmark]({evidence}/local_metrics.json).
-- [Recursos y primitivas]({evidence}/resources.json).
+- [Manifiesto, versiones y hashes]({evidence}/manifest.json).
+- [Métricas RTL]({evidence}/local_metrics.json) y [celdas/área por tipo]({evidence}/resources.json).
+- [Métricas de netlist]({evidence}/gate_metrics.json) y [log del benchmark de netlist]({evidence}/logs/gate_benchmark.log).
+- [Estadística Yosys original]({evidence}/cells.json) y [netlist SKY130]({evidence}/mapped.v).
+- [Script de la corrida]({evidence}/synthesis.ys) y [biblioteca utilizada]({evidence}/{LIBRARY}.lib).
+- [Log de síntesis]({evidence}/logs/yosys.log) y [benchmark]({evidence}/logs/benchmark.log).
+- [Regresión Python]({evidence}/logs/regression/python-tests.log) y [regresión C02/C04]({evidence}/logs/regression/).
 - [Onda de los primeros cuatro bloques]({evidence}/first_blocks.vcd).
-- Logs: `{location}/logs/`; incluyen regresión, compilación, simulación y síntesis.
-- [Procedimiento local y Windows]({guide}).
+- [Procedimiento]({guide}).
 
-Los archivos pesados y la copia original `summary.md` de esta corrida quedan en
-`build/`. Los resultados de Vivado se incorporarán al registro común conservando
-las corridas anteriores.
+Sólo esta última corrida exitosa ocupa la sección; las anteriores permanecen en `build/ppa/`.
 """
 
 
@@ -215,7 +213,13 @@ def target_settings(name: str) -> dict:
             "vectors": "modelo fijo A04; regresión A05"}
 
 
-def local(target: str = "frequency_serial") -> Path:
+def local(target: str = "frequency_serial", liberty: str | None = None) -> Path:
+    library = sky130_library(liberty)
+    models = [library.parent.parent / "verilog" / name
+              for name in ("primitives.v", "sky130_fd_sc_hd.v")]
+    for model in models:
+        if not model.is_file():
+            raise ValueError(f"Falta modelo funcional SKY130: {model}")
     config = target_settings(target)
     top, bench = config["top"], config["bench"]
     for tool in ("iverilog", "vvp", "yosys", "git"):
@@ -240,10 +244,12 @@ def local(target: str = "frequency_serial") -> Path:
                      ROOT / config["bench_path"], ROOT / "scripts/ppa.py",
                      ROOT / "scripts/ppa_vectors.py", ROOT / config["constraint"],
                      REPORT,
-                     ROOT / f"scripts/synth/{target}_xc7.ys"})
+                     ROOT / f"scripts/synth/{target}_sky130.ys"})
     manifest = {
         "commit": commit, "git_status": capture(["git", "status", "--short"]),
         "config": config, "status": "running",
+        "library": {"name": LIBRARY, "path": str(library), "sha256": sha256(library)},
+        "library_models": {p.name: {"path": str(p), "sha256": sha256(p)} for p in models},
         "tools": {"python": sys.version.split()[0], "numpy": version("numpy"),
                   "yosys": capture(["yosys", "-V"]).splitlines()[0],
                   "iverilog": capture(["iverilog", "-V"]).splitlines()[0],
@@ -269,16 +275,46 @@ def local(target: str = "frequency_serial") -> Path:
              f"+METRICS={run_dir / 'local_metrics.json'}",
              f"+VCD={run_dir / 'first_blocks.vcd'}",
              f"+PERIOD_NS={config['clock_period_ns']}"], logs / "benchmark.log")
-        run(["yosys", "-p", f"script scripts/synth/{target}_xc7.ys; "
-             f'tee -o {(run_dir / "cells.json").relative_to(ROOT)} stat -json -tech xilinx'],
-            logs / "yosys.log")
-        resources = resource_counts(json.loads((run_dir / "cells.json").read_text()), top)
+        library_copy = run_dir / library.name
+        shutil.copy2(library, library_copy)
+        mapped = run_dir / "mapped.v"
+        stats = run_dir / "cells.json"
+        synthesis = run_dir / "synthesis.ys"
+        lib_arg = json.dumps(str(library_copy.relative_to(ROOT)))
+        synthesis.write_text(
+            f"script scripts/synth/{target}_sky130.ys\n"
+            f"dffunmap\ndfflibmap -liberty {lib_arg}\nabc -liberty {lib_arg}\nopt_clean\n"
+            f"delete t:$scopeinfo\nread_liberty -lib {lib_arg}\ncheck -assert -mapped\n"
+            f"write_verilog -noattr -noexpr {mapped.relative_to(ROOT)}\n"
+            f"tee -o {stats.relative_to(ROOT)} stat -json -liberty {lib_arg}\n",
+            encoding="utf-8")
+        run(["yosys", "-s", str(synthesis)], logs / "yosys.log")
+        resources = resource_counts(json.loads(stats.read_text()), top, liberty_flops(library_copy))
         write_json(run_dir / "resources.json", resources)
         metrics = json.loads((run_dir / "local_metrics.json").read_text())
         if not metrics.get("passed") or metrics.get("output_samples") != config["samples"]:
             raise ValueError("El benchmark no confirmó las 2048 salidas")
+        model_dir = run_dir / "library_models"
+        model_dir.mkdir()
+        for model in models:
+            shutil.copy2(model, model_dir / model.name)
+        run(["iverilog", "-g2012", "-DFUNCTIONAL", "-DUNIT_DELAY=", "-s", bench,
+             "-o", str(run_dir / "gate.out"), config["bench_path"], str(mapped),
+             *(str(model_dir / model.name) for model in models)], logs / "gate_compile.log")
+        run(["vvp", str(run_dir / "gate.out"), f"+VECTORS={run_dir / 'ppa_vectors.txt'}",
+             f"+METRICS={run_dir / 'gate_metrics.json'}",
+             f"+PERIOD_NS={config['clock_period_ns']}"], logs / "gate_benchmark.log")
+        gate_metrics = json.loads((run_dir / "gate_metrics.json").read_text())
+        if gate_metrics != metrics:
+            raise ValueError("Las métricas de la netlist SKY130 difieren del benchmark RTL")
         changed = [name for name, digest in manifest["inputs_sha256"].items()
                    if sha256(ROOT / name) != digest]
+        if sha256(library) != manifest["library"]["sha256"] or sha256(library_copy) != manifest["library"]["sha256"]:
+            changed.append(str(library))
+        for model in models:
+            expected = manifest["library_models"][model.name]["sha256"]
+            if sha256(model) != expected or sha256(model_dir / model.name) != expected:
+                changed.append(str(model))
         if changed:
             raise RuntimeError(f"Fuentes cambiaron durante la corrida; repetir: {changed}")
         signals = ("clk", "rst", "activity_window", "in_valid", "in_ready", "in_last",
@@ -342,18 +378,22 @@ def package(run_dir: Path) -> Path:
                f'-LatencyCycles {metrics["latency_cycles"]} '
                f'-BlockCycles {metrics["block_cycles"]} '
                f'-ActiveCycles {metrics["active_cycles"]} -Vectors vectors/ppa_vectors.txt')
-    content["README.md"] = ("# Ejecutar esta variante\n\nDesde la raíz del ZIP, en consola Vivado:\n\n"
+    content["README.md"] = ("# Referencia FPGA de esta variante\n\n"
+                            "Los resultados locales de resources.json/summary.md son ASIC SKY130; "
+                            "Vivado medirá Artix-7 de forma independiente.\n\n"
+                            "Desde la raíz del ZIP, en consola Vivado:\n\n"
                             + "```bat\n" + command + "\n```\n\n"
                             + content["README.md"].decode("utf-8")).encode("utf-8")
     archived_summary = content["summary.md"].decode("utf-8")
-    guide = Path(os.path.relpath(ROOT / "docs/frecuencia/ppa.md", run_dir)).as_posix()
-    archived_summary = archived_summary.replace(f"]({guide})", "](README.md)")
-    analysis = Path(os.path.relpath(REPORT, run_dir)).as_posix()
-    archived_summary = archived_summary.replace(
-        f"]({analysis}#análisis-base-serial)", "](diagnosis.txt)")
-    archived_summary = archived_summary.replace(
-        "[Onda de los primeros cuatro bloques](./first_blocks.vcd)",
-        "Onda de los primeros cuatro bloques: conservada en la corrida local, fuera del ZIP")
+    if "## Evidencia reproducible" in archived_summary:
+        archived_summary = archived_summary.split("## Evidencia reproducible")[0] + """## Evidencia incluida
+
+- [Manifiesto](manifest.json), [métricas RTL](local_metrics.json) y [área ASIC](resources.json).
+- [Instrucciones Vivado](README.md) y [análisis](diagnosis.txt).
+
+La netlist, biblioteca, métricas de netlist, logs y ondas ASIC permanecen en la
+corrida local identificada por el título; este ZIP contiene las fuentes para FPGA.
+"""
     content["summary.md"] = archived_summary.encode("utf-8")
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
         for name, data in sorted(content.items()):
@@ -377,9 +417,10 @@ def main() -> int:
     parser.add_argument("command", choices=("local", "package"))
     parser.add_argument("--target", choices=("frequency_serial", "frequency_optimized"),
                         default="frequency_serial")
+    parser.add_argument("--liberty", help="Ruta a SKY130 HD TT 25C 1v80; también SKY130_LIB")
     args = parser.parse_args()
     try:
-        run_dir = local(args.target)
+        run_dir = local(args.target, args.liberty)
         if args.command == "package":
             package(run_dir)
     except (OSError, ValueError, KeyError, RuntimeError, subprocess.CalledProcessError) as exc:
