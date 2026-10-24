@@ -164,6 +164,232 @@ Sólo esta última corrida exitosa ocupa la sección; las anteriores permanecen 
 
 <!-- optimized-runs:end -->
 
+<!-- comparison:start -->
+
+## Comparación C02 / C04
+
+Corridas: [C02](../../build/ppa/frequency_serial/20261022T111500117337Z-ee4a4eb1/manifest.json) / [C04](../../build/ppa/frequency_optimized/20261022T111804284811Z-ee4a4eb1/manifest.json). Benchmark: QPSK 2×, semilla 1, 2048 muestras exactas.
+
+Las diferencias porcentuales son (C04/C02 − 1) × 100; un signo positivo no siempre significa mejora.
+
+Síntesis lógica y ciclos RTL. Los relojes de 10/100 MHz son supuestos, **sin timing físico demostrado**. Potencia y energía no medidas.
+
+| Métrica | Unidad | C02 | C04 | Cambio C04/C02 | Condición / procedencia |
+|---|---|---:|---:|---:|---|
+| Muestras aceptadas | muestras | 2048 | 2048 | 0 % | local_metrics.json / resources.json |
+| Muestras exactas | muestras | 2048 | 2048 | 0 % | local_metrics.json / resources.json |
+| Reloj configurado | MHz | 10 | 100 | 900 % | Objetivos propios, 10/100 MHz; hipotético si timing FAIL |
+| Latencia | ciclos | 559 | 26 | -95.348837 % | local_metrics.json / resources.json |
+| Intervalo por bloque | ciclos | 575 | 8 | -98.608696 % | local_metrics.json / resources.json |
+| Ciclos activos del benchmark | ciclos | 147200 | 2074 | -98.591033 % | local_metrics.json / resources.json |
+| Latencia temporal | ns | 55900 | 260 | -99.534884 % | Objetivos propios, 10/100 MHz; hipotético si timing FAIL |
+| Throughput sostenido | muestras/s | 139130.434783 | 1e+08 | 71775 % | Objetivos propios, 10/100 MHz; hipotético si timing FAIL |
+| Throughput efectivo | muestras/s | 139130.434783 | 9.87464e+07 | 70873.963356 % | Objetivos propios, 10/100 MHz; hipotético si timing FAIL |
+| Celdas de síntesis | celdas | 4474 | 48353 | 980.755476 % | local_metrics.json / resources.json |
+| Flip-flops de síntesis | FF | 610 | 6562 | 975.737705 % | local_metrics.json / resources.json |
+| Celdas combinacionales de síntesis | celdas | 3864 | 41791 | 981.547619 % | local_metrics.json / resources.json |
+| Área de celdas de síntesis | µm² | 38448.1248 | 383355.168 | 897.071171 % | local_metrics.json / resources.json |
+| Área final de celdas | µm² | No medida | No medida | — | physical_metrics.json |
+| Área del núcleo | µm² | No medida | No medida | — | physical_metrics.json |
+| Área del die | µm² | No medida | No medida | — | physical_metrics.json |
+| Potencia interna | W | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Potencia de conmutación | W | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Potencia dinámica | W | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Leakage del núcleo | W | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Potencia total | W | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Energía dinámica por muestra | J/muestra | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Energía total por muestra | J/muestra | No medida | No medida | — | Netlist final / SPEF / VCD, TT; objetivos propios |
+| Pines con actividad VCD/reloj/constante | % | No medida | No medida | — | physical_metrics.json |
+
+### Radares normalizados
+
+100 es el mejor valor **de esta pareja** en cada eje. Más afuera es mejor. Beneficios: 100 × valor/máximo; costos: 100 × mínimo/valor. Empate en cero: ambos 100; costo cero frente a costo positivo: 100 frente a 0. La superficie no es una puntuación global. Valores originales en la tabla.
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    cScale0: '#2563eb'
+    cScale1: '#ea580c'
+    fontSize: 18px
+    radar:
+      curveOpacity: 0.25
+      axisLabelFontSize: 16px
+      legendFontSize: 16px
+  radar:
+    width: 900
+    height: 700
+    axisScaleFactor: 1
+    marginTop: 60
+    marginBottom: 60
+    marginLeft: 100
+    marginRight: 100
+    curveTension: 0
+---
+radar-beta
+    title Arquitectura y síntesis
+    axis a0["Área síntesis"], a1["FF"], a2["Latencia"], a3["II bloque"]
+    curve c02["C02"]{100.00000, 100.00000, 4.65116, 1.39130}
+    curve c04["C04"]{10.02937, 9.29595, 100.00000, 100.00000}
+    min 0
+    max 100
+    ticks 5
+    showLegend true
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/radar-arquitectura.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/radar-arquitectura.svg)
+
+### Barras: objetivos propios
+
+Cada gráfico usa una unidad; menor costo favorece la variante más pequeña.
+
+```mermaid
+xychart-beta
+    title "Latencia"
+    x-axis ["C02", "C04"]
+    y-axis "ciclos" 0.000000000000 --> 586.950000000000
+    bar [559.000000000000, 26.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/latency_cycles.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/latency_cycles.svg)
+
+| ciclos | C02 | C04 |
+|---|---:|---:|
+| Latencia | 559 | 26 |
+
+```mermaid
+xychart-beta
+    title "Intervalo por bloque"
+    x-axis ["C02", "C04"]
+    y-axis "ciclos" 0.000000000000 --> 603.750000000000
+    bar [575.000000000000, 8.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/block_cycles.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/block_cycles.svg)
+
+| ciclos | C02 | C04 |
+|---|---:|---:|
+| Intervalo por bloque | 575 | 8 |
+
+```mermaid
+xychart-beta
+    title "Ciclos activos del benchmark"
+    x-axis ["C02", "C04"]
+    y-axis "ciclos" 0.000000000000 --> 154560.000000000000
+    bar [147200.000000000000, 2074.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/active_cycles.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/active_cycles.svg)
+
+| ciclos | C02 | C04 |
+|---|---:|---:|
+| Ciclos activos del benchmark | 147200 | 2074 |
+
+```mermaid
+xychart-beta
+    title "Latencia temporal"
+    x-axis ["C02", "C04"]
+    y-axis "ns" 0.000000000000 --> 58695.000000000000
+    bar [55900.000000000000, 260.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/latency_ns.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/latency_ns.svg)
+
+| ns | C02 | C04 |
+|---|---:|---:|
+| Latencia temporal | 55900 | 260 |
+
+```mermaid
+xychart-beta
+    title "Throughput sostenido"
+    x-axis ["C02", "C04"]
+    y-axis "muestras/s" 0.000000000000 --> 105000000.000000000000
+    bar [139130.434782608703, 100000000.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/sustained_sps.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/sustained_sps.svg)
+
+| muestras/s | C02 | C04 |
+|---|---:|---:|
+| Throughput sostenido | 139130.434783 | 1e+08 |
+
+```mermaid
+xychart-beta
+    title "Throughput efectivo"
+    x-axis ["C02", "C04"]
+    y-axis "muestras/s" 0.000000000000 --> 103683702.989392489195
+    bar [139130.434782608994, 98746383.799421414733]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/effective_sps.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/effective_sps.svg)
+
+| muestras/s | C02 | C04 |
+|---|---:|---:|
+| Throughput efectivo | 139130.434783 | 9.87464e+07 |
+
+```mermaid
+xychart-beta
+    title "Celdas de síntesis"
+    x-axis ["C02", "C04"]
+    y-axis "celdas" 0.000000000000 --> 50770.650000000001
+    bar [4474.000000000000, 48353.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/cells.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/cells.svg)
+
+| celdas | C02 | C04 |
+|---|---:|---:|
+| Celdas de síntesis | 4474 | 48353 |
+
+```mermaid
+xychart-beta
+    title "Flip-flops de síntesis"
+    x-axis ["C02", "C04"]
+    y-axis "FF" 0.000000000000 --> 6890.100000000000
+    bar [610.000000000000, 6562.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/flip_flops.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/flip_flops.svg)
+
+| FF | C02 | C04 |
+|---|---:|---:|
+| Flip-flops de síntesis | 610 | 6562 |
+
+```mermaid
+xychart-beta
+    title "Celdas combinacionales de síntesis"
+    x-axis ["C02", "C04"]
+    y-axis "celdas" 0.000000000000 --> 43880.550000000003
+    bar [3864.000000000000, 41791.000000000000]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/combinational_cells.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/combinational_cells.svg)
+
+| celdas | C02 | C04 |
+|---|---:|---:|
+| Celdas combinacionales de síntesis | 3864 | 41791 |
+
+```mermaid
+xychart-beta
+    title "Área de celdas de síntesis"
+    x-axis ["C02", "C04"]
+    y-axis "µm²" 0.000000000000 --> 402522.926399999997
+    bar [38448.124799999998, 383355.168000000005]
+```
+
+[Fuente Mermaid](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/cell_area_um2.mmd) · [SVG compatible](../../build/ppa/comparisons/8f3fdf81fdb9a9d8/cell_area_um2.svg)
+
+| µm² | C02 | C04 |
+|---|---:|---:|
+| Área de celdas de síntesis | 38448.1248 | 383355.168 |
+
+### Reloj común: 10 MHz
+
+Pendiente: ambas implementaciones deben demostrar timing a 10 MHz. No se grafican datos físicos supuestos.
+
+<!-- comparison:end -->
+
 ## Referencia histórica preservada — C02 en Vivado 2024.2
 
 Esta sección corresponde a **FPGA Artix-7**, no a SKY130. Se conserva por pedido

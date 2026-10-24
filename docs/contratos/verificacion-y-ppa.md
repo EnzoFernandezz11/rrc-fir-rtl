@@ -36,6 +36,19 @@ El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como 
 
 ## PPA
 
+**Extensión física aprobada por Enzo (24/10/2026, C02/C04):** usar OpenLane 2
+local fijado mediante Nix y SKY130 HD. La metodología sigue el material del
+curso: síntesis → implementación física → SPEF → STA en nueve corners y potencia
+con actividad completa del benchmark sobre la netlist final. Setup/hold mediante
+STA post-ruteo sustituye la exigencia de simulación SDF para este análisis; SDF
+queda como verificación adicional. Vivado continúa como referencia FPGA.
+Los objetivos mínimos no cambian; un resultado timing FAIL se declara, no se
+reclasifica la variante ni se modifica su arquitectura automáticamente.
+La potencia funcional sin retardos es una estimación y la cobertura del origen
+de actividad por pin se registra. La comparación común usa 10 MHz sólo cuando ambas variantes
+cumplen STA. Ver [procedimiento físico y Mermaid](../frecuencia/ppa.md).
+La adopción del método no implica que las mediciones físicas ya estén obtenidas.
+
 **Actualización de Enzo del 22/10/2026 (C02 y C04):** la comparación local vigente
 es ASIC **SKY130 HD de 130 nm**, con biblioteca `sky130_fd_sc_hd__tt_025C_1v80.lib`
 (TT, 25 °C, 1,8 V). Yosys sintetiza y mapea ambas variantes con el mismo flujo;

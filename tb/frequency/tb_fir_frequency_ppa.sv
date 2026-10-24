@@ -39,6 +39,7 @@ module tb_fir_frequency_ppa;
     integer timing_mode;
     string vectors_path, metrics_path, vcd_path, extra;
     reg dump_enabled = 0;
+    reg power_dump = 0;
     real throughput;
 
     initial begin
@@ -59,7 +60,13 @@ module tb_fir_frequency_ppa;
         rc = $fscanf(fd, "%s", extra);
         if (rc == 1) $fatal(1, "Contenido extra en vectores");
         $fclose(fd);
-        if ($value$plusargs("VCD=%s", vcd_path)) begin
+        power_dump = $value$plusargs("POWER_VCD=%s", vcd_path);
+        if (power_dump) begin
+            // Incluir pines de celdas: OpenSTA anota actividad por pin.
+            $dumpfile(vcd_path);
+            $dumpvars(2, dut);
+            dump_enabled = 1;
+        end else if ($value$plusargs("VCD=%s", vcd_path)) begin
             $dumpfile(vcd_path);
             $dumpvars(0, dut);
             $dumpvars(0, activity_window);
@@ -105,7 +112,7 @@ module tb_fir_frequency_ppa;
             end
             if (cycles > 160000) $fatal(1, "Timeout benchmark PPA");
             @(negedge clk);
-            if (dump_enabled && received >= 32) begin
+            if (dump_enabled && !power_dump && received >= 32) begin
                 $dumpoff;
                 dump_enabled = 0;
             end

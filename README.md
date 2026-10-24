@@ -34,6 +34,19 @@ Requisitos actuales: Python 3.12 o compatible; `iverilog` y `vvp` cuando se regi
 
 Las variantes registradas están en `config/rtl_targets.json`. **Agregar una variante al registro en el mismo PR que incorpora su RTL y testbench.** Si una variante registrada falta o su simulación falla, `make smoke` falla; el mensaje inicial de «0 variantes» no cuenta como vector matching.
 
+Para PPA físico de C02/C04 se añadió OpenLane 2 fijado mediante Nix:
+
+~~~sh
+sh scripts/ppa/openlane/run.sh --target frequency_serial
+sh scripts/ppa/openlane/run.sh --target frequency_optimized
+python3 scripts/ppa.py compare --c02 RUTA_CORRIDA_C02 --c04 RUTA_CORRIDA_C04 --render
+~~~
+
+La [guía PPA](docs/frecuencia/ppa.md) describe los requisitos, STA post-SPEF,
+potencia con actividad y gráficos Mermaid/SVG. La automatización no implica
+que una corrida física ya haya terminado; el [informe](reports/ppa/frequency.md)
+identifica el nivel de evidencia de cada medición.
+
 ## Organización
 
 La [arquitectura RTL serial de B01](docs/arquitectura-rtl-tiempo-serial.md) define el diseño temporal que implementa `rtl/time/fir_time_serial.sv` (B02), y la [arquitectura optimizada de B03](docs/arquitectura-rtl-tiempo-optimizada.md) elige la variante sistólica que implementará B04. La [arquitectura RTL serial de C01](docs/frecuencia/arquitectura-rtl-frecuencia-serial.md) reúne las decisiones de C02; el [contrato C04](docs/frecuencia/c04-implementacion.md) documenta la implementación optimizada en frecuencia y sus límites de evidencia PPA.

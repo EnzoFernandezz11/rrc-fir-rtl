@@ -77,13 +77,16 @@ archivo compartido. Cada tarea entrega código y su prueba antes de avanzar.
   en régimen, II_bloque=8; medir L según el contrato y distinguir llenado/vaciado.
 - Ejecutar `make smoke` y `make full`; síntesis sin latches ni `$mul` en CSD.
   Sintetizar temprano aritmética/E4 y después el conjunto.
-- Preparar paquete Vivado externo de 10 ns con fuentes, vectores, versiones y
-  hashes. Medir setup/hold, recursos, simulación SDF y potencia con SAIF.
+- Ejecutar PPA físico OpenLane 2 / SKY130 a 10 ns: setup/hold post-SPEF,
+  recursos y potencia con actividad. Conservar paquete Vivado para referencia FPGA.
   Throughput sostenido y throughput de la ventana de actividad se reportan aparte.
 
-La evidencia física queda pendiente de ejecutar Vivado externo. C04 no se cierra
-sin esa evidencia (o decisión escrita revisada admitida por la issue) y A06
-resuelta. No se presume cierre de timing por pasar simulación o síntesis Yosys.
+La evidencia física se obtiene con OpenLane 2 / SKY130 siguiendo la
+[metodología aprobada el 24/10/2026](ppa.md). Se exige STA post-ruteo con SPEF;
+simulación SDF queda como verificación adicional y Vivado como referencia FPGA.
+La adopción del flujo no equivale a haber completado la medición. El cierre de
+C04 conserva su dependencia de A06 y del cumplimiento de 100 MHz, que debe
+demostrar su implementación. No se presume timing por pasar simulación o Yosys.
 
 ## Evidencia funcional de la implementación
 

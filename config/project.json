@@ -71,8 +71,8 @@
       "node_nm": 130,
       "library": "sky130_fd_sc_hd",
       "corner": "tt_025C_1v80",
-      "tool": "yosys",
-      "flow": "standard_cell_synthesis",
+      "tool": "openlane2/yosys/openroad/opensta",
+      "flow": "physical_post_route_spef",
       "source": "docs/contratos/verificacion-y-ppa.md#ppa",
       "fpga_reference": {
         "status": "proposed",
@@ -84,10 +84,20 @@
           "slow": "constraints/clk_10mhz.xdc"
         },
         "source": "docs/contratos/verificacion-y-ppa.md#ppa"
+      },
+      "measurement_status": "pending_physical_run",
+      "physical_method": {
+        "openlane_revision": "a7b0e6d",
+        "pdk_revision": "0fe599b2afb6708d281543108caf8310912f54af",
+        "core_util_pct": 35,
+        "placement_density_pct": 45,
+        "threads": 2,
+        "timing": "nine_PVT_RC_corners",
+        "additional_sdf_simulation": "optional"
       }
     },
     "power_method": {
-      "status": "pending_for_asic",
+      "status": "confirmed_by_enzo_for_frequency",
       "source": "docs/contratos/verificacion-y-ppa.md#ppa",
       "metrics": [
         "dynamic_w",
@@ -104,7 +114,18 @@
           "energy_per_sample_j"
         ],
         "source": "docs/contratos/verificacion-y-ppa.md#ppa"
-      }
+      },
+      "scope": [
+        "frequency_serial",
+        "frequency_optimized"
+      ],
+      "tool": "opensta",
+      "activity": "full_active_window_functional_final_netlist_vcd",
+      "parasitics": "post_route_nominal_spef",
+      "corner": "tt_025C_1v80",
+      "measurement_status": "pending_physical_run",
+      "energy_method": "power_w * activity_duration_s / output_samples",
+      "limitation": "zero_delay_activity_does_not_capture_all_timing_glitches"
     },
     "samples_per_symbol": {
       "value": 2,

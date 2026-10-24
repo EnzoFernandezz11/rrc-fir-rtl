@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Benchmark RTL, síntesis SKY130 y paquete de referencia FPGA para Vivado."""
+"""Medición ASIC SKY130, comparación Mermaid y referencia FPGA para Vivado."""
 
 from __future__ import annotations
 
@@ -120,6 +120,11 @@ def record_run(run_id: str, result: str, key: str, report: Path = REPORT,
     entry = re.sub(r"(?m)^(#+) ", r"##\1 ", result).strip()
     replacement = f"\n\n<!-- {architecture}-measurement:{key} -->\n{entry}\n\n"
     # Incluso una medición equivalente reemplaza la anterior: siempre la última corrida exitosa.
+    # Una nueva medición invalida la pareja graficada, aunque la otra no cambie.
+    if "<!-- comparison:start -->" in document:
+        document = re.sub(r"(?s)(<!-- comparison:start -->).*?(<!-- comparison:end -->)",
+                          r"\1\n\nComparación pendiente de regenerar con las últimas corridas.\n\n\2", document)
+        left, right = document.index(start) + len(start), document.index(end)
     report.write_text(document[:left] + replacement + document[right:], encoding="utf-8")
 
 
@@ -213,7 +218,8 @@ def target_settings(name: str) -> dict:
             "vectors": "modelo fijo A04; regresión A05"}
 
 
-def local(target: str = "frequency_serial", liberty: str | None = None) -> Path:
+def local(target: str = "frequency_serial", liberty: str | None = None,
+          publish: bool = True) -> Path:
     library = sky130_library(liberty)
     models = [library.parent.parent / "verilog" / name
               for name in ("primitives.v", "sky130_fd_sc_hd.v")]
@@ -239,7 +245,7 @@ def local(target: str = "frequency_serial", liberty: str | None = None) -> Path:
     inputs = sorted({*ROOT.glob("rtl/*/*.sv"), *ROOT.glob("tb/*/*.sv"),
                      *ROOT.glob("scripts/synth/*.ys"), *ROOT.glob("vectors/*.txt"),
                      *ROOT.glob("model/*.py"),
-                     *ROOT.glob("scripts/*.py"), *ROOT.glob("tests/*.py"),
+                     *ROOT.glob("scripts/*.py"), *ROOT.glob("scripts/ppa/openlane/*"), *ROOT.glob("tests/*.py"),
                      *ROOT.glob("config/*"), *ROOT.glob("scripts/ppa/vivado/*"),
                      ROOT / config["bench_path"], ROOT / "scripts/ppa.py",
                      ROOT / "scripts/ppa_vectors.py", ROOT / config["constraint"],
@@ -330,8 +336,9 @@ def local(target: str = "frequency_serial", liberty: str | None = None) -> Path:
         result = summary(run_dir, manifest, metrics, resources)
         (run_dir / "summary.md").write_text(
             summary(run_dir, manifest, metrics, resources, run_dir), encoding="utf-8")
-        record_run(run_dir.name, result, measurement_key(manifest, metrics, resources),
-                   architecture=config["architecture"])
+        if publish:
+            record_run(run_dir.name, result, measurement_key(manifest, metrics, resources),
+                       architecture=config["architecture"])
     except Exception:
         manifest["status"] = "failed"
         raise
@@ -414,15 +421,28 @@ corrida local identificada por el título; este ZIP contiene las fuentes para FP
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("local", "package"))
+    parser.add_argument("command", choices=("local", "package", "physical", "compare"))
     parser.add_argument("--target", choices=("frequency_serial", "frequency_optimized"),
                         default="frequency_serial")
     parser.add_argument("--liberty", help="Ruta a SKY130 HD TT 25C 1v80; también SKY130_LIB")
+    parser.add_argument("--c02", type=Path, help="Corrida completa C02 para comparar")
+    parser.add_argument("--c04", type=Path, help="Corrida completa C04 para comparar")
+    parser.add_argument("--openlane-root", type=Path, default=Path.home() / "openlane2")
+    parser.add_argument("--render", action="store_true", help="Exportar SVG con Mermaid CLI 11.6.0")
     args = parser.parse_args()
     try:
-        run_dir = local(args.target, args.liberty)
-        if args.command == "package":
-            package(run_dir)
+        if args.command == "compare":
+            from scripts.ppa_compare import compare
+            if args.c02 is None or args.c04 is None:
+                raise ValueError("compare requiere --c02 y --c04")
+            compare(args.c02, args.c04, render=args.render)
+        elif args.command == "physical":
+            from scripts.ppa_physical import physical
+            physical(args.target, args.openlane_root, args.liberty)
+        else:
+            run_dir = local(args.target, args.liberty)
+            if args.command == "package":
+                package(run_dir)
     except (OSError, ValueError, KeyError, RuntimeError, subprocess.CalledProcessError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
@@ -430,4 +450,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    sys.path.insert(0, str(ROOT))
     raise SystemExit(main())
