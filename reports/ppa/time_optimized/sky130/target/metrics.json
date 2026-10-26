@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "timing_simulation": false,
+  "seed": 1, "symbols": 1024, "samples_per_symbol": 2,
+  "input_samples": 2048, "output_samples": 2048,
+  "clock_period_ns": 10.000, "active_cycles": 2049,
+  "activity_start_ns": 100.000, "activity_duration_ns": 20490.000,
+  "latency_cycles": 1, "block_cycles": 1, "blocks": 2048,
+  "throughput_samples_per_second": 99951195.705222055
+}

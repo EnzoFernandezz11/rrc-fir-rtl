@@ -1,0 +1,30 @@
+---
+config:
+  theme: base
+  themeVariables:
+    cScale0: '#2563eb'
+    cScale1: '#ea580c'
+    fontSize: 18px
+    radar:
+      curveOpacity: 0.25
+      axisLabelFontSize: 16px
+      legendFontSize: 16px
+  radar:
+    width: 900
+    height: 700
+    axisScaleFactor: 1
+    marginTop: 60
+    marginBottom: 60
+    marginLeft: 100
+    marginRight: 100
+    curveTension: 0
+---
+radar-beta
+    title Arquitectura y síntesis
+    axis a0["Área síntesis"], a1["FF"], a2["Latencia"], a3["II"]
+    curve b02["B02"]{100.00000, 100.00000, 11.11111, 10.00000}
+    curve b04["B04"]{51.05559, 47.72727, 100.00000, 100.00000}
+    min 0
+    max 100
+    ticks 5
+    showLegend true
