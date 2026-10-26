@@ -86,6 +86,10 @@ def load_run(directory: Path, target: str) -> dict:
     physical = None
     if m["status"] == "physical_complete":
         physical = json.loads((directory / "physical_metrics.json").read_text())
+        for scenario in physical.get("scenarios", {}).values():
+            power = scenario.get("power", {})
+            if "dynamic_w" not in power and "internal_w" in power and "switching_w" in power:
+                power["dynamic_w"] = power["internal_w"] + power["switching_w"]
         v.update(physical["areas"])
         v.update(physical["scenarios"]["target"]["power"])
     for key, _, _, _ in METRICS:
@@ -175,6 +179,25 @@ def radar(title: str, keys: list[str], av: dict, bv: dict) -> str | None:
             + "    min 0\n    max 100\n    ticks 5\n    showLegend true\n")
 
 
+def scenario_status(scenario: dict) -> tuple[bool, bool, bool]:
+    """Return setup/hold, electrical/constraints and global status, including legacy rows."""
+    timing = scenario.get("timing", {})
+    rows = list(timing.values())
+    setup = scenario.get("setup_hold_pass")
+    if setup is None and rows:
+        setup = all(r.get("setup_ws_ns", -1) >= 0 and r.get("hold_ws_ns", -1) >= 0
+                    and r.get("setup_violations", 1) == 0 and r.get("hold_violations", 1) == 0
+                    for r in rows)
+    electrical = scenario.get("electrical_constraints_pass")
+    if electrical is None and rows:
+        electrical = all(r.get("constraint_warnings", 1) == 0 and r.get("unconstrained_endpoints", 1) == 0
+                         and r.get("unannotated_routed_nets", 1) == 0
+                         and r.get("max_slew_violations", 1) == 0 and r.get("max_cap_violations", 1) == 0
+                         and r.get("max_fanout_violations", 1) == 0 for r in rows)
+    setup, electrical = bool(setup), bool(electrical)
+    return setup, electrical, bool(scenario.get("timing_pass", setup and electrical))
+
+
 def comparison_document(a: dict, b: dict, output: Path, render: bool = False) -> tuple[str, dict]:
     check_compatible(a, b)
     av, bv = a["values"], b["values"]
@@ -234,15 +257,26 @@ def comparison_document(a: dict, b: dict, output: Path, render: bool = False) ->
             text += add_chart(key, bar(label, unit, x, y))
             text += f"\n| {unit} | C02 | C04 |\n|---|---:|---:|\n| {label} | {fmt(x)} | {fmt(y)} |\n"
     text += "\n### Reloj común: 10 MHz\n\n"
-    if not physical or not all(r["physical"]["scenarios"].get("common", {}).get("timing_pass") for r in (a, b)):
+    common = []
+    common_scenarios = [r["physical"]["scenarios"].get("common", {}) for r in (a, b)] if physical else []
+    if physical and all(common_scenarios):
+        for run, m in zip((a, b), common_scenarios):
+            common.append({**run["values"], **m.get("power", {}),
+                           "latency_ns": run["values"]["latency_cycles"] * 100,
+                           "effective_sps": 2048e7 / run["values"]["active_cycles"]
+                           if run["values"].get("active_cycles") else None,
+                           "sustained_sps": 8e7 / run["values"]["block_cycles"]
+                           if run["values"].get("block_cycles") else None})
+        text += "Potencia común medida por variante (TT/25 °C/1,8 V), aunque el estado global no habilite gráficas:\n\n"
+        text += "| Métrica | Unidad | C02 | C04 |\n|---|---|---:|---:|\n"
+        for key in ("internal_w", "switching_w", "dynamic_w", "leakage_w", "total_w",
+                    "dynamic_energy_j", "total_energy_j"):
+            x, y = common[0].get(key), common[1].get(key)
+            unit = "W" if key.endswith("_w") else "J/muestra"
+            text += f"| {key} | {unit} | {fmt(x)} | {fmt(y)} |\n"
+    if not physical or not all(scenario_status(r["physical"]["scenarios"].get("common", {}))[2] for r in (a, b)):
         text += "Pendiente: ambas implementaciones deben demostrar timing a 10 MHz. No se grafican datos físicos supuestos.\n"
     else:
-        common = []
-        for run in (a, b):
-            m = run["physical"]["scenarios"]["common"]
-            common.append({**run["values"], **m["power"], "latency_ns": run["values"]["latency_cycles"] * 100,
-                           "effective_sps": 2048e7 / run["values"]["active_cycles"],
-                           "sustained_sps": 8e7 / run["values"]["block_cycles"]})
         text += "Mismo layout de cada variante y reloj común; potencia funcional sin retardos, TT/25 °C/1,8 V.\n"
         code = radar("PPA físico a 10 MHz", ["final_cell_area_um2", "latency_ns", "effective_sps", "total_energy_j"], *common)
         if code:
@@ -259,7 +293,12 @@ def comparison_document(a: dict, b: dict, output: Path, render: bool = False) ->
             if not all(scenario in r["physical"]["scenarios"] for r in (a, b)):
                 continue
             aa, bb = [r["physical"]["scenarios"][scenario] for r in (a, b)]
-            text += f"\nEscenario {scenario}: C02 **{'PASS' if aa['timing_pass'] else 'FAIL'}**, C04 **{'PASS' if bb['timing_pass'] else 'FAIL'}**.\n\n"
+            statuses = [scenario_status(x) for x in (aa, bb)]
+            text += f"\nEscenario {scenario}: C02 setup/hold **{'PASS' if statuses[0][0] else 'FAIL'}**, eléctrico/restricciones **{'PASS' if statuses[0][1] else 'FAIL'}**, global **{'PASS' if statuses[0][2] else 'FAIL'}**; C04 setup/hold **{'PASS' if statuses[1][0] else 'FAIL'}**, eléctrico/restricciones **{'PASS' if statuses[1][1] else 'FAIL'}**, global **{'PASS' if statuses[1][2] else 'FAIL'}**.\n\n"
+            text += "| Estado | C02 | C04 |\n|---|---|---|\n"
+            for label, index in (("Setup/hold", 0), ("Eléctrico/restricciones", 1), ("Global", 2)):
+                text += f"| {label} | {'PASS' if statuses[0][index] else 'FAIL'} | {'PASS' if statuses[1][index] else 'FAIL'} |\n"
+            text += "\n"
             text += "| Corner | Métrica | C02 | C04 |\n|---|---|---:|---:|\n"
             if aa["timing"].keys() != bb["timing"].keys():
                 raise ValueError("Corners incompatibles")

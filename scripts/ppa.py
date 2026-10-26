@@ -39,11 +39,11 @@ def write_json(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def run(command: list[str], log: Path) -> None:
+def run(command: list[str], log: Path, timeout: float | None = None) -> None:
     print(f"$ {' '.join(command)}", flush=True)
     with log.open("w", encoding="utf-8") as output:
         result = subprocess.run(command, cwd=ROOT, stdout=output,
-                                stderr=subprocess.STDOUT, check=False)
+                                stderr=subprocess.STDOUT, check=False, timeout=timeout)
     if result.returncode:
         print("\n".join(log.read_text(errors="replace").splitlines()[-40:]))
         raise RuntimeError(f"{command[0]} falló ({result.returncode}); ver {log}")
@@ -404,7 +404,8 @@ corrida local identificada por el título; este ZIP contiene las fuentes para FP
     content["summary.md"] = archived_summary.encode("utf-8")
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
         for name, data in sorted(content.items()):
-            bundle.writestr(name, data)
+            # Fecha ZIP fija: SOURCE_DATE_EPOCH de Nix puede quedar antes de 1980.
+            bundle.writestr(zipfile.ZipInfo(name), data, compress_type=zipfile.ZIP_DEFLATED)
     with zipfile.ZipFile(archive) as bundle:
         if bundle.testzip() is not None or set(bundle.namelist()) != set(files):
             raise RuntimeError("Falló validación del ZIP")

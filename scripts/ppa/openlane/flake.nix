@@ -12,6 +12,9 @@
     tools = keep full.includedTools;
     dependencies = keep full.propagatedBuildInputs;
     ppaOpenlane = full.overrideAttrs (old: {
+      # El perfil termina antes de KLayout; conservar el chequeo del resto.
+      nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.python3.pkgs.pythonRelaxDepsHook ];
+      pythonRemoveDeps = [ "klayout" ];
       includedTools = tools;
       propagatedBuildInputs = dependencies;
       computed_PATH = lib.makeBinPath dependencies;

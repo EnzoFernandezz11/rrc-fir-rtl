@@ -8,9 +8,16 @@ y fijado en a7b0e6d (2.3.10-1); PDK Volare
 0fe599b2afb6708d281543108caf8310912f54af, sky130A, sky130_fd_sc_hd.
 Los ejemplos con flow.tcl son de OpenLane 1 y no se copian literalmente.
 
+Correspondencia con el curso: M8 cubre síntesis y extracción SPEF; M9 cubre
+corners y checks de setup/hold, además de explicar retiming. En esta medición el
+retiming de ABC está deshabilitado, como indica la configuración del flujo. M10
+cubre potencia con actividad VCD.
+
 El perfil Nix del repositorio reutiliza los mismos motores del checkout fijado,
 excluyendo las dependencias directas KLayout/Magic/Netgen y sus pruebas de
-paquete, que no se ejecutan hasta STA. No cambia los motores de síntesis,
+paquete, que no se ejecutan hasta STA. El perfil también elimina KLayout de
+los requisitos del wheel Python; conserva el chequeo de las demás dependencias.
+No cambia los motores de síntesis,
 ruteo ni STA. Evita compilar dos variantes de KLayout al preparar este análisis.
 Se valida con SPM y las regresiones del proyecto; el hash del perfil queda
 registrado en cada medición. El entorno completo del curso también es válido,
@@ -38,6 +45,15 @@ python3 scripts/ppa.py physical --target frequency_serial
 python3 scripts/ppa.py physical --target frequency_optimized
 ~~~
 
+Ejecutar una sola corrida EDA a la vez. Los procesos instrumentados usan
+`build/tmp` como `TMPDIR`. GNU time conserva un archivo
+`*.resource.txt` por ejecución (incluye máximo RSS); el monitor añade
+`*.monitor.jsonl` con muestras cada cinco segundos de memoria disponible, swap,
+espacio libre y tamaño de los VCD observados. Se exige al menos 1 GiB de memoria
+disponible antes de iniciar cada proceso instrumentado. Si queda menos de 512 MiB
+durante dos muestras consecutivas, se detiene solo el grupo de procesos de esa ejecución. Los logs,
+archivos de consumo y tamaños observados quedan en la corrida para diagnóstico.
+
 El comando valida primero el ejemplo SPM en build/ppa/openlane-preflight/.
 Luego ejecuta la regresión/benchmark local sin publicar todavía y ejecuta
 OpenLane Classic hasta OpenROAD.STAPostPNR: síntesis, floorplan, placement,
@@ -51,8 +67,10 @@ incluye E/S y reset síncrono, cargas, incertidumbre y transición; el SDC resue
 queda en los artefactos. STA cubre las nueve combinaciones de TT/SS/FF y
 RC nom/min/max, con reloj propagado y SPEF. Se registran slacks positivos y WNS
 (limitado a cero), TNS, violaciones, advertencias de restricciones y redes
-ruteadas sin parasíticos. PASS exige setup/hold sin violaciones en todos los
-corners, restricciones completas y parasíticos de todas las redes ruteadas.
+ruteadas sin parasíticos. El informe separa setup/hold, restricciones eléctricas
+(slew, capacitancia y fanout) y PASS global. PASS global exige setup/hold sin
+violaciones, cero violaciones eléctricas en todos los corners, restricciones
+completas y parasíticos de todas las redes ruteadas.
 Fmax es una estimación registro a registro: no es un barrido de frecuencia ni
 demuestra por sí sola timing de E/S.
 
@@ -63,9 +81,17 @@ streaming porque el OpenSTA fijado no soporta los selectores de tiempo de
 versiones recientes. Reset y guarda final quedan fuera del análisis.
 
 Potencia usa netlist final, Liberty TT/25 °C/1,8 V, SDC resuelto, SPEF nominal y
-read_vcd con scope del DUT. El volcado incluye los pines de las celdas. Se exige
-actividad de origen VCD, reloj o constante en todos los pines y se registra el
-conteo real importado por OpenSTA; no es cobertura funcional. Se cubren pines
+read_vcd con scope del DUT. El proyecto usa un benchmark de 2048 muestras y
+divide la ventana activa en hasta 64 segmentos alineados al reloj, analizados
+por procesos OpenSTA secuenciales. El SDC de potencia conserva las restricciones
+resueltas y ajusta localmente el período al reloj simulado; se valida y conserva
+como `power.sdc`. El volcado incluye los pines de las celdas. Las potencias se
+promedian por duración y las energías se suman. Así se conserva
+el benchmark completo con menor pico de memoria. Los VCD temporales se borran
+al acabar cada segmento. Las ventanas se ponderan por duración y su inicio
+acumulado queda registrado. Se exige actividad de origen VCD, reloj o constante
+en todos los pines y se registra el conteo real importado por OpenSTA; no es
+cobertura funcional. Se cubren pines
 externos de celdas y puertos del top: los estados internos Liberty IQ/IQ_N
 no son puertos Verilog y se cuentan aparte, fuera del denominador.
 Se informa la actividad **funcional
@@ -76,7 +102,8 @@ total. Energía = potencia × duración activa / 2048.
 El escenario target usa el objetivo propio. common repite STA y actividad a
 10 MHz sobre el mismo layout, sin repetir P&R. Las métricas físicas están en
 physical_metrics.json; los estados OpenLane enlazan netlist, ODB, DEF, SDC,
-SPEF y SDF. El SDF se exporta; su simulación es adicional, no obligatoria.
+SPEF y SDF. El SDF se exporta; su simulación es adicional al flujo PPA y se
+ejecuta cuando la verificación definida por el contrato local la requiere.
 Una corrida completa puede informar timing FAIL; una falla de herramienta o
 evidencia incompleta conserva la última medición publicada.
 

@@ -92,8 +92,11 @@ class PpaResourcesTest(unittest.TestCase):
             (directory / "manifest.json").write_text(json.dumps(manifest))
             for name in ("resources.json", "summary.md", "diagnosis.txt"):
                 (directory/name).write_text("{}")
-            archive = package(directory)
+            with patch.dict("os.environ", {"SOURCE_DATE_EPOCH": "1"}):
+                archive = package(directory)
             with zipfile.ZipFile(archive) as bundle:
+                self.assertTrue(all(info.date_time == (1980, 1, 1, 0, 0, 0)
+                                    for info in bundle.infolist()))
                 self.assertTrue(set(config["sources"]).issubset(bundle.namelist()))
                 self.assertIn("constraints/clk_100mhz.xdc", bundle.namelist())
                 self.assertIn("-Top fir_frequency_optimized", bundle.read("README.md").decode())
