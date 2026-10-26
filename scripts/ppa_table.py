@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A07: tabla PPA de las cuatro variantes, trazable a las corridas Vivado.
+"""A07: tabla PPA de referencia FPGA (Vivado / Artix-7), trazable a las corridas.
 
 Cada corrida medida tiene su carpeta `reports/ppa/<variante>/<reloj>mhz/` con los
 reportes chicos que deja el flujo Vivado de C02 (`scripts/ppa/vivado/run.tcl`).
@@ -108,7 +108,9 @@ def main() -> int:
     out = PPA_DIR / "tabla.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
-        "# Tabla PPA\n\n"
+        "# Tabla PPA: referencia FPGA (Vivado / Artix-7)\n\n"
+        "La comparación PPA principal del informe se hace con SKY130 (decisión del 26/10, #56). "
+        "Esta tabla queda como referencia FPGA para contrastar tendencias. "
         "Generada con `python3 -m scripts.ppa_table`; no editar a mano. Cada fila sale de "
         "`reports/ppa/<variante>/<reloj>mhz/summary.tsv` (flujo Vivado de C02). El reloj oficial es "
         "10 MHz para las seriales y 100 MHz para las optimizadas; las seriales a 100 MHz son un dato "
