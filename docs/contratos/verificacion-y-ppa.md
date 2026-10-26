@@ -36,44 +36,58 @@ El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como 
 
 ## PPA
 
-**Extensión física aprobada por Enzo (24/10/2026, C02/C04):** usar OpenLane 2
-local fijado mediante Nix y SKY130 HD. La metodología sigue el material del
-curso: síntesis → implementación física → SPEF → STA en nueve corners y potencia
-con actividad completa del benchmark sobre la netlist final. Setup/hold mediante
-STA post-ruteo sustituye la exigencia de simulación SDF para este análisis; SDF
-queda como verificación adicional. Vivado continúa como referencia FPGA.
-Los objetivos mínimos no cambian; un resultado timing FAIL se declara, no se
-reclasifica la variante ni se modifica su arquitectura automáticamente.
-La potencia funcional sin retardos es una estimación y la cobertura del origen
-de actividad por pin se registra. La comparación común usa 10 MHz sólo cuando ambas variantes
-cumplen STA. Ver [procedimiento físico y Mermaid](../frecuencia/ppa.md).
-La adopción del método no implica que las mediciones físicas ya estén obtenidas.
+**Acuerdo del equipo (26/10/2026, D05/D06):** @EnzoFernandezz11,
+@andres332271 y @moreyrajulian adoptan OpenLane 2 fijado mediante Nix y
+**SKY130 HD de 130 nm** para B02, B04, C02 y C04. El flujo cubre síntesis,
+floorplan, placement, CTS, ruteo, extracción SPEF y STA post-ruteo en las nueve
+combinaciones TT/SS/FF × RC nom/min/max. El procedimiento y las versiones están
+en la [guía PPA](../frecuencia/ppa.md). El área final de celdas, core y die se
+informa por separado del área Liberty de síntesis.
 
-**Actualización de Enzo del 22/10/2026 (C02 y C04):** la comparación local vigente
-es ASIC **SKY130 HD de 130 nm**, con biblioteca `sky130_fd_sc_hd__tt_025C_1v80.lib`
-(TT, 25 °C, 1,8 V). Yosys sintetiza y mapea ambas variantes con el mismo flujo;
-se registran celdas, flip-flops, área de celdas en µm², versiones y SHA256 de la
-biblioteca y fuentes. El área es una suma Liberty; no incluye floorplan, ruteo,
-árbol de reloj ni macros SRAM. El flujo vigente no mide timing ni potencia ASIC.
-La adopción y medición de este mismo flujo en las variantes temporales queda pendiente.
+Los objetivos son **10 MHz en seriales y 100 MHz en optimizadas**. Para informar
+cumplimiento de setup/hold se exige slack no negativo y cero violaciones de ambos
+chequeos en **los nueve corners**. La tabla muestra el peor slack de setup y el
+peor slack de hold, cada uno con su corner; TT nominal puede mostrarse como dato
+adicional. Fmax es una estimación registro a registro y no sustituye esta condición.
+Las restricciones eléctricas (**slew, capacitancia y fanout**) tienen un veredicto
+separado, incluidos los buffers insertados por CTS. **PASS global** requiere
+setup/hold y eléctrico PASS, restricciones completas y parasíticos anotados.
+Un FAIL se declara sin reclasificar la variante ni reducir su objetivo.
 
-La simulación mantiene comparación exacta A04/A05 y mide latencia e intervalo.
-Los mínimos objetivo siguen siendo 10 MHz para lentas y 100 MHz para rápidas;
-el reloj configurado en el banco no demuestra que el circuito cierre timing.
-Fmax/WNS/setup/hold requieren STA y restricciones declaradas. Para resultados
-físicos hacen falta implementación y parasíticos. Potencia dinámica/estática y
-energía por muestra requieren biblioteca, actividad y condiciones comparables;
-se reportan como no medidas hasta disponer de esa evidencia.
+La netlist final se simula funcionalmente con comparación exacta A04/A05. El
+período del banco no demuestra cierre temporal; setup/hold se evalúan mediante
+STA con SPEF. La simulación SDF queda como comprobación adicional.
 
-Vivado/Artix-7 queda como referencia FPGA independiente. Se conserva el resumen
-histórico C02 recibido de Windows y el generador de paquetes para futuras
-comparaciones FPGA. Sus LUT, DSP, timing y potencia no se convierten a cifras ASIC.
+La potencia se estima con **OpenSTA**, Liberty TT/25 °C/1,8 V, **SPEF nominal**,
+SDC declarado y **VCD de la netlist final**. Las cuatro variantes usan QPSK 2×,
+semilla 1 y 2048 muestras. Se procesa la ventana activa completa en segmentos,
+se pondera la potencia por duración y se calcula energía por muestra como
+potencia × duración activa / 2048. Se informa interna, switching, dinámica,
+leakage y total, junto con la cobertura de actividad por pin. La actividad
+funcional sin retardos no captura todos los glitches temporales. Cada escenario
+publica las restricciones usadas por STA y potencia, incluidas sus diferencias.
 
-**Mantenimiento de resultados:** `reports/ppa/frequency.md` muestra solamente la
-última corrida exitosa de cada variante, reemplazando la anterior incluso cuando
-es equivalente. Los artefactos anteriores quedan en `build/ppa/`; la referencia
-histórica Vivado C02 se conserva fuera de las regiones reemplazables. No actualizar
-resultados con una corrida fallida. Ver el [procedimiento](../frecuencia/ppa.md).
+C02/C04 ya tienen corridas físicas en [el reporte de frecuencia](../../reports/ppa/frequency.md).
+Julián informó las mediciones B02/B04 con el mismo flujo en su revisión de #56;
+su integración y la tabla conjunta se completan con B04 y A07. Tener una corrida
+completa no implica cierre: C04 pasa setup/hold en TT a 100 MHz, falla en SS y
+mantiene violaciones eléctricas. Las comparaciones físicas a reloj común deben
+explicitar ambos veredictos; los gráficos que presuponen cumplimiento quedan
+condicionados a PASS global de las variantes comparadas.
+
+**Referencia FPGA:** se conservan `scripts/ppa/vivado/` y los reportes de
+`reports/ppa/time_serial/` y `reports/ppa/frequency_serial/`. La corrida C04 de
+#57 se destina al anexo FPGA. Sus métricas Artix-7 no se convierten a área ni
+potencia ASIC; la tabla principal A07 utilizará SKY130 para las cuatro variantes.
+
+**Evidencia y mantenimiento:** se publica el subconjunto pequeño de la última
+corrida completa en `reports/ppa/<target>/sky130/`: manifiesto, métricas JSON,
+configuraciones OpenLane, SDC, logs de potencia y resúmenes STA por corner.
+`evidence.json` identifica la corrida de origen y los SHA256 de los archivos.
+Los VCD, netlists, SPEF, SDF, ODB y bibliotecas permanecen en `build/ppa/`.
+Una corrida completa con timing FAIL se publica con ese resultado; una falla de
+herramienta o evidencia incompleta no reemplaza la medición válida anterior.
+Las referencias FPGA se conservan junto a la evidencia ASIC.
 
 ## Condiciones para aprobar
 

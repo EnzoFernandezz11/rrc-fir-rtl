@@ -1,0 +1,2503 @@
+{
+  "scope": "solo las simulaciones y el reanálisis C04 de esta corrida",
+  "monitor_interval_s": 5,
+  "process_count": 132,
+  "aborted_process_count": 0,
+  "process_rss_is_not_summed": true,
+  "max_single_process_rss_kib": 523980,
+  "sum_child_elapsed_s": 2271.94,
+  "host_min_mem_available_bytes": 4830830592,
+  "host_min_swap_free_bytes": 1051652096,
+  "host_min_disk_free_bytes": 822775820288,
+  "scenarios": {
+    "target": {
+      "stages": {
+        "benchmark_vvp": {
+          "processes": 1,
+          "sum_child_elapsed_s": 40.98,
+          "max_single_process_elapsed_s": 40.98,
+          "max_single_process_rss_kib": 290876,
+          "min_host_mem_available_bytes": 5111746560,
+          "min_host_swap_free_bytes": 1051652096,
+          "min_disk_free_bytes": 825886363648,
+          "observed_swap_free_delta_bytes_range": [
+            1544192,
+            1544192
+          ]
+        },
+        "vcd_segmentation": {
+          "processes": 1,
+          "sum_child_elapsed_s": 37.64,
+          "max_single_process_elapsed_s": 37.64,
+          "max_single_process_rss_kib": 182416,
+          "min_host_mem_available_bytes": 5056094208,
+          "min_host_swap_free_bytes": 1058672640,
+          "min_disk_free_bytes": 824425308160,
+          "observed_swap_free_delta_bytes_range": [
+            3907584,
+            3907584
+          ]
+        },
+        "sta_power_segment": {
+          "processes": 64,
+          "sum_child_elapsed_s": 1061.51,
+          "max_single_process_elapsed_s": 16.96,
+          "max_single_process_rss_kib": 523920,
+          "min_host_mem_available_bytes": 4830830592,
+          "min_host_swap_free_bytes": 1052758016,
+          "min_disk_free_bytes": 824421621760,
+          "observed_swap_free_delta_bytes_range": [
+            -18370560,
+            427257856
+          ]
+        }
+      },
+      "raw_vcd": {
+        "path": "target/raw.vcd",
+        "size_bytes": 182571571,
+        "sha256": "732a106ad9666791d62b53e0f7b4f734045cd92f37e2cd4ff8895c9380b02b11"
+      },
+      "activity_segments": {
+        "count": 64,
+        "total_size_bytes": 1459860669,
+        "min_size_bytes": 22367693,
+        "max_size_bytes": 22960074,
+        "clock_period_ns": 10.0
+      }
+    },
+    "common": {
+      "stages": {
+        "benchmark_vvp": {
+          "processes": 1,
+          "sum_child_elapsed_s": 40.44,
+          "max_single_process_elapsed_s": 40.44,
+          "max_single_process_rss_kib": 290824,
+          "min_host_mem_available_bytes": 6028173312,
+          "min_host_swap_free_bytes": 1559601152,
+          "min_disk_free_bytes": 824239456256,
+          "observed_swap_free_delta_bytes_range": [
+            4829184,
+            4829184
+          ]
+        },
+        "vcd_segmentation": {
+          "processes": 1,
+          "sum_child_elapsed_s": 35.04,
+          "max_single_process_elapsed_s": 35.04,
+          "max_single_process_rss_kib": 182440,
+          "min_host_mem_available_bytes": 6076932096,
+          "min_host_swap_free_bytes": 1555824640,
+          "min_disk_free_bytes": 822778413056,
+          "observed_swap_free_delta_bytes_range": [
+            -8622080,
+            -8622080
+          ]
+        },
+        "sta_power_segment": {
+          "processes": 64,
+          "sum_child_elapsed_s": 1056.33,
+          "max_single_process_elapsed_s": 16.69,
+          "max_single_process_rss_kib": 523980,
+          "min_host_mem_available_bytes": 5840994304,
+          "min_host_swap_free_bytes": 1547943936,
+          "min_disk_free_bytes": 822775820288,
+          "observed_swap_free_delta_bytes_range": [
+            -5812224,
+            47575040
+          ]
+        }
+      },
+      "raw_vcd": {
+        "path": "common/raw.vcd",
+        "size_bytes": 182231371,
+        "sha256": "fbb2898e69ca4b21638710d41aa6e7d4f5e93157e49e98002d02d4375eb9bd42"
+      },
+      "activity_segments": {
+        "count": 64,
+        "total_size_bytes": 1459864818,
+        "min_size_bytes": 22367758,
+        "max_size_bytes": 22960140,
+        "clock_period_ns": 100.0
+      }
+    }
+  },
+  "processes": [
+    {
+      "resource_log": "target/benchmark.resource.txt",
+      "monitor_log": "target/benchmark.monitor.jsonl",
+      "command": "/usr/bin/vvp /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/gate.out +VECTORS=/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/ppa_vectors.txt +METRICS=/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/metrics.json +POWER_VCD=/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/raw.vcd +PERIOD_NS=10",
+      "elapsed_s": 40.98,
+      "max_rss_kib": 290876,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5111746560,
+      "host_min_swap_free_bytes": 1051652096,
+      "host_min_disk_free_bytes": 825886363648,
+      "observed_swap_free_delta_bytes": 1544192,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/raw.vcd": 182571571
+      },
+      "monitor_samples": 10,
+      "stage": "benchmark_vvp",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-000.resource.txt",
+      "monitor_log": "target/power-000.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-000.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 519284,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4874895360,
+      "host_min_swap_free_bytes": 1062649856,
+      "host_min_disk_free_bytes": 824425222144,
+      "observed_swap_free_delta_bytes": 237568,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-000.vcd": 22547659
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-001.resource.txt",
+      "monitor_log": "target/power-001.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-001.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 523272,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4890669056,
+      "host_min_swap_free_bytes": 1062965248,
+      "host_min_disk_free_bytes": 824425132032,
+      "observed_swap_free_delta_bytes": 413696,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-001.vcd": 22904389
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-002.resource.txt",
+      "monitor_log": "target/power-002.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-002.tcl",
+      "elapsed_s": 16.58,
+      "max_rss_kib": 522164,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4845604864,
+      "host_min_swap_free_bytes": 1064235008,
+      "host_min_disk_free_bytes": 824425107456,
+      "observed_swap_free_delta_bytes": 499712,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-002.vcd": 22791311
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-003.resource.txt",
+      "monitor_log": "target/power-003.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-003.tcl",
+      "elapsed_s": 16.6,
+      "max_rss_kib": 521876,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4848050176,
+      "host_min_swap_free_bytes": 1067077632,
+      "host_min_disk_free_bytes": 824425082880,
+      "observed_swap_free_delta_bytes": 516096,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-003.vcd": 22815318
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-004.resource.txt",
+      "monitor_log": "target/power-004.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-004.tcl",
+      "elapsed_s": 16.64,
+      "max_rss_kib": 522432,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4830830592,
+      "host_min_swap_free_bytes": 1067896832,
+      "host_min_disk_free_bytes": 824425058304,
+      "observed_swap_free_delta_bytes": 503808,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-004.vcd": 22803568
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-005.resource.txt",
+      "monitor_log": "target/power-005.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-005.tcl",
+      "elapsed_s": 16.47,
+      "max_rss_kib": 522456,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4831952896,
+      "host_min_swap_free_bytes": 1069289472,
+      "host_min_disk_free_bytes": 824424968192,
+      "observed_swap_free_delta_bytes": 176128,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-005.vcd": 22804543
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-006.resource.txt",
+      "monitor_log": "target/power-006.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-006.tcl",
+      "elapsed_s": 16.6,
+      "max_rss_kib": 522008,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4852834304,
+      "host_min_swap_free_bytes": 1069494272,
+      "host_min_disk_free_bytes": 824424927232,
+      "observed_swap_free_delta_bytes": 348160,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-006.vcd": 22821566
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-007.resource.txt",
+      "monitor_log": "target/power-007.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-007.tcl",
+      "elapsed_s": 16.77,
+      "max_rss_kib": 522340,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4857487360,
+      "host_min_swap_free_bytes": 1070370816,
+      "host_min_disk_free_bytes": 824424902656,
+      "observed_swap_free_delta_bytes": 909312,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-007.vcd": 22816271
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-008.resource.txt",
+      "monitor_log": "target/power-008.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-008.tcl",
+      "elapsed_s": 16.49,
+      "max_rss_kib": 522520,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4850827264,
+      "host_min_swap_free_bytes": 1073422336,
+      "host_min_disk_free_bytes": 824424878080,
+      "observed_swap_free_delta_bytes": 1355776,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-008.vcd": 22850531
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-009.resource.txt",
+      "monitor_log": "target/power-009.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-009.tcl",
+      "elapsed_s": 16.5,
+      "max_rss_kib": 522120,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4864045056,
+      "host_min_swap_free_bytes": 1074798592,
+      "host_min_disk_free_bytes": 824424853504,
+      "observed_swap_free_delta_bytes": 331776,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-009.vcd": 22774848
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-010.resource.txt",
+      "monitor_log": "target/power-010.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-010.tcl",
+      "elapsed_s": 16.64,
+      "max_rss_kib": 522104,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4834676736,
+      "host_min_swap_free_bytes": 1057157120,
+      "host_min_disk_free_bytes": 824424763392,
+      "observed_swap_free_delta_bytes": -18370560,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-010.vcd": 22799526
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-011.resource.txt",
+      "monitor_log": "target/power-011.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-011.tcl",
+      "elapsed_s": 16.57,
+      "max_rss_kib": 522736,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4963168256,
+      "host_min_swap_free_bytes": 1057308672,
+      "host_min_disk_free_bytes": 824424738816,
+      "observed_swap_free_delta_bytes": 192512,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-011.vcd": 22863010
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-012.resource.txt",
+      "monitor_log": "target/power-012.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-012.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522008,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4979490816,
+      "host_min_swap_free_bytes": 1057632256,
+      "host_min_disk_free_bytes": 824424710144,
+      "observed_swap_free_delta_bytes": 335872,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-012.vcd": 22810385
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-013.resource.txt",
+      "monitor_log": "target/power-013.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-013.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 522944,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4944949248,
+      "host_min_swap_free_bytes": 1058054144,
+      "host_min_disk_free_bytes": 824424685568,
+      "observed_swap_free_delta_bytes": 151552,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-013.vcd": 22876517
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-014.resource.txt",
+      "monitor_log": "target/power-014.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-014.tcl",
+      "elapsed_s": 16.5,
+      "max_rss_kib": 522120,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4959272960,
+      "host_min_swap_free_bytes": 1058254848,
+      "host_min_disk_free_bytes": 824424660992,
+      "observed_swap_free_delta_bytes": 118784,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-014.vcd": 22791528
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-015.resource.txt",
+      "monitor_log": "target/power-015.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-015.tcl",
+      "elapsed_s": 16.58,
+      "max_rss_kib": 522288,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4955078656,
+      "host_min_swap_free_bytes": 1058484224,
+      "host_min_disk_free_bytes": 824424570880,
+      "observed_swap_free_delta_bytes": 143360,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-015.vcd": 22800790
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-016.resource.txt",
+      "monitor_log": "target/power-016.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-016.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522500,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4963995648,
+      "host_min_swap_free_bytes": 1058643968,
+      "host_min_disk_free_bytes": 824424546304,
+      "observed_swap_free_delta_bytes": 221184,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-016.vcd": 22834581
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-017.resource.txt",
+      "monitor_log": "target/power-017.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-017.tcl",
+      "elapsed_s": 16.49,
+      "max_rss_kib": 522400,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4959330304,
+      "host_min_swap_free_bytes": 1058934784,
+      "host_min_disk_free_bytes": 824424517632,
+      "observed_swap_free_delta_bytes": 90112,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-017.vcd": 22818926
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-018.resource.txt",
+      "monitor_log": "target/power-018.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-018.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 523168,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4942753792,
+      "host_min_swap_free_bytes": 1059446784,
+      "host_min_disk_free_bytes": 824424493056,
+      "observed_swap_free_delta_bytes": 159744,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-018.vcd": 22922503
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-019.resource.txt",
+      "monitor_log": "target/power-019.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-019.tcl",
+      "elapsed_s": 16.57,
+      "max_rss_kib": 521512,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4947562496,
+      "host_min_swap_free_bytes": 1059610624,
+      "host_min_disk_free_bytes": 824424402944,
+      "observed_swap_free_delta_bytes": 2428928,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-019.vcd": 22744715
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-020.resource.txt",
+      "monitor_log": "target/power-020.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-020.tcl",
+      "elapsed_s": 16.47,
+      "max_rss_kib": 523224,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 4937719808,
+      "host_min_swap_free_bytes": 1062141952,
+      "host_min_disk_free_bytes": 824424378368,
+      "observed_swap_free_delta_bytes": 16384,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-020.vcd": 22885861
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-021.resource.txt",
+      "monitor_log": "target/power-021.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-021.tcl",
+      "elapsed_s": 16.64,
+      "max_rss_kib": 521972,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5012418560,
+      "host_min_swap_free_bytes": 1056235520,
+      "host_min_disk_free_bytes": 824424353792,
+      "observed_swap_free_delta_bytes": -7340032,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-021.vcd": 22790630
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-022.resource.txt",
+      "monitor_log": "target/power-022.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-022.tcl",
+      "elapsed_s": 16.67,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5172396032,
+      "host_min_swap_free_bytes": 1052758016,
+      "host_min_disk_free_bytes": 824424321024,
+      "observed_swap_free_delta_bytes": -3637248,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-022.vcd": 22793435
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-023.resource.txt",
+      "monitor_log": "target/power-023.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-023.tcl",
+      "elapsed_s": 16.96,
+      "max_rss_kib": 522468,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5112709120,
+      "host_min_swap_free_bytes": 1052954624,
+      "host_min_disk_free_bytes": 824424284160,
+      "observed_swap_free_delta_bytes": 393216,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-023.vcd": 22852245
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-024.resource.txt",
+      "monitor_log": "target/power-024.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-024.tcl",
+      "elapsed_s": 16.61,
+      "max_rss_kib": 521752,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5213831168,
+      "host_min_swap_free_bytes": 1055322112,
+      "host_min_disk_free_bytes": 824424194048,
+      "observed_swap_free_delta_bytes": 397312,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-024.vcd": 22767233
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-025.resource.txt",
+      "monitor_log": "target/power-025.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-025.tcl",
+      "elapsed_s": 16.63,
+      "max_rss_kib": 522680,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5217009664,
+      "host_min_swap_free_bytes": 1055784960,
+      "host_min_disk_free_bytes": 824424169472,
+      "observed_swap_free_delta_bytes": 188416,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-025.vcd": 22853922
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-026.resource.txt",
+      "monitor_log": "target/power-026.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-026.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522152,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5217546240,
+      "host_min_swap_free_bytes": 1056026624,
+      "host_min_disk_free_bytes": 824424144896,
+      "observed_swap_free_delta_bytes": 335872,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-026.vcd": 22785994
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-027.resource.txt",
+      "monitor_log": "target/power-027.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-027.tcl",
+      "elapsed_s": 16.72,
+      "max_rss_kib": 522072,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5198319616,
+      "host_min_swap_free_bytes": 1056587776,
+      "host_min_disk_free_bytes": 824424112128,
+      "observed_swap_free_delta_bytes": 339968,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-027.vcd": 22797926
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-028.resource.txt",
+      "monitor_log": "target/power-028.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-028.tcl",
+      "elapsed_s": 16.6,
+      "max_rss_kib": 522616,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5206884352,
+      "host_min_swap_free_bytes": 1056985088,
+      "host_min_disk_free_bytes": 824424083456,
+      "observed_swap_free_delta_bytes": 118784,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-028.vcd": 22855532
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-029.resource.txt",
+      "monitor_log": "target/power-029.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-029.tcl",
+      "elapsed_s": 16.68,
+      "max_rss_kib": 522132,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5213880320,
+      "host_min_swap_free_bytes": 1062371328,
+      "host_min_disk_free_bytes": 824423993344,
+      "observed_swap_free_delta_bytes": 77824,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-029.vcd": 22783989
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-030.resource.txt",
+      "monitor_log": "target/power-030.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-030.tcl",
+      "elapsed_s": 16.6,
+      "max_rss_kib": 522848,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5214957568,
+      "host_min_swap_free_bytes": 1062481920,
+      "host_min_disk_free_bytes": 824423968768,
+      "observed_swap_free_delta_bytes": 49152,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-030.vcd": 22876264
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-031.resource.txt",
+      "monitor_log": "target/power-031.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-031.tcl",
+      "elapsed_s": 16.68,
+      "max_rss_kib": 522256,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5199986688,
+      "host_min_swap_free_bytes": 1062555648,
+      "host_min_disk_free_bytes": 824423944192,
+      "observed_swap_free_delta_bytes": 442368,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-031.vcd": 22799897
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-032.resource.txt",
+      "monitor_log": "target/power-032.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-032.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 521364,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5209464832,
+      "host_min_swap_free_bytes": 1063051264,
+      "host_min_disk_free_bytes": 824423919616,
+      "observed_swap_free_delta_bytes": 4837376,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-032.vcd": 22725200
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-033.resource.txt",
+      "monitor_log": "target/power-033.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-033.tcl",
+      "elapsed_s": 16.59,
+      "max_rss_kib": 522568,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5212172288,
+      "host_min_swap_free_bytes": 1067905024,
+      "host_min_disk_free_bytes": 824423890944,
+      "observed_swap_free_delta_bytes": 151552,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-033.vcd": 22853719
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-034.resource.txt",
+      "monitor_log": "target/power-034.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-034.tcl",
+      "elapsed_s": 16.51,
+      "max_rss_kib": 520756,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5196242944,
+      "host_min_swap_free_bytes": 1068077056,
+      "host_min_disk_free_bytes": 824423800832,
+      "observed_swap_free_delta_bytes": 40960,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-034.vcd": 22685567
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-035.resource.txt",
+      "monitor_log": "target/power-035.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-035.tcl",
+      "elapsed_s": 16.61,
+      "max_rss_kib": 522664,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5210226688,
+      "host_min_swap_free_bytes": 1068146688,
+      "host_min_disk_free_bytes": 824423776256,
+      "observed_swap_free_delta_bytes": 155648,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-035.vcd": 22876048
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-036.resource.txt",
+      "monitor_log": "target/power-036.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-036.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522464,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5194125312,
+      "host_min_swap_free_bytes": 1068318720,
+      "host_min_disk_free_bytes": 824423751680,
+      "observed_swap_free_delta_bytes": 57344,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-036.vcd": 22820024
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-037.resource.txt",
+      "monitor_log": "target/power-037.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-037.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 522716,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5202644992,
+      "host_min_swap_free_bytes": 1068617728,
+      "host_min_disk_free_bytes": 824423727104,
+      "observed_swap_free_delta_bytes": 159744,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-037.vcd": 22812844
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-038.resource.txt",
+      "monitor_log": "target/power-038.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-038.tcl",
+      "elapsed_s": 16.75,
+      "max_rss_kib": 522800,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5190012928,
+      "host_min_swap_free_bytes": 1068875776,
+      "host_min_disk_free_bytes": 824423636992,
+      "observed_swap_free_delta_bytes": 217088,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-038.vcd": 22871386
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-039.resource.txt",
+      "monitor_log": "target/power-039.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-039.tcl",
+      "elapsed_s": 16.86,
+      "max_rss_kib": 522256,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5125529600,
+      "host_min_swap_free_bytes": 1101836288,
+      "host_min_disk_free_bytes": 824423608320,
+      "observed_swap_free_delta_bytes": 7553024,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-039.vcd": 22791351
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-040.resource.txt",
+      "monitor_log": "target/power-040.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-040.tcl",
+      "elapsed_s": 16.86,
+      "max_rss_kib": 523416,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5316112384,
+      "host_min_swap_free_bytes": 1109413888,
+      "host_min_disk_free_bytes": 824423583744,
+      "observed_swap_free_delta_bytes": 427257856,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-040.vcd": 22923625
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-041.resource.txt",
+      "monitor_log": "target/power-041.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-041.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522372,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5818675200,
+      "host_min_swap_free_bytes": 1540993024,
+      "host_min_disk_free_bytes": 824423559168,
+      "observed_swap_free_delta_bytes": 3932160,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-041.vcd": 22816916
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-042.resource.txt",
+      "monitor_log": "target/power-042.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-042.tcl",
+      "elapsed_s": 16.62,
+      "max_rss_kib": 522280,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5860278272,
+      "host_min_swap_free_bytes": 1545244672,
+      "host_min_disk_free_bytes": 824423534592,
+      "observed_swap_free_delta_bytes": 147456,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-042.vcd": 22790889
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-043.resource.txt",
+      "monitor_log": "target/power-043.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-043.tcl",
+      "elapsed_s": 16.63,
+      "max_rss_kib": 522336,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5869211648,
+      "host_min_swap_free_bytes": 1545437184,
+      "host_min_disk_free_bytes": 824423444480,
+      "observed_swap_free_delta_bytes": 323584,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-043.vcd": 22837315
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-044.resource.txt",
+      "monitor_log": "target/power-044.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-044.tcl",
+      "elapsed_s": 16.59,
+      "max_rss_kib": 522576,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5858361344,
+      "host_min_swap_free_bytes": 1545768960,
+      "host_min_disk_free_bytes": 824423415808,
+      "observed_swap_free_delta_bytes": 73728,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-044.vcd": 22809815
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-045.resource.txt",
+      "monitor_log": "target/power-045.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-045.tcl",
+      "elapsed_s": 16.86,
+      "max_rss_kib": 522944,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5796134912,
+      "host_min_swap_free_bytes": 1546526720,
+      "host_min_disk_free_bytes": 824423391232,
+      "observed_swap_free_delta_bytes": 2248704,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-045.vcd": 22884943
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-046.resource.txt",
+      "monitor_log": "target/power-046.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-046.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522236,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5834539008,
+      "host_min_swap_free_bytes": 1548926976,
+      "host_min_disk_free_bytes": 824423366656,
+      "observed_swap_free_delta_bytes": 520192,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-046.vcd": 22786242
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-047.resource.txt",
+      "monitor_log": "target/power-047.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-047.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522308,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5831700480,
+      "host_min_swap_free_bytes": 1549500416,
+      "host_min_disk_free_bytes": 824422289408,
+      "observed_swap_free_delta_bytes": 94208,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-047.vcd": 22824056
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-048.resource.txt",
+      "monitor_log": "target/power-048.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-048.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 521388,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5826560000,
+      "host_min_swap_free_bytes": 1549701120,
+      "host_min_disk_free_bytes": 824422199296,
+      "observed_swap_free_delta_bytes": 151552,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-048.vcd": 22733348
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-049.resource.txt",
+      "monitor_log": "target/power-049.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-049.tcl",
+      "elapsed_s": 16.51,
+      "max_rss_kib": 521332,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5853220864,
+      "host_min_swap_free_bytes": 1549869056,
+      "host_min_disk_free_bytes": 824422174720,
+      "observed_swap_free_delta_bytes": 221184,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-049.vcd": 22718078
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-050.resource.txt",
+      "monitor_log": "target/power-050.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-050.tcl",
+      "elapsed_s": 16.52,
+      "max_rss_kib": 522912,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5876379648,
+      "host_min_swap_free_bytes": 1550139392,
+      "host_min_disk_free_bytes": 824422146048,
+      "observed_swap_free_delta_bytes": 270336,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-050.vcd": 22903787
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-051.resource.txt",
+      "monitor_log": "target/power-051.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-051.tcl",
+      "elapsed_s": 16.59,
+      "max_rss_kib": 522292,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5834211328,
+      "host_min_swap_free_bytes": 1550417920,
+      "host_min_disk_free_bytes": 824422121472,
+      "observed_swap_free_delta_bytes": 196608,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-051.vcd": 22810496
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-052.resource.txt",
+      "monitor_log": "target/power-052.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-052.tcl",
+      "elapsed_s": 16.5,
+      "max_rss_kib": 522636,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5844762624,
+      "host_min_swap_free_bytes": 1550618624,
+      "host_min_disk_free_bytes": 824422096896,
+      "observed_swap_free_delta_bytes": 200704,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-052.vcd": 22856939
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-053.resource.txt",
+      "monitor_log": "target/power-053.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-053.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522004,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5838581760,
+      "host_min_swap_free_bytes": 1550831616,
+      "host_min_disk_free_bytes": 824422006784,
+      "observed_swap_free_delta_bytes": 266240,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-053.vcd": 22790561
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-054.resource.txt",
+      "monitor_log": "target/power-054.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-054.tcl",
+      "elapsed_s": 16.51,
+      "max_rss_kib": 522392,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5837123584,
+      "host_min_swap_free_bytes": 1551101952,
+      "host_min_disk_free_bytes": 824421982208,
+      "observed_swap_free_delta_bytes": 86016,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-054.vcd": 22800246
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-055.resource.txt",
+      "monitor_log": "target/power-055.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-055.tcl",
+      "elapsed_s": 16.49,
+      "max_rss_kib": 522476,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5843533824,
+      "host_min_swap_free_bytes": 1551273984,
+      "host_min_disk_free_bytes": 824421953536,
+      "observed_swap_free_delta_bytes": 569344,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-055.vcd": 22839582
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-056.resource.txt",
+      "monitor_log": "target/power-056.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-056.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522412,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5833310208,
+      "host_min_swap_free_bytes": 1551925248,
+      "host_min_disk_free_bytes": 824421928960,
+      "observed_swap_free_delta_bytes": 49152,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-056.vcd": 22806612
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-057.resource.txt",
+      "monitor_log": "target/power-057.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-057.tcl",
+      "elapsed_s": 16.51,
+      "max_rss_kib": 523920,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5843156992,
+      "host_min_swap_free_bytes": 1552007168,
+      "host_min_disk_free_bytes": 824421838848,
+      "observed_swap_free_delta_bytes": 245760,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-057.vcd": 22960074
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-058.resource.txt",
+      "monitor_log": "target/power-058.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-058.tcl",
+      "elapsed_s": 16.59,
+      "max_rss_kib": 522120,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5848940544,
+      "host_min_swap_free_bytes": 1552404480,
+      "host_min_disk_free_bytes": 824421814272,
+      "observed_swap_free_delta_bytes": 77824,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-058.vcd": 22796931
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-059.resource.txt",
+      "monitor_log": "target/power-059.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-059.tcl",
+      "elapsed_s": 16.58,
+      "max_rss_kib": 522248,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5856714752,
+      "host_min_swap_free_bytes": 1554149376,
+      "host_min_disk_free_bytes": 824421789696,
+      "observed_swap_free_delta_bytes": 425984,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-059.vcd": 22806692
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-060.resource.txt",
+      "monitor_log": "target/power-060.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-060.tcl",
+      "elapsed_s": 16.57,
+      "max_rss_kib": 522796,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5851164672,
+      "host_min_swap_free_bytes": 1554608128,
+      "host_min_disk_free_bytes": 824421765120,
+      "observed_swap_free_delta_bytes": 163840,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-060.vcd": 22877387
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-061.resource.txt",
+      "monitor_log": "target/power-061.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-061.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 522448,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5851090944,
+      "host_min_swap_free_bytes": 1554776064,
+      "host_min_disk_free_bytes": 824421736448,
+      "observed_swap_free_delta_bytes": 999424,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-061.vcd": 22808911
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-062.resource.txt",
+      "monitor_log": "target/power-062.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-062.tcl",
+      "elapsed_s": 16.63,
+      "max_rss_kib": 522380,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5828767744,
+      "host_min_swap_free_bytes": 1555795968,
+      "host_min_disk_free_bytes": 824421646336,
+      "observed_swap_free_delta_bytes": 3489792,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-062.vcd": 22837979
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/power-063.resource.txt",
+      "monitor_log": "target/power-063.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/power-063.tcl",
+      "elapsed_s": 16.37,
+      "max_rss_kib": 516476,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5784768512,
+      "host_min_swap_free_bytes": 1559490560,
+      "host_min_disk_free_bytes": 824421621760,
+      "observed_swap_free_delta_bytes": 73728,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments/activity-063.vcd": 22367693
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "target/segment.resource.txt",
+      "monitor_log": "target/segment.monitor.jsonl",
+      "command": "/usr/bin/python3 /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/environment/resume_c04.py --split /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/raw.vcd /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/activity-segments 100.0 20740.0 tb_fir_frequency_optimized_ppa/dut 10 64",
+      "elapsed_s": 37.64,
+      "max_rss_kib": 182416,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5056094208,
+      "host_min_swap_free_bytes": 1058672640,
+      "host_min_disk_free_bytes": 824425308160,
+      "observed_swap_free_delta_bytes": 3907584,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/raw.vcd": 182571571
+      },
+      "monitor_samples": 9,
+      "stage": "vcd_segmentation",
+      "scenario": "target"
+    },
+    {
+      "resource_log": "common/benchmark.resource.txt",
+      "monitor_log": "common/benchmark.monitor.jsonl",
+      "command": "/usr/bin/vvp /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/gate.out +VECTORS=/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/ppa_vectors.txt +METRICS=/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/metrics.json +POWER_VCD=/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/raw.vcd +PERIOD_NS=100.0",
+      "elapsed_s": 40.44,
+      "max_rss_kib": 290824,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6028173312,
+      "host_min_swap_free_bytes": 1559601152,
+      "host_min_disk_free_bytes": 824239456256,
+      "observed_swap_free_delta_bytes": 4829184,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/raw.vcd": 182231371
+      },
+      "monitor_samples": 10,
+      "stage": "benchmark_vvp",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-000.resource.txt",
+      "monitor_log": "common/power-000.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-000.tcl",
+      "elapsed_s": 16.43,
+      "max_rss_kib": 518848,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6050631680,
+      "host_min_swap_free_bytes": 1550217216,
+      "host_min_disk_free_bytes": 822778327040,
+      "observed_swap_free_delta_bytes": -5812224,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-000.vcd": 22547723
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-001.resource.txt",
+      "monitor_log": "common/power-001.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-001.tcl",
+      "elapsed_s": 16.63,
+      "max_rss_kib": 523304,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6036951040,
+      "host_min_swap_free_bytes": 1550282752,
+      "host_min_disk_free_bytes": 822778236928,
+      "observed_swap_free_delta_bytes": 110592,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-001.vcd": 22904455
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-002.resource.txt",
+      "monitor_log": "common/power-002.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-002.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522104,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6008627200,
+      "host_min_swap_free_bytes": 1547943936,
+      "host_min_disk_free_bytes": 822778212352,
+      "observed_swap_free_delta_bytes": -2560000,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-002.vcd": 22791375
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-003.resource.txt",
+      "monitor_log": "common/power-003.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-003.tcl",
+      "elapsed_s": 16.52,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6065975296,
+      "host_min_swap_free_bytes": 1548054528,
+      "host_min_disk_free_bytes": 822778187776,
+      "observed_swap_free_delta_bytes": 49152,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-003.vcd": 22815384
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-004.resource.txt",
+      "monitor_log": "common/power-004.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-004.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522304,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6077595648,
+      "host_min_swap_free_bytes": 1548120064,
+      "host_min_disk_free_bytes": 822778163200,
+      "observed_swap_free_delta_bytes": 237568,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-004.vcd": 22803632
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-005.resource.txt",
+      "monitor_log": "common/power-005.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-005.tcl",
+      "elapsed_s": 16.69,
+      "max_rss_kib": 522096,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6036557824,
+      "host_min_swap_free_bytes": 1548414976,
+      "host_min_disk_free_bytes": 822778081280,
+      "observed_swap_free_delta_bytes": 401408,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-005.vcd": 22804607
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-006.resource.txt",
+      "monitor_log": "common/power-006.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-006.tcl",
+      "elapsed_s": 16.51,
+      "max_rss_kib": 522080,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6109544448,
+      "host_min_swap_free_bytes": 1548824576,
+      "host_min_disk_free_bytes": 822778056704,
+      "observed_swap_free_delta_bytes": 237568,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-006.vcd": 22821632
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-007.resource.txt",
+      "monitor_log": "common/power-007.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-007.tcl",
+      "elapsed_s": 16.53,
+      "max_rss_kib": 522596,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6077796352,
+      "host_min_swap_free_bytes": 1549107200,
+      "host_min_disk_free_bytes": 822778032128,
+      "observed_swap_free_delta_bytes": 172032,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-007.vcd": 22816335
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-008.resource.txt",
+      "monitor_log": "common/power-008.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-008.tcl",
+      "elapsed_s": 16.46,
+      "max_rss_kib": 522604,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6080012288,
+      "host_min_swap_free_bytes": 1549291520,
+      "host_min_disk_free_bytes": 822778007552,
+      "observed_swap_free_delta_bytes": 319488,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-008.vcd": 22850597
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-009.resource.txt",
+      "monitor_log": "common/power-009.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-009.tcl",
+      "elapsed_s": 16.43,
+      "max_rss_kib": 521808,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6035120128,
+      "host_min_swap_free_bytes": 1549737984,
+      "host_min_disk_free_bytes": 822777982976,
+      "observed_swap_free_delta_bytes": 364544,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-009.vcd": 22774912
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-010.resource.txt",
+      "monitor_log": "common/power-010.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-010.tcl",
+      "elapsed_s": 16.42,
+      "max_rss_kib": 522244,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6057951232,
+      "host_min_swap_free_bytes": 1550131200,
+      "host_min_disk_free_bytes": 822777892864,
+      "observed_swap_free_delta_bytes": 65536,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-010.vcd": 22799590
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-011.resource.txt",
+      "monitor_log": "common/power-011.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-011.tcl",
+      "elapsed_s": 16.53,
+      "max_rss_kib": 522808,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6019387392,
+      "host_min_swap_free_bytes": 1550462976,
+      "host_min_disk_free_bytes": 822777868288,
+      "observed_swap_free_delta_bytes": 1384448,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-011.vcd": 22863076
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-012.resource.txt",
+      "monitor_log": "common/power-012.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-012.tcl",
+      "elapsed_s": 16.42,
+      "max_rss_kib": 522252,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6054604800,
+      "host_min_swap_free_bytes": 1551945728,
+      "host_min_disk_free_bytes": 822777839616,
+      "observed_swap_free_delta_bytes": 73728,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-012.vcd": 22810449
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-013.resource.txt",
+      "monitor_log": "common/power-013.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-013.tcl",
+      "elapsed_s": 16.46,
+      "max_rss_kib": 522828,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6054633472,
+      "host_min_swap_free_bytes": 1553821696,
+      "host_min_disk_free_bytes": 822777815040,
+      "observed_swap_free_delta_bytes": 2940928,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-013.vcd": 22876583
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-014.resource.txt",
+      "monitor_log": "common/power-014.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-014.tcl",
+      "elapsed_s": 16.53,
+      "max_rss_kib": 522040,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6090768384,
+      "host_min_swap_free_bytes": 1556795392,
+      "host_min_disk_free_bytes": 822777790464,
+      "observed_swap_free_delta_bytes": 94208,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-014.vcd": 22791592
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-015.resource.txt",
+      "monitor_log": "common/power-015.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-015.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 522292,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6071447552,
+      "host_min_swap_free_bytes": 1560420352,
+      "host_min_disk_free_bytes": 822777700352,
+      "observed_swap_free_delta_bytes": 782336,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-015.vcd": 22800854
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-016.resource.txt",
+      "monitor_log": "common/power-016.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-016.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6032990208,
+      "host_min_swap_free_bytes": 1561214976,
+      "host_min_disk_free_bytes": 822777675776,
+      "observed_swap_free_delta_bytes": 47575040,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-016.vcd": 22834647
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-017.resource.txt",
+      "monitor_log": "common/power-017.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-017.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 522456,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5961199616,
+      "host_min_swap_free_bytes": 1646080000,
+      "host_min_disk_free_bytes": 822777647104,
+      "observed_swap_free_delta_bytes": -675840,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-017.vcd": 22818990
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-018.resource.txt",
+      "monitor_log": "common/power-018.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-018.tcl",
+      "elapsed_s": 16.49,
+      "max_rss_kib": 523284,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5966630912,
+      "host_min_swap_free_bytes": 1646243840,
+      "host_min_disk_free_bytes": 822777622528,
+      "observed_swap_free_delta_bytes": 45056,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-018.vcd": 22922569
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-019.resource.txt",
+      "monitor_log": "common/power-019.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-019.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 521332,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6035980288,
+      "host_min_swap_free_bytes": 1646292992,
+      "host_min_disk_free_bytes": 822777532416,
+      "observed_swap_free_delta_bytes": 126976,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-019.vcd": 22744779
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-020.resource.txt",
+      "monitor_log": "common/power-020.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-020.tcl",
+      "elapsed_s": 16.53,
+      "max_rss_kib": 523144,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6011314176,
+      "host_min_swap_free_bytes": 1646505984,
+      "host_min_disk_free_bytes": 822777507840,
+      "observed_swap_free_delta_bytes": 192512,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-020.vcd": 22885927
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-021.resource.txt",
+      "monitor_log": "common/power-021.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-021.tcl",
+      "elapsed_s": 16.42,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6001266688,
+      "host_min_swap_free_bytes": 1646780416,
+      "host_min_disk_free_bytes": 822777483264,
+      "observed_swap_free_delta_bytes": 28672,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-021.vcd": 22790694
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-022.resource.txt",
+      "monitor_log": "common/power-022.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-022.tcl",
+      "elapsed_s": 16.43,
+      "max_rss_kib": 522264,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6004125696,
+      "host_min_swap_free_bytes": 1646907392,
+      "host_min_disk_free_bytes": 822777450496,
+      "observed_swap_free_delta_bytes": 20480,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-022.vcd": 22793499
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-023.resource.txt",
+      "monitor_log": "common/power-023.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-023.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 522576,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5998018560,
+      "host_min_swap_free_bytes": 1647091712,
+      "host_min_disk_free_bytes": 822777425920,
+      "observed_swap_free_delta_bytes": 69632,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-023.vcd": 22852311
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-024.resource.txt",
+      "monitor_log": "common/power-024.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-024.tcl",
+      "elapsed_s": 16.69,
+      "max_rss_kib": 521776,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5964218368,
+      "host_min_swap_free_bytes": 1647202304,
+      "host_min_disk_free_bytes": 822777335808,
+      "observed_swap_free_delta_bytes": 999424,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-024.vcd": 22767297
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-025.resource.txt",
+      "monitor_log": "common/power-025.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-025.tcl",
+      "elapsed_s": 16.63,
+      "max_rss_kib": 522472,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5840994304,
+      "host_min_swap_free_bytes": 1647349760,
+      "host_min_disk_free_bytes": 822777311232,
+      "observed_swap_free_delta_bytes": -888832,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-025.vcd": 22853988
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-026.resource.txt",
+      "monitor_log": "common/power-026.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-026.tcl",
+      "elapsed_s": 16.59,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5938855936,
+      "host_min_swap_free_bytes": 1647370240,
+      "host_min_disk_free_bytes": 822777286656,
+      "observed_swap_free_delta_bytes": 61440,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-026.vcd": 22786058
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-027.resource.txt",
+      "monitor_log": "common/power-027.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-027.tcl",
+      "elapsed_s": 16.6,
+      "max_rss_kib": 521968,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5965029376,
+      "host_min_swap_free_bytes": 1647460352,
+      "host_min_disk_free_bytes": 822777262080,
+      "observed_swap_free_delta_bytes": 176128,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-027.vcd": 22797990
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-028.resource.txt",
+      "monitor_log": "common/power-028.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-028.tcl",
+      "elapsed_s": 16.57,
+      "max_rss_kib": 522516,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5960794112,
+      "host_min_swap_free_bytes": 1647693824,
+      "host_min_disk_free_bytes": 822777229312,
+      "observed_swap_free_delta_bytes": 225280,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-028.vcd": 22855598
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-029.resource.txt",
+      "monitor_log": "common/power-029.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-029.tcl",
+      "elapsed_s": 16.64,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5964914688,
+      "host_min_swap_free_bytes": 1648029696,
+      "host_min_disk_free_bytes": 822777139200,
+      "observed_swap_free_delta_bytes": 208896,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-029.vcd": 22784053
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-030.resource.txt",
+      "monitor_log": "common/power-030.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-030.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 522876,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5987110912,
+      "host_min_swap_free_bytes": 1648242688,
+      "host_min_disk_free_bytes": 822777114624,
+      "observed_swap_free_delta_bytes": 348160,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-030.vcd": 22876330
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-031.resource.txt",
+      "monitor_log": "common/power-031.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-031.tcl",
+      "elapsed_s": 16.44,
+      "max_rss_kib": 522324,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5990608896,
+      "host_min_swap_free_bytes": 1648611328,
+      "host_min_disk_free_bytes": 822777090048,
+      "observed_swap_free_delta_bytes": 65536,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-031.vcd": 22799961
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-032.resource.txt",
+      "monitor_log": "common/power-032.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-032.tcl",
+      "elapsed_s": 16.49,
+      "max_rss_kib": 521240,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5969391616,
+      "host_min_swap_free_bytes": 1648717824,
+      "host_min_disk_free_bytes": 822777065472,
+      "observed_swap_free_delta_bytes": 184320,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-032.vcd": 22725264
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-033.resource.txt",
+      "monitor_log": "common/power-033.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-033.tcl",
+      "elapsed_s": 16.44,
+      "max_rss_kib": 522604,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5989363712,
+      "host_min_swap_free_bytes": 1648951296,
+      "host_min_disk_free_bytes": 822777036800,
+      "observed_swap_free_delta_bytes": 118784,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-033.vcd": 22853785
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-034.resource.txt",
+      "monitor_log": "common/power-034.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-034.tcl",
+      "elapsed_s": 16.5,
+      "max_rss_kib": 520460,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6012055552,
+      "host_min_swap_free_bytes": 1649098752,
+      "host_min_disk_free_bytes": 822776946688,
+      "observed_swap_free_delta_bytes": 53248,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-034.vcd": 22685631
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-035.resource.txt",
+      "monitor_log": "common/power-035.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-035.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 522712,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5995216896,
+      "host_min_swap_free_bytes": 1649307648,
+      "host_min_disk_free_bytes": 822776922112,
+      "observed_swap_free_delta_bytes": 249856,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-035.vcd": 22876114
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-036.resource.txt",
+      "monitor_log": "common/power-036.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-036.tcl",
+      "elapsed_s": 16.45,
+      "max_rss_kib": 522432,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5977284608,
+      "host_min_swap_free_bytes": 1649561600,
+      "host_min_disk_free_bytes": 822776897536,
+      "observed_swap_free_delta_bytes": 114688,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-036.vcd": 22820088
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-037.resource.txt",
+      "monitor_log": "common/power-037.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-037.tcl",
+      "elapsed_s": 16.38,
+      "max_rss_kib": 522508,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5995884544,
+      "host_min_swap_free_bytes": 1649680384,
+      "host_min_disk_free_bytes": 822776872960,
+      "observed_swap_free_delta_bytes": 36864,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-037.vcd": 22812908
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-038.resource.txt",
+      "monitor_log": "common/power-038.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-038.tcl",
+      "elapsed_s": 16.58,
+      "max_rss_kib": 522776,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5987577856,
+      "host_min_swap_free_bytes": 1649737728,
+      "host_min_disk_free_bytes": 822776782848,
+      "observed_swap_free_delta_bytes": 225280,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-038.vcd": 22871452
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-039.resource.txt",
+      "monitor_log": "common/power-039.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-039.tcl",
+      "elapsed_s": 16.43,
+      "max_rss_kib": 522172,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5989773312,
+      "host_min_swap_free_bytes": 1649967104,
+      "host_min_disk_free_bytes": 822776754176,
+      "observed_swap_free_delta_bytes": 16384,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-039.vcd": 22791415
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-040.resource.txt",
+      "monitor_log": "common/power-040.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-040.tcl",
+      "elapsed_s": 16.48,
+      "max_rss_kib": 523344,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5969862656,
+      "host_min_swap_free_bytes": 1649991680,
+      "host_min_disk_free_bytes": 822776729600,
+      "observed_swap_free_delta_bytes": 139264,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-040.vcd": 22923691
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-041.resource.txt",
+      "monitor_log": "common/power-041.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-041.tcl",
+      "elapsed_s": 16.39,
+      "max_rss_kib": 522428,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5989494784,
+      "host_min_swap_free_bytes": 1650155520,
+      "host_min_disk_free_bytes": 822776705024,
+      "observed_swap_free_delta_bytes": 36864,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-041.vcd": 22816980
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-042.resource.txt",
+      "monitor_log": "common/power-042.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-042.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522216,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5984681984,
+      "host_min_swap_free_bytes": 1650233344,
+      "host_min_disk_free_bytes": 822776680448,
+      "observed_swap_free_delta_bytes": 180224,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-042.vcd": 22790953
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-043.resource.txt",
+      "monitor_log": "common/power-043.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-043.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 522404,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5964345344,
+      "host_min_swap_free_bytes": 1650421760,
+      "host_min_disk_free_bytes": 822776590336,
+      "observed_swap_free_delta_bytes": 12288,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-043.vcd": 22837381
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-044.resource.txt",
+      "monitor_log": "common/power-044.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-044.tcl",
+      "elapsed_s": 16.47,
+      "max_rss_kib": 522336,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5992280064,
+      "host_min_swap_free_bytes": 1650434048,
+      "host_min_disk_free_bytes": 822776561664,
+      "observed_swap_free_delta_bytes": 229376,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-044.vcd": 22809879
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-045.resource.txt",
+      "monitor_log": "common/power-045.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-045.tcl",
+      "elapsed_s": 16.47,
+      "max_rss_kib": 523044,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5979766784,
+      "host_min_swap_free_bytes": 1650728960,
+      "host_min_disk_free_bytes": 822776537088,
+      "observed_swap_free_delta_bytes": 69632,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-045.vcd": 22885009
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-046.resource.txt",
+      "monitor_log": "common/power-046.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-046.tcl",
+      "elapsed_s": 16.43,
+      "max_rss_kib": 522124,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5988892672,
+      "host_min_swap_free_bytes": 1650802688,
+      "host_min_disk_free_bytes": 822776512512,
+      "observed_swap_free_delta_bytes": 40960,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-046.vcd": 22786306
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-047.resource.txt",
+      "monitor_log": "common/power-047.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-047.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 522228,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6025170944,
+      "host_min_swap_free_bytes": 1650913280,
+      "host_min_disk_free_bytes": 822776487936,
+      "observed_swap_free_delta_bytes": 16384,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-047.vcd": 22824122
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-048.resource.txt",
+      "monitor_log": "common/power-048.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-048.tcl",
+      "elapsed_s": 16.45,
+      "max_rss_kib": 521544,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6007283712,
+      "host_min_swap_free_bytes": 1650929664,
+      "host_min_disk_free_bytes": 822776397824,
+      "observed_swap_free_delta_bytes": 290816,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-048.vcd": 22733412
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-049.resource.txt",
+      "monitor_log": "common/power-049.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-049.tcl",
+      "elapsed_s": 16.55,
+      "max_rss_kib": 521176,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5982994432,
+      "host_min_swap_free_bytes": 1651339264,
+      "host_min_disk_free_bytes": 822776373248,
+      "observed_swap_free_delta_bytes": 0,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-049.vcd": 22718142
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-050.resource.txt",
+      "monitor_log": "common/power-050.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-050.tcl",
+      "elapsed_s": 16.5,
+      "max_rss_kib": 523120,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5989933056,
+      "host_min_swap_free_bytes": 1651359744,
+      "host_min_disk_free_bytes": 822776344576,
+      "observed_swap_free_delta_bytes": 8192,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-050.vcd": 22903853
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-051.resource.txt",
+      "monitor_log": "common/power-051.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-051.tcl",
+      "elapsed_s": 16.58,
+      "max_rss_kib": 522436,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5980626944,
+      "host_min_swap_free_bytes": 1651650560,
+      "host_min_disk_free_bytes": 822776320000,
+      "observed_swap_free_delta_bytes": 1499136,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-051.vcd": 22810560
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-052.resource.txt",
+      "monitor_log": "common/power-052.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-052.tcl",
+      "elapsed_s": 16.39,
+      "max_rss_kib": 522728,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5981237248,
+      "host_min_swap_free_bytes": 1653358592,
+      "host_min_disk_free_bytes": 822776295424,
+      "observed_swap_free_delta_bytes": 0,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-052.vcd": 22857005
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-053.resource.txt",
+      "monitor_log": "common/power-053.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-053.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 521972,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5912965120,
+      "host_min_swap_free_bytes": 1653391360,
+      "host_min_disk_free_bytes": 822776205312,
+      "observed_swap_free_delta_bytes": 73728,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-053.vcd": 22790625
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-054.resource.txt",
+      "monitor_log": "common/power-054.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-054.tcl",
+      "elapsed_s": 16.46,
+      "max_rss_kib": 522444,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5978562560,
+      "host_min_swap_free_bytes": 1653465088,
+      "host_min_disk_free_bytes": 822776180736,
+      "observed_swap_free_delta_bytes": 8192,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-054.vcd": 22800310
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-055.resource.txt",
+      "monitor_log": "common/power-055.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-055.tcl",
+      "elapsed_s": 16.58,
+      "max_rss_kib": 522488,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5967622144,
+      "host_min_swap_free_bytes": 1653522432,
+      "host_min_disk_free_bytes": 822776152064,
+      "observed_swap_free_delta_bytes": 98304,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-055.vcd": 22839648
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-056.resource.txt",
+      "monitor_log": "common/power-056.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-056.tcl",
+      "elapsed_s": 16.44,
+      "max_rss_kib": 522000,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5983330304,
+      "host_min_swap_free_bytes": 1653633024,
+      "host_min_disk_free_bytes": 822776127488,
+      "observed_swap_free_delta_bytes": 20480,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-056.vcd": 22806676
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-057.resource.txt",
+      "monitor_log": "common/power-057.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-057.tcl",
+      "elapsed_s": 16.54,
+      "max_rss_kib": 523980,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5970616320,
+      "host_min_swap_free_bytes": 1653657600,
+      "host_min_disk_free_bytes": 822776037376,
+      "observed_swap_free_delta_bytes": 172032,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-057.vcd": 22960140
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-058.resource.txt",
+      "monitor_log": "common/power-058.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-058.tcl",
+      "elapsed_s": 16.42,
+      "max_rss_kib": 522212,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6019538944,
+      "host_min_swap_free_bytes": 1653833728,
+      "host_min_disk_free_bytes": 822776012800,
+      "observed_swap_free_delta_bytes": 77824,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-058.vcd": 22796995
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-059.resource.txt",
+      "monitor_log": "common/power-059.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-059.tcl",
+      "elapsed_s": 16.49,
+      "max_rss_kib": 522268,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5962268672,
+      "host_min_swap_free_bytes": 1653932032,
+      "host_min_disk_free_bytes": 822775988224,
+      "observed_swap_free_delta_bytes": 192512,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-059.vcd": 22806756
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-060.resource.txt",
+      "monitor_log": "common/power-060.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-060.tcl",
+      "elapsed_s": 16.53,
+      "max_rss_kib": 522824,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5960146944,
+      "host_min_swap_free_bytes": 1654157312,
+      "host_min_disk_free_bytes": 822775963648,
+      "observed_swap_free_delta_bytes": 69632,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-060.vcd": 22877453
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-061.resource.txt",
+      "monitor_log": "common/power-061.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-061.tcl",
+      "elapsed_s": 16.47,
+      "max_rss_kib": 522276,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5970542592,
+      "host_min_swap_free_bytes": 1654259712,
+      "host_min_disk_free_bytes": 822775934976,
+      "observed_swap_free_delta_bytes": 65536,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-061.vcd": 22808975
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-062.resource.txt",
+      "monitor_log": "common/power-062.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-062.tcl",
+      "elapsed_s": 16.56,
+      "max_rss_kib": 522420,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5985099776,
+      "host_min_swap_free_bytes": 1654325248,
+      "host_min_disk_free_bytes": 822775844864,
+      "observed_swap_free_delta_bytes": 69632,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-062.vcd": 22838045
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/power-063.resource.txt",
+      "monitor_log": "common/power-063.monitor.jsonl",
+      "command": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta -exit /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/power-063.tcl",
+      "elapsed_s": 16.36,
+      "max_rss_kib": 516460,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 5979316224,
+      "host_min_swap_free_bytes": 1654394880,
+      "host_min_disk_free_bytes": 822775820288,
+      "observed_swap_free_delta_bytes": 139264,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments/activity-063.vcd": 22367758
+      },
+      "monitor_samples": 5,
+      "stage": "sta_power_segment",
+      "scenario": "common"
+    },
+    {
+      "resource_log": "common/segment.resource.txt",
+      "monitor_log": "common/segment.monitor.jsonl",
+      "command": "/usr/bin/python3 /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/environment/resume_c04.py --split /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/raw.vcd /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/activity-segments 1000.0 207400.0 tb_fir_frequency_optimized_ppa/dut 100.0 64",
+      "elapsed_s": 35.04,
+      "max_rss_kib": 182440,
+      "exit_status": 0,
+      "host_min_mem_available_bytes": 6076932096,
+      "host_min_swap_free_bytes": 1555824640,
+      "host_min_disk_free_bytes": 822778413056,
+      "observed_swap_free_delta_bytes": -8622080,
+      "watched_file_max_bytes": {
+        "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/raw.vcd": 182231371
+      },
+      "monitor_samples": 9,
+      "stage": "vcd_segmentation",
+      "scenario": "common"
+    }
+  ],
+  "historical_pnr_resources": "not measured; the C04 post-PnR layout was reused"
+}

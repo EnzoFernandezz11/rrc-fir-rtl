@@ -1,0 +1,117 @@
+{
+  "source_run": "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261024T232507221614Z-22dd3d09",
+  "source_manifest_sha256": "b599b1472ef522ceaece1f352185d07f5aad47c2d8dfecb6de7fa844241a9992",
+  "source_manifest_status": "failed",
+  "source_manifest_error": "Falta reporte de potencia/actividad válido",
+  "reused_physical_layout": true,
+  "new_placement_or_routing": false,
+  "reused_files_sha256": {
+    "runs/target/54-openroad-stapostpnr/state_out.json": "62e191fa4ddc87a9572dcdb80d2350edf4c924bc7abc01c227eeb4e8d39a4ea4",
+    "runs/target/51-openroad-fillinsertion/fir_frequency_optimized.nl.v": "6d025c530b0dba716a782ece868622b003c0d15f39058dc02dd1dc8d3df82b9d",
+    "runs/target/51-openroad-fillinsertion/fir_frequency_optimized.sdc": "3c6309fd1db1654e32dbb0b86d588a9bab54e905a486baa086f92fb2c9e87841",
+    "runs/target/53-openroad-rcx/nom/fir_frequency_optimized.nom.spef": "65d31ec2124d2a4f6f64fef81fa318ef04115e5444fcfbb8cc70bbda5463c83f",
+    "target/gate.out": "c9b31a472f6986ad3606892833a0a02643968230f63b17175d5f3dda68feb7dd",
+    "runs/common/01-openroad-stapostpnr/state_out.json": "e33a0bc7dcae9cb8acffae9cb58b4bfa04dd89a7d02be41117cc6ce49040dea0",
+    "common/gate.out": "c9b31a472f6986ad3606892833a0a02643968230f63b17175d5f3dda68feb7dd"
+  },
+  "changed_non_design_inputs": {
+    "scripts/ppa/openlane/run.sh": {
+      "recorded": "13c0c08f40f9e2ed28f619ee96d3e6fc2a6d627c6cf6b218bf25ab170ede80c9",
+      "current": "80f4b6beb81d8272b0230399dc3eef0440074151ad12dda2c23984ad6059252a"
+    },
+    "scripts/ppa_compare.py": {
+      "recorded": "32b4ad8d5ba71bc9828925c2ee4eadd906d07ceab4324dca107546cac6f9cb52",
+      "current": "a77bac74197067a4f30b7045ad49dcdbf91d07031bff20e2b0b3ef3bd7cff6db"
+    },
+    "scripts/ppa_physical.py": {
+      "recorded": "550ca6059d1f9cd7566daa8057fe02928acfd3a861294f796ff16693cddc9ff9",
+      "current": "0bf1c88abf977113be11e7a5cf916d50d636d3a0a93398b0425f6a6a4ea38629"
+    },
+    "tests/test_ppa_analysis.py": {
+      "recorded": "47122d24193747017c7378c38ddf96584f351aed833d650273ad5b38eaf247f3",
+      "current": "924a85cf76efeaaffe7718a08c9ebb16f84bb6dbfe55a565f06584e617e4822d"
+    }
+  },
+  "analysis_code_sha256": {
+    "ppa_physical.py": "0bf1c88abf977113be11e7a5cf916d50d636d3a0a93398b0425f6a6a4ea38629",
+    "ppa.py": "0c6dd9cbfca8042e020e173e57452615bf7b207ede1ade0c7338fb963f10432e",
+    "ppa_compare.py": "a77bac74197067a4f30b7045ad49dcdbf91d07031bff20e2b0b3ef3bd7cff6db",
+    "resume_c04.py": "a930f6c9357fd85bf1e6f0911092833bb07353a16c5b95869e37e2201a77ceef",
+    "ppa_physical_postprocess": "897c6cbee2aacf73c78fd67097793a89d214fc6bbc1f3ffac4249178b6d760ab",
+    "ppa_compare_postprocess": "6311c7a34d547c96f109fec1de88589952d9c3675b85ff28812a205bad7ad9cf",
+    "finalize_c04.py": "adc9ca93cdb04ede08c4f9311b97c7ceffb2e9f72826b72c028d39a22732d23e"
+  },
+  "tool_binaries": {
+    "sta": {
+      "path": "/nix/store/q5ycjmn0d9awbcq05c75z2rmgwjgbc9g-opensta/bin/sta",
+      "version": "2.6.0",
+      "sha256": "13573cc781ba426cc78a070745bf727abca2b757e295f095d3ae17dbb669c5d8"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "version": "Icarus Verilog runtime version 12.0 (stable) ()",
+      "sha256": "e0a087a4906d5a9cd1b0b85c9b4c2081704c2c9bcd94f224437fc56b15fc440d"
+    }
+  },
+  "command": "/usr/bin/python3 /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/environment/resume_c04.py /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261024T232507221614Z-22dd3d09",
+  "source_layout_reused_without_new_pnr": true,
+  "postprocessed_without_new_sta": true,
+  "report_generation_code_sha256": {
+    "ppa_physical_final.py": "897c6cbee2aacf73c78fd67097793a89d214fc6bbc1f3ffac4249178b6d760ab",
+    "ppa_compare.py": "6311c7a34d547c96f109fec1de88589952d9c3675b85ff28812a205bad7ad9cf",
+    "finalize_c04.py": "adc9ca93cdb04ede08c4f9311b97c7ceffb2e9f72826b72c028d39a22732d23e"
+  },
+  "common_sta_vs_power_sdc": {
+    "timing_sta": {
+      "template_path": "/home/enzo/openlane2/openlane/scripts/base.sdc",
+      "template_sha256": "cc63d204b0edfb975b62f9b70066e3b19b322b18c539ce339f28f064ce30229b",
+      "diagnostic_path": "build/ppa/environment/c04-path-diagnostic.md",
+      "diagnostic_sha256": "0fb1ed52bab067c327eac78350eea5a8a6cea2ff8053dd13dfa97462e159a620",
+      "clock_period_ns": 100.0,
+      "input_delay_ns": 20.0,
+      "output_delay_ns": 20.0,
+      "constraint_source": "OpenLane base.sdc, documented by preserved STA logs and Tcl"
+    },
+    "power_estimation": {
+      "sdc_path": "common/power.sdc",
+      "sdc_sha256": "cd0c6f49371b586f62170533d1223fddf881ec0411706bd9b1cd7b900ae0356b",
+      "derived_from_sdc": "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261024T232507221614Z-22dd3d09/runs/target/51-openroad-fillinsertion/fir_frequency_optimized.sdc",
+      "derived_from_sdc_sha256": "3c6309fd1db1654e32dbb0b86d588a9bab54e905a486baa086f92fb2c9e87841",
+      "clock_period_ns": 100.0,
+      "input_delay_ns": 2.0,
+      "output_delay_ns": 2.0,
+      "constraint_source": "resolved target SDC with only create_clock period rewritten"
+    },
+    "nominal_sta_power_slack_difference_ns": {
+      "clock_period_gain": 90.0,
+      "additional_input_margin": 18.0,
+      "additional_output_margin": 18.0,
+      "net": 54.0
+    }
+  },
+  "target_power_replay_comparison": {
+    "source_log_sha256": "d2f8b4b31780df999925d9d75eb0c39a194f0c7bb60ac9963017441f14a82e19",
+    "resumed_log_sha256": "d2f8b4b31780df999925d9d75eb0c39a194f0c7bb60ac9963017441f14a82e19",
+    "source_log_bytes": 885486,
+    "resumed_log_bytes": 885486,
+    "identical": true,
+    "source_weighted_average_w": {
+      "internal_w": 0.04498003784965871,
+      "switching_w": 0.018493774692773128,
+      "leakage_w": 3.4575640107180956e-07,
+      "total_w": 0.06347415719105859
+    },
+    "resumed_weighted_average_w": {
+      "internal_w": 0.04498003784965871,
+      "switching_w": 0.018493774692773128,
+      "leakage_w": 3.4575640107180956e-07,
+      "total_w": 0.06347415719105859
+    },
+    "relative_delta": {
+      "internal_w": 0.0,
+      "switching_w": 0.0,
+      "leakage_w": 0.0,
+      "total_w": 0.0
+    }
+  }
+}
