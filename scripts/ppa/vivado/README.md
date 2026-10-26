@@ -43,6 +43,19 @@ Tambien se puede invocar Vivado directamente, sin el lanzador Windows:
 vivado -mode batch -source scripts/ppa/vivado/run.tcl -tclargs build/ppa/frequency_serial/manual_01 -top fir_frequency_serial -bench tb_fir_frequency_ppa -period_ns 100 -latency_cycles 559 -block_cycles 575 -active_cycles 147200
 ```
 
+Ejemplo completo para la serial temporal (A07), desde la raiz del repositorio:
+generar los vectores del modelo temporal, correr Vivado a 10 MHz e importar la
+corrida a la tabla. Para 100 MHz cambia solo `-period_ns 10`; los ciclos no
+dependen del reloj. Con B04, ajustar `LATENCY`/`INTERVAL` en el banco y
+`-latency_cycles`, `-block_cycles` y `-active_cycles = 2047 * II + L + 1`.
+
+```sh
+python3 -m scripts.ppa_vectors build/ppa/ppa_vectors_time.txt --domain time
+vivado -mode batch -source scripts/ppa/vivado/run.tcl -tclargs build/ppa/time_serial/manual_01 -top fir_time_serial -bench tb_fir_time_ppa -period_ns 100 -latency_cycles 9 -block_cycles 10 -active_cycles 20480 -vectors build/ppa/ppa_vectors_time.txt
+python3 -m scripts.ppa_table --import build/ppa/time_serial/manual_01 time_serial
+python3 -m scripts.ppa_table
+```
+
 El flujo lee `rtl/*/*.sv` y busca un unico `tb/*/<Bench>.sv`. A07 debe aportar
 el banco de la variante temporal y sus vectores de referencia; el banco temporal
 funcional actual no implementa este protocolo PPA. Cada banco PPA debe instanciar
@@ -102,7 +115,11 @@ registra las condiciones termicas y electricas por defecto de la version usada.
 La energia por muestra es potencia dinamica / throughput medido en esa ventana.
 
 `manifest.json` del paquete identifica commit, cambios locales y hashes de las
-entradas; se copia como `source_manifest.json`. `file_sizes.tsv` enumera el
+entradas; se copia como `source_manifest.json`. Describe el paquete base, no
+la corrida: dos corridas del mismo paquete a 10 y 100 MHz tienen el mismo
+`source_manifest.json`. La configuracion efectiva de cada corrida (top, banco,
+periodo, ciclos esperados, vectores) esta en `configuration.txt`; para saber a
+que reloj se midio una fila, leer `clock_period_ns` ahi. `file_sizes.tsv` enumera el
 tamano de los archivos generados antes de escribir el propio inventario.
 Una corrida incompleta deja `run_status.txt`, `failure.txt` y `summary.md`;
 consultar tambien los logs de compilacion, elaboracion y simulacion.
