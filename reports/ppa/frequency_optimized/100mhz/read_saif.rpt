@@ -1,0 +1,4 @@
+INFO: [Power 33-167] Parsing SAIF file activity.saif
+WARNING: [Power 33-330] Read_saif is trying to annotate activities on clock net and this will be ignored. Users shall manually specify clock net frequency using sdc timing constraints(e.g. create_clock)
+INFO: [Power 33-177] SAIF annotation done from file activity.saif
+INFO: [Power 33-26] Design nets matched = 15091 of 22236

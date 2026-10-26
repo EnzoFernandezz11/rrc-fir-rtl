@@ -117,7 +117,10 @@ def main() -> int:
         "`config/rtl_targets.json` (coinciden palabra por palabra con ese modelo). La potencia estática es del dispositivo "
         "completo. Vivado informa la dinámica con resolución de 1 mW, así que la energía por muestra "
         "de corridas con pocos mW de dinámica no distingue diferencias menores a ±0,5 mW; además, "
-        "la cobertura SAIF es parcial (redes anotadas / total).\n\n"
+        "la cobertura SAIF es parcial (redes anotadas / total). frequency_optimized se midió además con "
+        "`set_input_delay` T/2 y `set_output_delay` 0 (ver su `clock.xdc`) y su SAIF sale de la netlist "
+        "implementada sin SDF, porque la simulación SDF da salidas obsoletas en CARRY4 (#56); esa actividad "
+        "no tiene glitches, así que su potencia dinámica puede estar algo subestimada.\n\n"
         + table(sqnr, {t["name"] for t in load_targets()}),
         encoding="utf-8",
     )
