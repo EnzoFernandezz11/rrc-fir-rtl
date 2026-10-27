@@ -1,0 +1,4 @@
+# Preparación del núcleo ASIC. scripts/ppa_time.py aplica SKY130 HD y guarda netlist/área.
+read_verilog -sv rtl/time/fir_time_systolic.sv
+synth -noabc -flatten -top fir_time_systolic
+check -assert

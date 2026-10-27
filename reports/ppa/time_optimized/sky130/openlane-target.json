@@ -1,0 +1,32 @@
+{
+  "DESIGN_NAME": "fir_time_systolic",
+  "VERILOG_FILES": [
+    "/home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/source/rtl/time/fir_time_systolic.sv"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 10,
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+  "DEFAULT_CORNER": "nom_tt_025C_1v80",
+  "STA_CORNERS": [
+    "nom_tt_025C_1v80",
+    "nom_ss_100C_1v60",
+    "nom_ff_n40C_1v95",
+    "min_tt_025C_1v80",
+    "min_ss_100C_1v60",
+    "min_ff_n40C_1v95",
+    "max_tt_025C_1v80",
+    "max_ss_100C_1v60",
+    "max_ff_n40C_1v95"
+  ],
+  "TIMING_VIOLATION_CORNERS": [
+    "*"
+  ],
+  "FP_CORE_UTIL": 35,
+  "PL_TARGET_DENSITY_PCT": 45,
+  "SYNTH_STRATEGY": "AREA 0",
+  "SYNTH_HIERARCHY_MODE": "flatten",
+  "SYNTH_ABC_DFF": false,
+  "DRT_THREADS": 2,
+  "STA_THREADS": 2,
+  "ERROR_ON_LINTER_WARNINGS": false
+}
