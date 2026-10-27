@@ -5,21 +5,21 @@
       \draw[gray!25] ({(\d-3)*0.45},-1.3) -- ({(\d-3)*0.45},27.6);
       \node[gray, above] at ({(\d-3)*0.45},-1.3) {\d/10};
     }
-    \draw[black!70] ({(21-3)*0.45},-1.3) -- ({(21-3)*0.45},27.6) node[below] {registro 20/10};
+    \draw[black!70] ({(28-3)*0.45},-1.3) -- ({(28-3)*0.45},27.6) node[below, yshift=-2.8mm] {registro 27/10};
     \draw[black!70, dashed] ({(26-3)*0.45},-1.3) -- ({(26-3)*0.45},27.6) node[below] {corte C04};
     \draw[black!70, thick] ({(30-3)*0.45},-1.3) -- ({(30-3)*0.45},27.6) node[below] {entrega};
     % fila/tarea/plan inicio/plan fin/real inicio/real fin/color/terminada
     \foreach \y/\t/\ps/\pe/\rs/\re/\c/\ok in {
         0/E00/5/6/5/8/serie1/1, 1/E01/5/7/5/9/serie3/1, 2/E02/5/8/7/9/serie1/1,
-        3/E03/8/11/9/10/serie2/1, 4/G01/5/30/3/21/serie1/0,
+        3/E03/8/11/9/10/serie2/1, 4/G01/5/30/3/28/serie1/0,
         6/A01/5/7/7/9/serie1/1, 7/A02/7/9/7/10/serie1/1, 8/A03/9/12/12/13/serie1/1,
         9/A04/9/13/12/13/serie1/1, 10/A05/13/15/12/14/serie1/1, 11/A06/15/20/14/21/serie1/1,
-        12/A07/11/29/14/21/serie1/0,
+        12/A07/11/29/14/28/serie1/0,
         14/B01/8/11/12/14/serie2/1, 15/B02/11/16/14/15/serie2/1, 16/B03/11/14/15/17/serie2/1,
-        17/B04/16/25/19/21/serie2/0,
+        17/B04/16/25/19/28/serie2/0,
         19/C01/7/12/6/14/serie3/1, 20/C02/12/20/12/16/serie3/1, 21/C03/12/14/15/19/serie3/1,
-        22/C04/20/29/19/21/serie3/0,
-        24/I01/29/30/0/0/serie1/0, 25/I02/14/30/15/21/serie1/0, 26/I03/20/30/0/0/serie1/0} {
+        22/C04/20/29/19/28/serie3/0,
+        24/I01/29/30/27/28/serie1/0, 25/I02/14/30/15/28/serie1/0, 26/I03/20/30/27/28/serie1/0} {
       \node[anchor=east] at (-0.1,\y) {\t};
       \draw[gray!60, fill=gray!15] ({(\ps-3)*0.45},\y-0.42) rectangle ({(\pe-3)*0.45},\y-0.05);
       \ifnum\rs>0
