@@ -198,14 +198,19 @@ def scenario_status(scenario: dict) -> tuple[bool, bool, bool]:
     return setup, electrical, bool(scenario.get("timing_pass", setup and electrical))
 
 
-def comparison_document(a: dict, b: dict, output: Path, render: bool = False) -> tuple[str, dict]:
+def comparison_document(a: dict, b: dict, output: Path, render: bool = False,
+                        report_dir: Path = REPORT.parent) -> tuple[str, dict]:
+    from scripts.ppa_evidence import published_directory
+
     check_compatible(a, b)
     av, bv = a["values"], b["values"]
     charts = {}
-    link = lambda p: Path(os.path.relpath(p, REPORT.parent)).as_posix()
+    link = lambda p: Path(os.path.relpath(p, report_dir)).as_posix()
+    evidence_a = published_directory(a['directory'], a['manifest']['config'].get('target', 'frequency_serial'), report_dir)
+    evidence_b = published_directory(b['directory'], b['manifest']['config'].get('target', 'frequency_optimized'), report_dir)
     text = ("## Comparación C02 / C04\n\n"
-            f"Corridas: [C02]({link(a['directory'] / 'manifest.json')}) / "
-            f"[C04]({link(b['directory'] / 'manifest.json')}). "
+            f"Corridas: [C02]({link(evidence_a / 'manifest.json')}) / "
+            f"[C04]({link(evidence_b / 'manifest.json')}). "
             "Benchmark: QPSK 2×, semilla 1, 2048 muestras exactas.\n\n"
             "Las diferencias porcentuales son (C04/C02 − 1) × 100; "
             "un signo positivo no siempre significa mejora.\n\n")
@@ -328,11 +333,18 @@ def compare(c02: Path, c04: Path, render: bool = False, report: Path = REPORT) -
         if run["directory"].name not in section:
             raise ValueError(f"La corrida {run['directory'].name} no es la publicada para {arch}")
     identity = hashlib.sha256(json.dumps([r["evidence"] for r in (a, b)], sort_keys=True).encode()).hexdigest()[:16]
-    output = ROOT / "build/ppa/comparisons" / identity
+    if a["physical"] is not None:
+        from scripts.ppa_evidence import publish_evidence
+        for run in (a, b):
+            publish_evidence(run["directory"], report.parent)
+    output = report.parent / "comparisons" / identity
     output.mkdir(parents=True, exist_ok=True)
-    result, data = comparison_document(a, b, output, render)
+    result, data = comparison_document(a, b, output, render, report_dir=report.parent)
     write_json(output / "comparison.json", data)
-    (output / "comparison.md").write_text(result)
+    standalone = re.sub(r"\]\(([^)]+)\)",
+                        lambda m: f"]({Path(os.path.relpath(report.parent / m[1], output)).as_posix()})",
+                        result)
+    (output / "comparison.md").write_text(standalone)
     start, end = "<!-- comparison:start -->", "<!-- comparison:end -->"
     replacement = f"{start}\n\n{result}\n{end}"
     if start in original:

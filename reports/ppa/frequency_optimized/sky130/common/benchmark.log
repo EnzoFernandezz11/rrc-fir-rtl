@@ -1,0 +1,3 @@
+VCD info: dumpfile /mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/raw.vcd opened for output.
+PASS PPA: 2048 muestras, L=26, bloque=8, 2074 ciclos, 9874638.380 muestras/s
+tb/frequency_optimized/tb_fir_frequency_optimized_ppa.sv:160: $finish called at 209700000 (1ps)

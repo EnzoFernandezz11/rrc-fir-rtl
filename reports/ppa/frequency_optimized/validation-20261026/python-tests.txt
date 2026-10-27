@@ -1,0 +1,81 @@
+test_block_size_matches_contract (test_a03_time_vs_frequency.TimeVsFrequency.test_block_size_matches_contract) ... ok
+test_every_case_matches_within_float_rounding (test_a03_time_vs_frequency.TimeVsFrequency.test_every_case_matches_within_float_rounding) ... ok
+test_export_round_trips_with_indices (test_fir_time.FirTimeChecks.test_export_round_trips_with_indices) ... ok
+test_impulse_returns_taps (test_fir_time.FirTimeChecks.test_impulse_returns_taps) ... ok
+test_peak_within_sum_of_abs_taps (test_fir_time.FirTimeChecks.test_peak_within_sum_of_abs_taps) ... ok
+test_qpsk_matches_direct_sum (test_fir_time.FirTimeChecks.test_qpsk_matches_direct_sum) ... ok
+test_real_taps_keep_i_and_q_separate (test_fir_time.FirTimeChecks.test_real_taps_keep_i_and_q_separate) ... ok
+test_zeros_return_zeros (test_fir_time.FirTimeChecks.test_zeros_return_zeros) ... ok
+test_chosen_format_meets_sqnr_in_both_branches (test_fixed_point.FixedPointChecks.test_chosen_format_meets_sqnr_in_both_branches) ... ok
+test_output_width_matches_rtl_interface (test_fixed_point.FixedPointChecks.test_output_width_matches_rtl_interface) ... ok
+test_overflow_is_reported_not_wrapped (test_fixed_point.FixedPointChecks.test_overflow_is_reported_not_wrapped) ... ok
+test_rejects_inputs_outside_two_bits (test_fixed_point.FixedPointChecks.test_rejects_inputs_outside_two_bits) ... ok
+test_round_half_up_example (test_fixed_point.FixedPointChecks.test_round_half_up_example) ... ok
+test_wide_format_converges_to_float_reference (test_fixed_point.FixedPointChecks.test_wide_format_converges_to_float_reference) ... ok
+test_worst_case_windows_do_not_overflow_work (test_fixed_point.FixedPointChecks.test_worst_case_windows_do_not_overflow_work) ... ok
+test_exact_arithmetic_and_pipeline (test_frequency_arithmetic.FrequencyArithmeticChecks.test_exact_arithmetic_and_pipeline) ... ok
+test_overflow_including_trivial_negation (test_frequency_arithmetic.FrequencyArithmeticChecks.test_overflow_including_trivial_negation) ... ok
+test_frequency_column_is_exact (test_frequency_optimized.OptimizedVectorChecks.test_frequency_column_is_exact) ... ok
+test_invalid_files_fail_with_location (test_frequency_optimized.OptimizedVectorChecks.test_invalid_files_fail_with_location) ... ok
+test_official_frames_with_and_without_pauses (test_frequency_optimized.OptimizedVectorChecks.test_official_frames_with_and_without_pauses) ... ok
+test_asymmetric_taps_and_all_partial_lengths (test_frequency_overlap_contract.FrequencyOverlapContractTest.test_asymmetric_taps_and_all_partial_lengths) ... ok
+test_impulses_on_both_sides_of_block_boundary (test_frequency_overlap_contract.FrequencyOverlapContractTest.test_impulses_on_both_sides_of_block_boundary) ... ok
+test_last_tap_delay_preserves_indices_and_truncates_tail (test_frequency_overlap_contract.FrequencyOverlapContractTest.test_last_tap_delay_preserves_indices_and_truncates_tail) ... ok
+test_reusable_source_and_upsampler (test_frequency_overlap_contract.FrequencyOverlapContractTest.test_reusable_source_and_upsampler) ... ok
+test_rrc_with_qpsk_2x_full_partial_and_empty_frames (test_frequency_overlap_contract.FrequencyOverlapContractTest.test_rrc_with_qpsk_2x_full_partial_and_empty_frames) ... ok
+test_output_scale_exhaustive_fitting_range (test_frequency_spectral.FrequencySpectralChecks.test_output_scale_exhaustive_fitting_range) ... ok
+test_spectral_bins_pipeline_bubbles_and_reset (test_frequency_spectral.FrequencySpectralChecks.test_spectral_bins_pipeline_bubbles_and_reset) ... ok
+test_butterfly_overflow (test_frequency_transform.FrequencyTransformChecks.test_butterfly_overflow) ... ok
+test_stage_values_latency_bubbles_and_reset (test_frequency_transform.FrequencyTransformChecks.test_stage_values_latency_bubbles_and_reset) ... ok
+test_frequency_column_is_exact (test_frequency_vectors.FrequencyVectorChecks.test_frequency_column_is_exact) ... ok
+test_invalid_files_fail_with_location (test_frequency_vectors.FrequencyVectorChecks.test_invalid_files_fail_with_location) ... ok
+test_official_frames_with_and_without_pauses (test_frequency_vectors.FrequencyVectorChecks.test_official_frames_with_and_without_pauses) ... ok
+test_overflow_is_checked_at_each_output_handshake (test_frequency_vectors.FrequencyVectorChecks.test_overflow_is_checked_at_each_output_handshake) ... ok
+test_gantt_respects_backlog_dependencies (test_plan.PlanChecks.test_gantt_respects_backlog_dependencies) ... ok
+test_benchmark_clock_period_and_metrics (test_ppa.PpaResourcesTest.test_benchmark_clock_period_and_metrics) ... ok
+test_library_selection_and_sequential_cell_detection (test_ppa.PpaResourcesTest.test_library_selection_and_sequential_cell_detection) ... ok
+test_measurement_identity_ignores_documentation_but_tracks_rtl_and_results (test_ppa.PpaResourcesTest.test_measurement_identity_ignores_documentation_but_tracks_rtl_and_results) ... ok
+test_optimized_benchmark_and_export (test_ppa.PpaResourcesTest.test_optimized_benchmark_and_export) ... ok
+test_optimized_run_preserves_serial_and_historical_reference (test_ppa.PpaResourcesTest.test_optimized_run_preserves_serial_and_historical_reference) ... ok
+test_record_run_replaces_only_its_section_even_for_equivalent_result (test_ppa.PpaResourcesTest.test_record_run_replaces_only_its_section_even_for_equivalent_result) ... ok
+test_top_only_and_separate_resources (test_ppa.PpaResourcesTest.test_top_only_and_separate_resources) ... ok
+test_vivado_options_and_report_parsers (test_ppa.PpaResourcesTest.test_vivado_options_and_report_parsers) ... ok
+test_activity_split_rebases_preserves_initial_state_and_rejects_truncation (test_ppa_analysis.PpaAnalysisTest.test_activity_split_rebases_preserves_initial_state_and_rejects_truncation) ... ok
+test_all_timing_corners_required_and_failure_is_a_result (test_ppa_analysis.PpaAnalysisTest.test_all_timing_corners_required_and_failure_is_a_result) ... ok
+test_full_activity_benchmark_reaches_last_sample_for_both_targets (test_ppa_analysis.PpaAnalysisTest.test_full_activity_benchmark_reaches_last_sample_for_both_targets) ... ok
+test_missing_power_is_not_zero_and_incompatible_tools_are_rejected (test_ppa_analysis.PpaAnalysisTest.test_missing_power_is_not_zero_and_incompatible_tools_are_rejected) ... ok
+test_new_run_invalidates_comparison_and_preserves_history (test_ppa_analysis.PpaAnalysisTest.test_new_run_invalidates_comparison_and_preserves_history) ... ok
+test_physical_area_uses_micron_bounding_boxes_not_synthesis_area (test_ppa_analysis.PpaAnalysisTest.test_physical_area_uses_micron_bounding_boxes_not_synthesis_area) ... ok
+test_physical_summary_handles_legacy_status_and_lists_corner_timing (test_ppa_analysis.PpaAnalysisTest.test_physical_summary_handles_legacy_status_and_lists_corner_timing) ... ok
+test_power_parser_preserves_opensta_diagnostics (test_ppa_analysis.PpaAnalysisTest.test_power_parser_preserves_opensta_diagnostics) ... ok
+test_power_sdc_changes_only_validated_clock_period (test_ppa_analysis.PpaAnalysisTest.test_power_sdc_changes_only_validated_clock_period) ... ok
+test_power_window_energy_and_name_coverage (test_ppa_analysis.PpaAnalysisTest.test_power_window_energy_and_name_coverage) ... ok
+test_profiled_run_cleans_process_group_on_keyboard_interrupt (test_ppa_analysis.PpaAnalysisTest.test_profiled_run_cleans_process_group_on_keyboard_interrupt) ... Paquete: /tmp/tmpu7i9a5w9/frequency_optimized_vivado.zip (29,748 bytes)
+$ /usr/bin/time -v -o /tmp/tmpfhkuku42/interrupt.resource.txt sta -exit power.tcl
+ok
+test_profiled_run_keeps_resource_report (test_ppa_analysis.PpaAnalysisTest.test_profiled_run_keeps_resource_report) ... $ /usr/bin/time -v -o /tmp/tmp_x5boodr/benchmark.resource.txt python3 -c import os; print(os.environ['LC_ALL']); print(os.environ['TMPDIR'])
+$ /usr/bin/time -v -o /tmp/tmp_x5boodr/benchmark.resource.txt python3 -c import time; time.sleep(30)
+ok
+test_radar_direction_zeros_and_missing_dimensions (test_ppa_analysis.PpaAnalysisTest.test_radar_direction_zeros_and_missing_dimensions) ... ok
+test_tampered_evidence_and_failed_comparison_do_not_publish (test_ppa_analysis.PpaAnalysisTest.test_tampered_evidence_and_failed_comparison_do_not_publish) ... ok
+test_document_preserves_common_power_but_no_common_charts_on_global_fail (test_ppa_compare_status.PpaCompareStatusTest.test_document_preserves_common_power_but_no_common_charts_on_global_fail) ... ok
+test_legacy_power_derives_dynamic_metric_without_changing_source_evidence (test_ppa_compare_status.PpaCompareStatusTest.test_legacy_power_derives_dynamic_metric_without_changing_source_evidence) ... ok
+test_status_legacy_derives_setup_and_electrical_separately (test_ppa_compare_status.PpaCompareStatusTest.test_status_legacy_derives_setup_and_electrical_separately) ... ok
+test_same_seed_same_symbols (test_qpsk_rrc.QpskChecks.test_same_seed_same_symbols) ... ok
+test_symbols_are_plus_minus_one (test_qpsk_rrc.QpskChecks.test_symbols_are_plus_minus_one) ... ok
+test_upsample_inserts_zeros (test_qpsk_rrc.QpskChecks.test_upsample_inserts_zeros) ... ok
+test_config_matches_model (test_qpsk_rrc.RrcChecks.test_config_matches_model) ... ok
+test_eight_symmetric_unit_energy_taps (test_qpsk_rrc.RrcChecks.test_eight_symmetric_unit_energy_taps) ... ok
+test_impulse_response_is_taps (test_qpsk_rrc.RrcChecks.test_impulse_response_is_taps) ... ok
+test_special_points_are_continuous (test_qpsk_rrc.RrcChecks.test_special_points_are_continuous) ... ok
+test_duplicate_target_names_fail (test_scaffold.ScaffoldChecks.test_duplicate_target_names_fail) ... ok
+test_formal_requirements_are_preserved (test_scaffold.ScaffoldChecks.test_formal_requirements_are_preserved) ... ok
+test_missing_registered_rtl_fails_validation (test_scaffold.ScaffoldChecks.test_missing_registered_rtl_fails_validation) ... ok
+test_files_match_generator (test_vectors.VectorChecks.test_files_match_generator) ... ok
+test_format_ranges_and_frames (test_vectors.VectorChecks.test_format_ranges_and_frames) ... ok
+test_qpsk_vector_meets_sqnr (test_vectors.VectorChecks.test_qpsk_vector_meets_sqnr) ... ok
+
+----------------------------------------------------------------------
+Ran 72 tests in 45.986s
+
+OK

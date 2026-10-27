@@ -422,7 +422,8 @@ corrida local identificada por el título; este ZIP contiene las fuentes para FP
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("local", "package", "physical", "compare"))
+    parser.add_argument("command", choices=("local", "package", "physical", "compare", "publish-evidence"))
+    parser.add_argument("--run-dir", type=Path, help="Corrida física existente para publicar evidencia")
     parser.add_argument("--target", choices=("frequency_serial", "frequency_optimized"),
                         default="frequency_serial")
     parser.add_argument("--liberty", help="Ruta a SKY130 HD TT 25C 1v80; también SKY130_LIB")
@@ -432,7 +433,12 @@ def main() -> int:
     parser.add_argument("--render", action="store_true", help="Exportar SVG con Mermaid CLI 11.6.0")
     args = parser.parse_args()
     try:
-        if args.command == "compare":
+        if args.command == "publish-evidence":
+            from scripts.ppa_evidence import publish_evidence
+            if args.run_dir is None:
+                raise ValueError("publish-evidence requiere --run-dir")
+            print(f"Evidencia: {publish_evidence(args.run_dir, openlane_root=args.openlane_root)}")
+        elif args.command == "compare":
             from scripts.ppa_compare import compare
             if args.c02 is None or args.c04 is None:
                 raise ValueError("compare requiere --c02 y --c04")

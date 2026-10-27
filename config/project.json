@@ -61,9 +61,11 @@
       "source": "docs/contratos/interfaz-rtl.md"
     },
     "target_technology": {
-      "status": "confirmed_by_enzo_for_frequency",
-      "confirmed_on": "2026-10-22",
+      "status": "agreed_by_team",
+      "confirmed_on": "2026-10-26",
       "scope": [
+        "time_serial",
+        "time_optimized",
         "frequency_serial",
         "frequency_optimized"
       ],
@@ -75,7 +77,7 @@
       "flow": "physical_post_route_spef",
       "source": "docs/contratos/verificacion-y-ppa.md#ppa",
       "fpga_reference": {
-        "status": "proposed",
+        "status": "historical_reference",
         "tool": "vivado",
         "device": "xc7a35tcpg236-1",
         "flow": "out_of_context",
@@ -85,7 +87,7 @@
         },
         "source": "docs/contratos/verificacion-y-ppa.md#ppa"
       },
-      "measurement_status": "pending_physical_run",
+      "measurement_status": "physical_runs_completed_timing_reported_separately",
       "physical_method": {
         "openlane_revision": "a7b0e6d",
         "pdk_revision": "0fe599b2afb6708d281543108caf8310912f54af",
@@ -93,11 +95,20 @@
         "placement_density_pct": 45,
         "threads": 2,
         "timing": "nine_PVT_RC_corners",
-        "additional_sdf_simulation": "optional"
-      }
+        "additional_sdf_simulation": "optional",
+        "frequency_compliance": "setup_and_hold_pass_in_all_nine_corners",
+        "timing_summary": "worst_setup_and_hold_slack_with_respective_corners",
+        "electrical_constraints": "reported_separately_slew_capacitance_fanout",
+        "global_pass": "setup_hold_and_electrical_constraints_pass_in_all_nine_corners"
+      },
+      "agreed_by": [
+        "EnzoFernandezz11",
+        "andres332271",
+        "moreyrajulian"
+      ]
     },
     "power_method": {
-      "status": "confirmed_by_enzo_for_frequency",
+      "status": "agreed_by_team",
       "source": "docs/contratos/verificacion-y-ppa.md#ppa",
       "metrics": [
         "dynamic_w",
@@ -105,7 +116,7 @@
         "energy_per_sample_j"
       ],
       "fpga_reference": {
-        "status": "proposed",
+        "status": "historical_reference",
         "tool": "vivado_report_power",
         "activity": "saif_from_simulation",
         "metrics": [
@@ -116,6 +127,8 @@
         "source": "docs/contratos/verificacion-y-ppa.md#ppa"
       },
       "scope": [
+        "time_serial",
+        "time_optimized",
         "frequency_serial",
         "frequency_optimized"
       ],
@@ -123,9 +136,15 @@
       "activity": "full_active_window_functional_final_netlist_vcd",
       "parasitics": "post_route_nominal_spef",
       "corner": "tt_025C_1v80",
-      "measurement_status": "pending_physical_run",
+      "measurement_status": "physical_runs_completed_timing_reported_separately",
       "energy_method": "power_w * activity_duration_s / output_samples",
-      "limitation": "zero_delay_activity_does_not_capture_all_timing_glitches"
+      "limitation": "zero_delay_activity_does_not_capture_all_timing_glitches",
+      "confirmed_on": "2026-10-26",
+      "agreed_by": [
+        "EnzoFernandezz11",
+        "andres332271",
+        "moreyrajulian"
+      ]
     },
     "samples_per_symbol": {
       "value": 2,

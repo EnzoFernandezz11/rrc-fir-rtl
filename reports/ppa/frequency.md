@@ -1,6 +1,6 @@
 # Resultados PPA de frecuencia: C02 y C04
 
-> **Regla obligatoria de mantenimiento:** mostrar únicamente la **última corrida exitosa de cada variante**. Una nueva corrida reemplaza íntegramente su sección, incluso si reproduce los mismos valores; no se agregan históricos ni resúmenes duplicados. Cada resultado debe enlazar configuración, biblioteca, hashes y logs. Las corridas anteriores permanecen en `build/ppa/`. Una corrida fallida no reemplaza resultados válidos. **Excepción explícita:** conservar la referencia histórica Vivado de C02 al final, identificada como FPGA.
+> **Regla obligatoria de mantenimiento:** mostrar únicamente la **última corrida completa de cada variante**. Una nueva corrida reemplaza íntegramente su sección, incluso si reproduce los mismos valores; no se agregan históricos ni resúmenes duplicados. Cada resultado debe enlazar configuración, biblioteca, hashes y logs. Las corridas anteriores permanecen en `build/ppa/`. Una falla de herramienta o evidencia incompleta no reemplaza resultados válidos; un FAIL de timing se publica con su veredicto. **Excepción explícita:** conservar la referencia histórica Vivado de C02 al final, identificada como FPGA.
 
 Tecnología: **ASIC SKY130 HD, 130 nm**. Síntesis y potencia nominal usan
 TT / 25 °C / 1,8 V; STA físico cubre los nueve corners declarados en cada corrida.
@@ -10,6 +10,9 @@ estimación funcional sin retardos, no una medición de silicio.
 Los objetivos de 10 MHz (C02) y 100 MHz (C04) se evalúan por escenario: setup/hold,
 restricciones eléctricas y resultado global se presentan por separado. Una
 corrida completa no implica que el circuito cumpla todas las restricciones.
+Setup/hold PASS exige cumplir ambos chequeos en los nueve corners. Se informa
+el peor resultado de cada chequeo con su corner; slew, capacitancia y fanout
+se evalúan por separado. PASS global exige ambos veredictos.
 
 [Procedimiento y comandos](../../docs/frecuencia/ppa.md).
 
@@ -29,7 +32,7 @@ La latencia de 559 frente a 26 ciclos es una métrica distinta del intervalo.
 El área SKY130 se compara únicamente entre mediciones hechas con la misma
 biblioteca, corner y flujo. Las cifras LUT/DSP de Vivado describen una FPGA y no
 se convierten en área ASIC. Los bancos sin macros SRAM se sintetizan a registros
-y lógica. La potencia y la energía por muestra requieren una evaluación posterior.
+y lógica. La potencia y la energía por muestra estimadas se presentan debajo con sus condiciones de actividad y timing.
 <!-- serial-analysis:end -->
 
 ## Última corrida C02 — frecuencia serial
@@ -37,7 +40,6 @@ y lógica. La potencia y la energía por muestra requieren una evaluación poste
 <!-- serial-runs:start -->
 
 <!-- serial-measurement:bd8a1d47b6aa068ba312cbf120b3d386fa2339fc5df8fd87d7222fcdfd41f1d1 -->
-
 ### frequency_serial — corrida 20261024T190548892720Z-22dd3d09 (OpenLane 2 / SKY130)
 
 **Medición física completa; simulación funcional de netlist final, STA post-SPEF y potencia con VCD.**
@@ -93,15 +95,19 @@ El throughput al reloj objetivo queda condicionado a PASS global de timing. Fmax
 | common | max_tt_025C_1v80 | 57.7644 | 0.3140 | 0 / 0 | 0 / 1 / 22 | No medida |
 | common | max_ss_100C_1v60 | 56.1350 | 0.8752 | 0 / 0 | 86 / 1 / 22 | No medida |
 | common | max_ff_n40C_1v95 | 58.4175 | 0.1118 | 0 / 0 | 0 / 1 / 22 | No medida |
-- [manifest.json](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/manifest.json).
-- [physical_metrics.json](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/physical_metrics.json).
-- [local_metrics.json](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/local_metrics.json).
-- [gate_metrics.json](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/gate_metrics.json).
-- [resources.json](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/resources.json).
-- [openlane-target.json](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/openlane-target.json).
-- [STA, netlist final, SPEF, SDF y restricciones resueltas](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/runs/).
+- [manifest.json](frequency_serial/sky130/manifest.json).
+- [physical_metrics.json](frequency_serial/sky130/physical_metrics.json).
+- [local_metrics.json](frequency_serial/sky130/local_metrics.json).
+- [gate_metrics.json](frequency_serial/sky130/gate_metrics.json).
+- [resources.json](frequency_serial/sky130/resources.json).
+- [openlane-target.json](frequency_serial/sky130/openlane-target.json).
+- [Índice de archivos y SHA256](frequency_serial/sky130/evidence.json).
+- [STA por corner y restricciones usadas](frequency_serial/sky130/sta/).
+
+Los VCD, netlists, SPEF/SDF, ODB y bibliotecas se conservan localmente en `build/ppa/`.
+
 El escenario common comparte la corrida target al mismo reloj; no se creó un directorio adicional.
-- [Actividad y potencia target](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/target/) y [Actividad y potencia common](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/target/).
+- [Actividad y potencia target](frequency_serial/sky130/target/) y [Actividad y potencia common](frequency_serial/sky130/target/).
 - Los directorios de escenario existentes conservan `power.sdc` y el log combinado `power.log`.
 
 <!-- serial-runs:end -->
@@ -115,7 +121,7 @@ El escenario common comparte la corrida target al mismo reloj; no se creó un di
 
 **Medición física completa; simulación funcional de netlist final, STA post-SPEF y potencia con VCD.**
 
-Layout físico reutilizado de [20261024T232507221614Z-22dd3d09](../../build/ppa/frequency_optimized/20261024T232507221614Z-22dd3d09/manifest.json); esta corrida no hizo placement ni routing nuevos. Se volvió a ejecutar la simulación funcional de la netlist y el análisis de potencia.
+Layout físico reutilizado de [20261024T232507221614Z-22dd3d09](frequency_optimized/sky130/source_run/manifest.json); esta corrida no hizo placement ni routing nuevos. Se volvió a ejecutar la simulación funcional de la netlist y el análisis de potencia.
 
 Potencia estimada TT/25 °C/1,8 V, sin retardos de simulación ni glitches temporales completos. No es signoff de fabricación.
 
@@ -168,22 +174,26 @@ El throughput al reloj objetivo queda condicionado a PASS global de timing. Fmax
 | common | max_tt_025C_1v80 | 56.1969 | 0.3057 | 0 / 0 | 8 / 3 / 183 | 143.37 |
 | common | max_ss_100C_1v60 | 53.3134 | 0.8316 | 0 / 0 | 544 / 3 / 183 | 75.30 |
 | common | max_ff_n40C_1v95 | 57.3915 | 0.1018 | 0 / 0 | 0 / 3 / 183 | 221.80 |
-- [manifest.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/manifest.json).
-- [physical_metrics.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/physical_metrics.json).
-- [local_metrics.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/local_metrics.json).
-- [gate_metrics.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/gate_metrics.json).
-- [resources.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/resources.json).
-- [openlane-target.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/openlane-target.json).
-- [openlane-common.json](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/openlane-common.json).
-- [STA, netlist final, SPEF, SDF y restricciones resueltas](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/runs/).
-- [Actividad y potencia objetivo](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/target/) y [a 10 MHz](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/common/).
-- Cada escenario conserva `power.sdc` y el log combinado `power.log`.
+- [manifest.json](frequency_optimized/sky130/manifest.json).
+- [physical_metrics.json](frequency_optimized/sky130/physical_metrics.json).
+- [local_metrics.json](frequency_optimized/sky130/local_metrics.json).
+- [gate_metrics.json](frequency_optimized/sky130/gate_metrics.json).
+- [resources.json](frequency_optimized/sky130/resources.json).
+- [openlane-target.json](frequency_optimized/sky130/openlane-target.json).
+- [openlane-common.json](frequency_optimized/sky130/openlane-common.json).
+- [Índice de archivos y SHA256](frequency_optimized/sky130/evidence.json).
+- [STA por corner y restricciones usadas](frequency_optimized/sky130/sta/).
+
+Los VCD, netlists, SPEF/SDF, ODB y bibliotecas se conservan localmente en `build/ppa/`.
+
+- [Actividad y potencia target](frequency_optimized/sky130/target/) y [Actividad y potencia common](frequency_optimized/sky130/common/).
+- Los directorios de escenario existentes conservan `power.sdc` y el log combinado `power.log`.
 
 #### Procedencia de la medición
 
 Se reutilizó el layout post-PnR C04 original; no se ejecutó un P&R nuevo. La temporización se releyó de los reportes post-SPEF conservados. La actividad target/common se simuló de nuevo sobre las netlists finales.
 
-En common, STA físico lee `base.sdc` con reloj 100 ns y delays E/S 20 ns; la potencia usa el SDC resuelto del target con solo el período de reloj reescrito a 100 ns, por lo que conserva delays E/S 2 ns. La diferencia de slack nominal de 54 ns se explica por +90 ns de período y −18 ns por cada margen E/S. Ver [diagnóstico de caminos y constraints](../../build/ppa/environment/c04-path-diagnostic.md).
+En common, STA físico lee `base.sdc` con reloj 100 ns y delays E/S 20 ns; la potencia usa el SDC resuelto del target con solo el período de reloj reescrito a 100 ns, por lo que conserva delays E/S 2 ns. La diferencia de slack nominal de 54 ns se explica por +90 ns de período y −18 ns por cada margen E/S. Ver [diagnóstico de caminos y constraints](frequency_optimized/sky130/diagnostics/c04-path-diagnostic.md).
 
 El log target reanalizado coincide byte a byte con el anterior (SHA-256 `d2f8b4b31780df999925d9d75eb0c39a194f0c7bb60ac9963017441f14a82e19`). El resumen de recursos cubre solo esta reanudación; no infiere consumo histórico de P&R.
 
@@ -205,7 +215,7 @@ Los VCD originales target/common ocuparon **174.11 / 173.79 MiB**. Al coexistir 
 
 La adquisición completó sin cortes por RAM o espacio. El fallo histórico sólo registraba un rechazo del reporte de potencia; no hay medición histórica de `vvp` que permita atribuirlo a OOM o falta de disco. El nuevo `target/power.log` es idéntico byte a byte al del 24/10. El perfil no incluye una nueva síntesis, P&R ni el coste del postprocesado y verificación de hashes.
 
-[Consumo por proceso y muestras del host](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/resource_summary.json) · [Validación de artefactos](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/validation.json) · [Procedencia y hashes del layout](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/source_run/rehash.json) · [Comandos registrados](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/reproduce.txt).
+[Consumo por proceso y muestras del host](frequency_optimized/sky130/resource_summary.json) · [Validación de artefactos](frequency_optimized/sky130/validation.json) · [Procedencia y hashes del layout](frequency_optimized/sky130/source_run/rehash.json) · [Comandos registrados](frequency_optimized/sky130/reproduce.txt).
 
 Para ejecutar una nueva corrida desde RTL con las versiones fijadas y el perfil documentado:
 
@@ -224,7 +234,7 @@ A 100 MHz, el corner nominal `nom_tt_025C_1v80` pasa setup/hold: **+2.330294 / +
 | Setup | `_78863_` → `_81410_` | El destino corresponde a `u_spectral.spectral_bins[15].u_product.aligned[1][19]`. El origen no conserva un alias RTL que permita atribuirle una función más específica. |
 | Hold | `rst` → `_79914_` | El destino corresponde a `u_control.fft_token[0][5]`; requiere revisar la ruta de reset y sus restricciones de entrada. |
 
-[Diagnóstico con referencias a reportes y netlist](../../build/ppa/environment/c04-path-diagnostic.md).
+[Diagnóstico con referencias a reportes y netlist](frequency_optimized/sky130/diagnostics/c04-path-diagnostic.md).
 
 | Análisis C04 | Período | Retardos de E/S |
 |---|---:|---:|
@@ -241,9 +251,9 @@ La Fmax de las tablas es una estimación registro a registro: usa la métrica pr
 
 A 10 MHz, esta estimación da **6.347817 mW** y **0.642840 nJ/muestra** para C04, frente a **0.658034 mW** y **4.729616 nJ/muestra** para C02. C04 tiene aproximadamente **9.65×** más potencia media y **7.36×** menos energía por muestra en este benchmark. Son estimaciones con actividad y las condiciones declaradas; ambos layouts conservan violaciones eléctricas. Las gráficas físicas comunes siguen condicionadas al PASS global de ambas variantes.
 
-La implementación del flujo pasó **25 pruebas PPA** y `make smoke`: **72 pruebas Python** y tres variantes RTL compiladas y simuladas. [Resumen de validación del código](../../build/ppa/environment/c04-code-validation.json) · [Log Python de smoke](../../build/ci-logs/python-tests.log). La nueva simulación de netlist verificó 2048/2048 muestras en ambos escenarios.
+La validación histórica de la adquisición del 26/10 pasó **25 pruebas PPA** y `make smoke`: **72 pruebas Python** y tres variantes RTL compiladas y simuladas. [Resumen de validación del código](frequency_optimized/validation-20261026/code-validation.json) · [Log Python de smoke](frequency_optimized/validation-20261026/python-tests.txt). La nueva simulación de netlist verificó 2048/2048 muestras en ambos escenarios.
 
-Para cerrar C04 falta resolver el timing global objetivo y las restricciones eléctricas, y comprobar su dependencia formal de A06. El siguiente trabajo técnico es revisar restricciones legítimas de reset/E/S, fanout y optimización física; después evaluar síntesis orientada a retardo frente a `AREA 0`. El análisis de caminos determinará si hace falta retiming o nuevos cortes RTL. Esta entrega no modifica el RTL.
+Para cerrar C04 falta resolver el timing global objetivo y las restricciones eléctricas. A06 ya está integrado desde `main`; el banco común se verifica junto a esta revisión. El siguiente trabajo técnico es revisar restricciones legítimas de reset/E/S, fanout y optimización física; después evaluar síntesis orientada a retardo frente a `AREA 0`. El análisis de caminos determinará si hace falta retiming o nuevos cortes RTL. Esta entrega no modifica el RTL.
 
 La metodología sigue M8 (síntesis, implementación y SPEF), M9 (corners, setup/hold y retiming) y M10 (potencia con actividad). Los nueve corners, 2048 muestras y 64 segmentos son decisiones del proyecto. Los mínimos de 10/100 MHz están registrados en el [contrato técnico](../../docs/contrato-tecnico.md); el procedimiento completo está en la [guía PPA](../../docs/frecuencia/ppa.md).
 <!-- c04-diagnostics:end -->
@@ -254,7 +264,7 @@ La metodología sigue M8 (síntesis, implementación y SPEF), M9 (corners, setup
 
 ## Comparación C02 / C04
 
-Corridas: [C02](../../build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09/manifest.json) / [C04](../../build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume/manifest.json). Benchmark: QPSK 2×, semilla 1, 2048 muestras exactas.
+Corridas: [C02](frequency_serial/sky130/manifest.json) / [C04](frequency_optimized/sky130/manifest.json). Benchmark: QPSK 2×, semilla 1, 2048 muestras exactas.
 
 Las diferencias porcentuales son (C04/C02 − 1) × 100; un signo positivo no siempre significa mejora.
 
@@ -324,7 +334,7 @@ radar-beta
     showLegend true
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/radar-arquitectura.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/radar-arquitectura.mmd)
 
 ### Barras: objetivos propios
 
@@ -338,7 +348,7 @@ xychart-beta
     bar [559.000000000000, 26.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/latency_cycles.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/latency_cycles.mmd)
 
 | ciclos | C02 | C04 |
 |---|---:|---:|
@@ -352,7 +362,7 @@ xychart-beta
     bar [575.000000000000, 8.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/block_cycles.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/block_cycles.mmd)
 
 | ciclos | C02 | C04 |
 |---|---:|---:|
@@ -366,7 +376,7 @@ xychart-beta
     bar [147200.000000000000, 2074.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/active_cycles.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/active_cycles.mmd)
 
 | ciclos | C02 | C04 |
 |---|---:|---:|
@@ -380,7 +390,7 @@ xychart-beta
     bar [55900.000000000000, 260.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/latency_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/latency_ns.mmd)
 
 | ns | C02 | C04 |
 |---|---:|---:|
@@ -394,7 +404,7 @@ xychart-beta
     bar [139130.434782608703, 100000000.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/sustained_sps.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/sustained_sps.mmd)
 
 | muestras/s | C02 | C04 |
 |---|---:|---:|
@@ -408,7 +418,7 @@ xychart-beta
     bar [139130.434782608994, 98746383.799421414733]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/effective_sps.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/effective_sps.mmd)
 
 | muestras/s | C02 | C04 |
 |---|---:|---:|
@@ -422,7 +432,7 @@ xychart-beta
     bar [4474.000000000000, 48295.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/cells.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/cells.mmd)
 
 | celdas | C02 | C04 |
 |---|---:|---:|
@@ -436,7 +446,7 @@ xychart-beta
     bar [610.000000000000, 6562.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/flip_flops.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/flip_flops.mmd)
 
 | FF | C02 | C04 |
 |---|---:|---:|
@@ -450,7 +460,7 @@ xychart-beta
     bar [3864.000000000000, 41733.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/combinational_cells.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/combinational_cells.mmd)
 
 | celdas | C02 | C04 |
 |---|---:|---:|
@@ -464,7 +474,7 @@ xychart-beta
     bar [38448.124799999998, 382962.291199999978]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/cell_area_um2.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/cell_area_um2.mmd)
 
 | µm² | C02 | C04 |
 |---|---:|---:|
@@ -478,7 +488,7 @@ xychart-beta
     bar [57365.000000000000, 541302.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/final_cell_area_um2.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/final_cell_area_um2.mmd)
 
 | µm² | C02 | C04 |
 |---|---:|---:|
@@ -492,7 +502,7 @@ xychart-beta
     bar [144863.936000000016, 1432473.856000000145]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/core_area_um2.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/core_area_um2.mmd)
 
 | µm² | C02 | C04 |
 |---|---:|---:|
@@ -506,7 +516,7 @@ xychart-beta
     bar [157743.082425000001, 1472699.144000000088]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/die_area_um2.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/die_area_um2.mmd)
 
 | µm² | C02 | C04 |
 |---|---:|---:|
@@ -520,7 +530,7 @@ xychart-beta
     bar [0.456245056739, 44.980037849659]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/internal_w.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/internal_w.mmd)
 
 | W | C02 | C04 |
 |---|---:|---:|
@@ -534,7 +544,7 @@ xychart-beta
     bar [0.201749662665, 18.493774692773]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/switching_w.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/switching_w.mmd)
 
 | W | C02 | C04 |
 |---|---:|---:|
@@ -548,7 +558,7 @@ xychart-beta
     bar [0.657994719404, 63.473812542432]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/dynamic_w.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/dynamic_w.mmd)
 
 | W | C02 | C04 |
 |---|---:|---:|
@@ -562,7 +572,7 @@ xychart-beta
     bar [0.000038831497, 0.000345756401]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/leakage_w.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/leakage_w.mmd)
 
 | W | C02 | C04 |
 |---|---:|---:|
@@ -576,7 +586,7 @@ xychart-beta
     bar [0.658033549371, 63.474157191059]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/total_w.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/total_w.mmd)
 
 | W | C02 | C04 |
 |---|---:|---:|
@@ -590,7 +600,7 @@ xychart-beta
     bar [4.729337045717, 0.642796324282]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/dynamic_energy_j.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/dynamic_energy_j.mmd)
 
 | J/muestra | C02 | C04 |
 |---|---:|---:|
@@ -604,7 +614,7 @@ xychart-beta
     bar [4.729616136103, 0.642799814523]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/total_energy_j.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/total_energy_j.mmd)
 
 | J/muestra | C02 | C04 |
 |---|---:|---:|
@@ -618,7 +628,7 @@ xychart-beta
     bar [100.000000000000, 100.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/activity_coverage_pct.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/activity_coverage_pct.mmd)
 
 | % | C02 | C04 |
 |---|---:|---:|
@@ -805,7 +815,7 @@ xychart-beta
     line [2.330293801658, -3.162586726462, 3.485214437918, 2.474241770388, -3.037316262248, 3.582549469596, 2.196894728317, -3.280996012190, 3.391546695038]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/target-setup_ws_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/target-setup_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -822,7 +832,7 @@ xychart-beta
     line [0.303278077902, -0.331912728918, 0.100030320192, 0.300486311005, -0.199806177259, 0.099975808240, 0.305664835428, -0.499414967961, 0.101807343215]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/target-hold_ws_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/target-hold_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -839,7 +849,7 @@ xychart-beta
     line [0.000000000000, -406.348260763418, 0.000000000000, 0.000000000000, -357.997588373478, 0.000000000000, 0.000000000000, -464.008236966897, 0.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/target-setup_tns_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/target-setup_tns_ns.mmd)
 
 ```mermaid
 ---
@@ -856,7 +866,7 @@ xychart-beta
     line [0.000000000000, -1.803330646964, 0.000000000000, 0.000000000000, -0.927087766130, 0.000000000000, 0.000000000000, -3.389988608001, 0.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/target-hold_tns_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/target-hold_tns_ns.mmd)
 
 Escenario common: C02 setup/hold **PASS**, eléctrico/restricciones **FAIL**, global **FAIL**; C04 setup/hold **PASS**, eléctrico/restricciones **FAIL**, global **FAIL**.
 
@@ -1021,7 +1031,7 @@ xychart-beta
     line [56.330291359167, 53.529761693952, 57.485211107249, 56.474236663362, 53.780483810783, 57.582551912087, 56.196897614897, 53.313408530221, 57.391547361172]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/common-setup_ws_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/common-setup_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -1038,7 +1048,7 @@ xychart-beta
     line [0.303278077902, 0.827144154359, 0.100030320192, 0.300486311005, 0.824434543969, 0.099975808240, 0.305664835428, 0.831591707922, 0.101807343215]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/common-hold_ws_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/common-hold_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -1055,7 +1065,7 @@ xychart-beta
     line [0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/common-setup_tns_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/common-setup_tns_ns.mmd)
 
 ```mermaid
 ---
@@ -1072,7 +1082,7 @@ xychart-beta
     line [0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000]
 ```
 
-[Fuente Mermaid](../../build/ppa/comparisons/e9a58ba6857b698a/common-hold_tns_ns.mmd)
+[Fuente Mermaid](comparisons/e9a58ba6857b698a/common-hold_tns_ns.mmd)
 
 <!-- comparison:end -->
 
@@ -1164,6 +1174,6 @@ corresponde al FPGA completo, no solo al filtro.
 
 ### Evidencia histórica
 
-- [Resumen original recibido](../../build/ppa/frequency_serial/20261013-vivado2024.2-recibido/resultados_ppa_frequency_serial.md).
+- [Resumen original recibido](frequency_serial/vivado-20261013/resultados_ppa_frequency_serial.md).
 - SHA256 del resumen: `54e01cc87e53d321c744948fbca040b80d9b892c91641bf94fffc647eebfcfcb`.
-- [Manifiesto de la base local serial](../../build/ppa/frequency_serial/20261013T220620013563Z-b9bd2183/manifest.json); no se confirmó identidad con las fuentes ejecutadas en Windows.
+- [Manifiesto de la base local serial](frequency_serial/vivado-20261013/local_manifest.json); no se confirmó identidad con las fuentes ejecutadas en Windows.

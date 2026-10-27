@@ -568,6 +568,8 @@ def physical(target: str, openlane_root: Path, liberty: str | None = None) -> Pa
                                         for p in run_dir.rglob("*") if p.is_file()
                                         and p.name != "manifest.json" and p.suffix not in (".out", ".vcd", ".log")}
         write_json(run_dir / "manifest.json", manifest)
+        from scripts.ppa_evidence import publish_evidence
+        publish_evidence(run_dir, openlane_root=openlane_root)
         result = physical_summary(run_dir, manifest, results)
         (run_dir / "physical_summary.md").write_text(result)
         record_run(run_dir.name, result, sha256(run_dir / "physical_metrics.json"),
@@ -585,14 +587,17 @@ def physical(target: str, openlane_root: Path, liberty: str | None = None) -> Pa
 
 def physical_summary(directory: Path, manifest: dict, result: dict) -> str:
     from scripts.ppa_compare import scenario_status
+    from scripts.ppa_evidence import published_directory
 
-    link = Path(os.path.relpath(directory, REPORT.parent)).as_posix()
+    evidence = published_directory(directory, manifest['config']['target'])
+    link = Path(os.path.relpath(evidence, REPORT.parent)).as_posix()
     text = f"# {manifest['config']['target']} — corrida {directory.name} (OpenLane 2 / SKY130)\n\n"
     text += "**Medición física completa; simulación funcional de netlist final, STA post-SPEF y potencia con VCD.**\n\n"
     provenance = manifest.get("resume_provenance")
     if provenance and provenance.get("reused_physical_layout"):
         source_run = Path(provenance["source_run"])
-        source_link = Path(os.path.relpath(source_run, REPORT.parent)).as_posix()
+        source_link = (link + "/source_run" if evidence != directory else
+                       Path(os.path.relpath(source_run, REPORT.parent)).as_posix())
         text += (f"Layout físico reutilizado de [{source_run.name}]({source_link}/manifest.json); "
                  "esta corrida no hizo placement ni routing nuevos. Se volvió a ejecutar "
                  "la simulación funcional de la netlist y el análisis de potencia.\n\n")
@@ -633,7 +638,11 @@ def physical_summary(directory: Path, manifest: dict, result: dict) -> str:
                  "resources.json", "openlane-target.json", "openlane-common.json"):
         if (directory / name).is_file():
             text += f"- [{name}]({link}/{name}).\n"
-    if (directory / "runs").is_dir():
+    if (evidence / "evidence.json").is_file():
+        text += f"- [Índice de archivos y SHA256]({link}/evidence.json).\n"
+        text += f"- [STA por corner y restricciones usadas]({link}/sta/).\n"
+        text += "\nLos VCD, netlists, SPEF/SDF, ODB y bibliotecas se conservan localmente en `build/ppa/`.\n\n"
+    elif (directory / "runs").is_dir():
         text += f"- [STA, netlist final, SPEF, SDF y restricciones resueltas]({link}/runs/).\n"
     activity_links = []
     for scenario in ("target", "common"):

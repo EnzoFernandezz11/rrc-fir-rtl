@@ -1,0 +1,29 @@
+{
+  "validated_at_utc": "2026-10-26T18:29:41.534247+00:00",
+  "checks": {
+    "c02_load_run": true,
+    "c04_load_run": true,
+    "check_compatible": true,
+    "c04_reload_after_hash_update": true
+  },
+  "comparison": {
+    "c02": "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_serial/20261024T190548892720Z-22dd3d09",
+    "c04": "/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/frequency_optimized/20261026T174127Z-22dd3d09-c04resume",
+    "render": false
+  },
+  "c02_evidence_sha256": {
+    "manifest.json": "bd1bde8252775d8b2fd8a7e63b18acb69bf86d77663a39121060b2597e2384d4",
+    "local_metrics.json": "4ae80500841034d1db57aa5add0bda369ac02c676f888de2b39050debe93ca09",
+    "gate_metrics.json": "4ae80500841034d1db57aa5add0bda369ac02c676f888de2b39050debe93ca09",
+    "resources.json": "6c4b3158ff7ed0a891200bb6db52e0c7d129680d2c99307890ac0088511cea0b",
+    "physical_metrics.json": "bd8a1d47b6aa068ba312cbf120b3d386fa2339fc5df8fd87d7222fcdfd41f1d1"
+  },
+  "c04_evidence_sha256": {
+    "manifest.json": "3b25d229b32453a749497d6694c510d43af21356c3091ca4c6d1f73753d64341",
+    "local_metrics.json": "305564d1c0393793f5543c9abede3f817030f02d4a7458452fc91fc38ae77ef0",
+    "gate_metrics.json": "305564d1c0393793f5543c9abede3f817030f02d4a7458452fc91fc38ae77ef0",
+    "resources.json": "805752051fa29294eea46de673b003cf47bdf8ea3d77bd4b7ab38a640249cf1f",
+    "physical_metrics.json": "38f8227330f7388a67f3cbc21502e06beec3af264af310a20a4f7ad050b65973"
+  },
+  "c04_manifest_status": "physical_complete"
+}
