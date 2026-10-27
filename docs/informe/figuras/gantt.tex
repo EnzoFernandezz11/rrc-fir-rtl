@@ -1,0 +1,46 @@
+% Días de octubre; x = (día - 3) * 0,45 cm. Fin exclusivo, como en docs/gantt.md.
+  \begin{tikzpicture}[y=-0.42cm, font=\scriptsize]
+    % Grilla semanal, fecha del registro, corte de C04 y entrega.
+    \foreach \d in {5,12,19,26} {
+      \draw[gray!25] ({(\d-3)*0.45},-1.3) -- ({(\d-3)*0.45},27.6);
+      \node[gray, above] at ({(\d-3)*0.45},-1.3) {\d/10};
+    }
+    \draw[black!70] ({(21-3)*0.45},-1.3) -- ({(21-3)*0.45},27.6) node[below] {registro 20/10};
+    \draw[black!70, dashed] ({(26-3)*0.45},-1.3) -- ({(26-3)*0.45},27.6) node[below] {corte C04};
+    \draw[black!70, thick] ({(30-3)*0.45},-1.3) -- ({(30-3)*0.45},27.6) node[below] {entrega};
+    % fila/tarea/plan inicio/plan fin/real inicio/real fin/color/terminada
+    \foreach \y/\t/\ps/\pe/\rs/\re/\c/\ok in {
+        0/E00/5/6/5/8/serie1/1, 1/E01/5/7/5/9/serie3/1, 2/E02/5/8/7/9/serie1/1,
+        3/E03/8/11/9/10/serie2/1, 4/G01/5/30/3/21/serie1/0,
+        6/A01/5/7/7/9/serie1/1, 7/A02/7/9/7/10/serie1/1, 8/A03/9/12/12/13/serie1/1,
+        9/A04/9/13/12/13/serie1/1, 10/A05/13/15/12/14/serie1/1, 11/A06/15/20/14/21/serie1/1,
+        12/A07/11/29/14/21/serie1/0,
+        14/B01/8/11/12/14/serie2/1, 15/B02/11/16/14/15/serie2/1, 16/B03/11/14/15/17/serie2/1,
+        17/B04/16/25/19/21/serie2/0,
+        19/C01/7/12/6/14/serie3/1, 20/C02/12/20/12/16/serie3/1, 21/C03/12/14/15/19/serie3/1,
+        22/C04/20/29/19/21/serie3/0,
+        24/I01/29/30/0/0/serie1/0, 25/I02/14/30/15/21/serie1/0, 26/I03/20/30/0/0/serie1/0} {
+      \node[anchor=east] at (-0.1,\y) {\t};
+      \draw[gray!60, fill=gray!15] ({(\ps-3)*0.45},\y-0.42) rectangle ({(\pe-3)*0.45},\y-0.05);
+      \ifnum\rs>0
+        \ifnum\ok=1
+          \fill[\c] ({(\rs-3)*0.45},\y+0.05) rectangle ({(\re-3)*0.45},\y+0.42);
+        \else
+          \fill[\c!45] ({(\rs-3)*0.45},\y+0.05) rectangle ({(\re-3)*0.45},\y+0.42);
+        \fi
+      \fi
+    }
+    % Grupos.
+    \foreach \y/\g in {-0.1/Contrato y planificación, 5.9/Modelos y precisión (Andrés),
+        13.9/Filtro temporal (Julián), 18.9/Filtro en frecuencia (Enzo), 23.9/Integración y presentación}
+      \node[anchor=south west, font=\scriptsize\bfseries, inner sep=0] at (0,\y-0.55) {\g};
+    % Leyenda.
+    \begin{scope}[yshift=-29.2*0.42cm]
+      \draw[gray!60, fill=gray!15] (0,0) rectangle (0.5,0.2); \node[right] at (0.5,0.1) {plan};
+      \fill[serie1] (1.8,0) rectangle (2.3,0.2); \node[right] at (2.3,0.1) {Andrés};
+      \fill[serie2] (3.8,0) rectangle (4.3,0.2); \node[right] at (4.3,0.1) {Julián};
+      \fill[serie3] (5.6,0) rectangle (6.1,0.2); \node[right] at (6.1,0.1) {Enzo};
+      \fill[gray!75] (7.2,0) rectangle (7.7,0.2); \node[right] at (7.7,0.1) {terminada};
+      \fill[gray!30] (9.4,0) rectangle (9.9,0.2); \node[right] at (9.9,0.1) {en curso};
+    \end{scope}
+  \end{tikzpicture}
