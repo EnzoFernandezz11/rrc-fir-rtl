@@ -1,42 +1,73 @@
 \section{Comparación de desempeño}\label{sec:ppa}
 
-Todas las variantes se miden con el mismo flujo de Vivado 2024.2: Artix-7 \texttt{xc7a35tcpg236-1}, síntesis e implementación \emph{out of context} con las estrategias por defecto y una única restricción de reloj sobre \texttt{clk}. El estímulo es el mismo para todas: QPSK con sobremuestreo 2×, semilla 1, 1024 símbolos (2048 muestras), con la entrada siempre disponible y la salida siempre lista. Después del ruteo, la netlist se simula con los retardos SDF del peor caso y se comparan las 2048 salidas con el modelo de punto fijo de su rama. Esa misma simulación mide la latencia y el throughput y genera la actividad SAIF que usa la estimación de potencia.
+Las cuatro variantes se miden con el mismo flujo ASIC: OpenLane~2 (revisión \texttt{a7b0e6d}) con la biblioteca de celdas estándar SKY130 HD de 130\,nm, desde la síntesis hasta el ruteo, la extracción de parásitos (SPEF) y el análisis estático de timing (STA) posterior al ruteo. Todas usan la misma utilización del núcleo (35\,\%) y la misma densidad de colocación (45\,\%). El STA se corre en nueve \emph{corners}: tres condiciones de proceso, tensión y temperatura (TT a 25\,°C y 1,8\,V; SS a 100\,°C y 1,6\,V; FF a $-40$\,°C y 1,95\,V) por tres extracciones de parásitos (nominal, mínima y máxima).
 
-El reloj oficial es 10\,MHz para las variantes serie y 100\,MHz para las paralelas (sección~\ref{sec:intro}). Las serie se implementan también a 100\,MHz para separar la mejora que aporta la arquitectura de la que aporta el reloj. La tabla~\ref{tab:ppa} reúne las cuatro corridas serie; todas cumplen setup y hold, y la simulación temporal reproduce las 2048 muestras exactas.
+El estímulo es el mismo para todas: QPSK con sobremuestreo 2×, semilla 1, 1024 símbolos (2048 muestras), con la entrada siempre disponible y la salida siempre lista. La netlist final se simula sin retardos y se comparan las 2048 salidas con el modelo de punto fijo de su rama. Esa simulación mide la latencia y el throughput y genera la actividad (VCD) con la que OpenSTA estima la potencia, con los parásitos nominales y la biblioteca TT.
+
+El reloj objetivo es 10\,MHz para las variantes serie y 100\,MHz para las paralelas (sección~\ref{sec:intro}). Una variante cumple su reloj cuando el slack de setup y el de hold son no negativos, sin violaciones, en los nueve corners. Las restricciones eléctricas de las celdas (tiempo de transición, capacitancia de carga y fanout máximos) tienen un veredicto aparte. La tabla~\ref{tab:ppa} reúne las cuatro variantes en su reloj objetivo y la tabla~\ref{tab:ppa-10mhz}, las cuatro a 10\,MHz. Las cifras salen de \texttt{reports/ppa/tabla.md}, que se genera a partir de la evidencia versionada de cada corrida.
 
 \begin{table}[h]
   \centering
-  \caption{PPA de las variantes serie en Vivado. $L$ es la latencia por muestra; $II$, el intervalo medio entre muestras de salida. La SQNR es la mínima del modelo de punto fijo de cada rama, semillas 0 a 4.}\label{tab:ppa}
+  \caption{PPA en SKY130 HD en el reloj objetivo de cada variante. Los slacks son el peor valor de los nueve corners: en setup, SS con parásitos máximos en las cuatro variantes; en hold, FF con parásitos mínimos, salvo en frecuencia paralela (SS con parásitos máximos). $L$ es la latencia; $II$, el intervalo medio entre muestras de salida. La SQNR es la mínima del modelo de punto fijo de cada rama, semillas 0 a 4.}\label{tab:ppa}
+  \small
   \begin{tabular}{lrrrr}
     \toprule
-    & \multicolumn{2}{c}{Tiempo serie} & \multicolumn{2}{c}{Frecuencia serie} \\
+    & \multicolumn{2}{c}{Tiempo} & \multicolumn{2}{c}{Frecuencia} \\
     \cmidrule(lr){2-3}\cmidrule(lr){4-5}
-    Reloj & 10\,MHz & 100\,MHz & 10\,MHz & 100\,MHz \\
+    & Serie & Paralela & Serie & Paralela \\
     \midrule
+    Reloj (MHz) & 10 & 100 & 10 & 100 \\
     SQNR (dB) & \multicolumn{2}{c}{44,2} & \multicolumn{2}{c}{43,0} \\
-    LUT & 88 & 88 & 1875 & 1874 \\
-    FF & 57 & 57 & 569 & 569 \\
-    DSP & 0 & 0 & 3 & 3 \\
-    BRAM & 0 & 0 & 0 & 0 \\
-    WNS (ns) & 93,883 & 4,136 & 82,675 & 0,901 \\
-    Fmax estimada (MHz) & 163,5 & 170,5 & 57,7 & 109,9 \\
-    $L$ (ciclos) & 9 & 9 & 559 & 559 \\
-    $II$ (ciclos por muestra) & 10 & 10 & 71,875 & 71,875 \\
-    Throughput (Mmuestras/s) & 1 & 10 & 0,139 & 1,391 \\
-    Potencia dinámica (mW) & $<0{,}5$ & 2 & 2 & 15 \\
-    Energía dinámica (nJ/muestra) & $<0{,}5$ & 0,2 & 14,4 & 10,8 \\
+    Celdas de la síntesis & 396 & 779 & 4474 & 48\,295 \\
+    Flip-flops & 63 & 132 & 610 & 6562 \\
+    Área de celdas final (µm²) & 4748 & 8413 & 57\,365 & 541\,302 \\
+    Área del núcleo (µm²) & 11\,272 & 19\,526 & 144\,864 & 1\,432\,474 \\
+    Peor slack de setup (ns) & $+57{,}96$ & $+2{,}27$ & $+56{,}13$ & $-3{,}28$ \\
+    Peor slack de hold (ns) & $+0{,}11$ & $+0{,}11$ & $+0{,}11$ & $-0{,}50$ \\
+    Setup y hold en 9 corners & cumple & cumple & cumple & no cumple \\
+    Violaciones de transición / carga / fanout & 0 / 0 / 1 & 0 / 0 / 1 & 86 / 1 / 22 & 544 / 3 / 183 \\
+    Fmax estimada, peor corner (MHz) & 124,5 & 170,2 & 57,0 & 75,3 \\
+    $L$ (ciclos) & 9 & 1 & 559 & 26 \\
+    $II$ (ciclos por muestra) & 10 & 1 & 71,875 & 1 \\
+    Throughput (Mmuestras/s) & 1 & 99,95 & 0,139 & 98,75\textsuperscript{*} \\
+    Potencia total (mW) & 0,087 & 2,23 & 0,658 & 63,5 \\
+    Energía (nJ/muestra) & 0,087 & 0,022 & 4,73 & 0,643 \\
+    \bottomrule
+  \end{tabular}
+
+  \smallskip
+  \footnotesize\textsuperscript{*}Condicionado: la variante no cumple setup y hold a 100\,MHz en los corners SS.
+\end{table}
+
+En frecuencia serie el intervalo surge de procesar bloques de 8 muestras cada 575 ciclos ($575/8 = 71{,}875$); la paralela entrega un bloque cada 8 ciclos. El throughput es el cociente entre las 2048 muestras y la ventana activa de la simulación, que incluye el llenado inicial: por eso las paralelas quedan apenas debajo de 100\,Mmuestras/s. La energía por muestra es la potencia total por la duración de esa ventana, dividida por 2048. La Fmax es una estimación registro a registro, $1000/(T - \text{slack})$\,MHz, con $T$ el período restringido en ns; no surge de un barrido de frecuencias.
+
+La variante en frecuencia paralela cumple setup y hold en TT (slack de $+2{,}33$ y $+0{,}30$\,ns) y en FF, pero no en SS: 397 a 488 caminos de setup y 7 a 13 de hold violan según la extracción de parásitos. Las violaciones eléctricas aparecen en todas las variantes. En las dos de tiempo se reducen a un buffer del árbol de reloj con un fanout mayor que el permitido.
+
+\begin{table}[h]
+  \centering
+  \caption{Las cuatro variantes a 10\,MHz, el reloj común. Las serie repiten su corrida de la tabla~\ref{tab:ppa}; las paralelas reutilizan su layout con el período de 100\,ns.}\label{tab:ppa-10mhz}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    & \multicolumn{2}{c}{Tiempo} & \multicolumn{2}{c}{Frecuencia} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    & Serie & Paralela & Serie & Paralela \\
+    \midrule
+    Setup y hold en 9 corners & cumple & cumple & cumple & cumple \\
+    Throughput (Mmuestras/s) & 1 & 9,995 & 0,139 & 9,875 \\
+    Potencia total (mW) & 0,087 & 0,223 & 0,658 & 6,35 \\
+    Energía (nJ/muestra) & 0,087 & 0,022 & 4,73 & 0,643 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-En frecuencia el intervalo surge de procesar bloques de 8 muestras cada 575 ciclos ($575/8 = 71{,}875$). La potencia estática es la del dispositivo completo, 68\,mW en las cuatro corridas, y no se incluye en la energía por muestra. La Fmax se estima como $1000/(T - \text{WNS})$\,MHz, con $T$ el período restringido en ns.
-
 \paragraph{Límites de la medición.}
 \begin{itemize}
-  \item La Fmax estimada depende de la restricción: con 100\,ns los caminos cumplen con holgura y Vivado no los acorta; la variante en frecuencia, estimada en 57,7\,MHz a 10\,MHz, cumple 100\,MHz cuando se la restringe a ese período. La cota útil es la de la corrida a 100\,MHz.
-  \item Vivado informa la potencia dinámica con resolución de 1\,mW. Las cifras de pocos mW tienen un error de $\pm 0{,}5$\,mW, que domina la energía por muestra: los 2\,mW de la variante en frecuencia a 10\,MHz corresponden a entre 10,8 y 18,0\,nJ/muestra, por lo que la diferencia con los 10,8\,nJ/muestra a 100\,MHz no es significativa. Con 0,000\,W solo se puede acotar la dinámica por debajo de 0,5\,mW.
-  \item La actividad SAIF cubre parte de las redes: 94 de 211 en tiempo y 2696 de 4391 en frecuencia. Para el resto, Vivado estima la actividad por propagación vectorless.
-  \item El flujo \emph{out of context} no incluye buffers de entrada y salida ni restricciones de I/O; las cifras corresponden al núcleo.
+  \item La actividad sale de una simulación funcional sin retardos, así que no incluye los \emph{glitches} de los caminos combinacionales; la potencia dinámica puede estar subestimada. La potencia de fuga es menor que 0,4\,µW en las cuatro variantes y está incluida en el total.
+  \item La potencia se estima solo en TT con parásitos nominales. Los slacks y la Fmax de las otras condiciones no tienen una estimación de potencia asociada.
+  \item Cada variante se implementa con la restricción de su reloj objetivo. Con 100\,ns las herramientas no tienen motivo para acortar caminos, por lo que la Fmax de las variantes serie es una cota inferior de lo que alcanzarían con una restricción más exigente.
+  \item Las variantes en frecuencia se implementaron desde el commit \texttt{22dd3d09} y las de tiempo, desde \texttt{56822367}, con la misma revisión de OpenLane, del PDK y del entorno Nix. La corrida final de la paralela en frecuencia reutiliza el layout de una corrida anterior y repite la simulación de la netlist y la estimación de potencia.
+  \item No se usan macros de memoria: los bancos de datos de la variante en frecuencia paralela se sintetizan como flip-flops y lógica, lo que pesa en su área.
 \end{itemize}
 
-\pendiente{Julián (B04) y Enzo (C04)}{Columnas de las variantes paralelas a 100\,MHz, con el mismo flujo, y su comparación con las serie a igual reloj.}
+Las mismas variantes, salvo la paralela en tiempo, se midieron antes en una FPGA Artix-7 con Vivado. Esas cifras se conservan como referencia en el anexo~\ref{app:fpga} y no se convierten a área ni potencia ASIC.

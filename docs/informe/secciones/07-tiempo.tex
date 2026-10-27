@@ -58,7 +58,7 @@ La latencia es $L = 9$ ciclos, de la aceptación de $x[n]$ al primer ciclo con $
 
 \subsection{Recursos}
 
-El diseño previó 56 registros: 32 de historial (dos de $8 \times 2$ bits), 18 de acumuladores, 3 del contador, 2 de estado y 1 para la marca de fin de trama guardada; ningún multiplicador, bloque DSP ni memoria de bloque (BRAM). La implementación en Vivado usa 57 registros y 88 tablas de búsqueda (LUT) (tabla~\ref{tab:ppa}).
+El diseño previó 56 registros: 32 de historial (dos de $8 \times 2$ bits), 18 de acumuladores, 3 del contador, 2 de estado y 1 para la marca de fin de trama guardada; ningún multiplicador, bloque DSP ni memoria de bloque (BRAM). La síntesis en SKY130 usa 63 flip-flops (tabla~\ref{tab:ppa}); la implementación en FPGA, 57 registros y 88 tablas de búsqueda (LUT) (anexo~\ref{app:fpga}).
 
 \subsection{Verificación}
 
