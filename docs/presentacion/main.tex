@@ -1,0 +1,237 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[spanish,es-noquoting,es-tabla]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+% Misma paleta que el informe: las figuras compartidas la usan.
+\definecolor{serie1}{HTML}{2A78D6}
+\definecolor{serie2}{HTML}{EB6834}
+\definecolor{serie3}{HTML}{1BAF7A}
+\definecolor{serie4}{HTML}{EDA100}
+
+\usetheme{default}
+\usecolortheme[named=serie1]{structure}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{frametitle}{series=\bfseries}
+% Quién presenta cada bloque, en la esquina del título.
+\newcommand{\presenta}[1]{\hfill{\normalfont\small\color{gray}#1}}
+
+\title{Filtro RRCOS complejo de 8 coeficientes}
+\subtitle{Implementaciones RTL en tiempo y en frecuencia}
+\author{Andrés Villarreal \and Julián Moreyra \and Enzo Fernández}
+\date{30 de octubre de 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ---------------------------------------------------------------- Andrés
+\begin{frame}{Qué se pidió \presenta{Andrés}}
+  \begin{itemize}
+    \item Filtro FIR complejo de 8 coeficientes, raíz de coseno elevado con \emph{roll-off} 0,5, sobre símbolos QPSK sobremuestreados 2×.
+    \item Dos ramas: FIR en el dominio del tiempo y procesamiento por bloques en frecuencia (overlap-save con 50\,\% de superposición).
+    \item En cada rama, una variante serie y una paralela, con la misma interfaz y los mismos resultados.
+    \item Modelos en punto flotante y en punto fijo, comparados con distintos conjuntos de datos.
+    \item Objetivos de reloj: 10\,MHz para las serie y 100\,MHz para las paralelas.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cadena común a las dos ramas \presenta{Andrés}}
+  \centering
+  \input{../informe/figuras/cadena}
+
+  \bigskip
+  \begin{itemize}
+    \item Los modelos en Python generan los coeficientes, la secuencia QPSK y las salidas esperadas de cada rama.
+    \item En flotante las dos ramas difieren en menos de $2\times10^{-14}$: calculan el mismo filtro.
+    \item El RTL recibe $x[n] \in \{-1, 0, +1\}$ en I y Q, con \texttt{valid}/\texttt{ready}/\texttt{last} y reset síncrono.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Punto fijo y SQNR \presenta{Andrés}}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \resizebox{\linewidth}{!}{\input{../informe/figuras/sqnr}}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \small
+      \begin{itemize}
+        \item Coeficientes Q1.7 y salida Q2.7 (9 bits) en las dos ramas, sin saturación: los anchos salen de cotas de peor caso.
+        \item SQNR mínima con QPSK, semillas 0 a 4: \textbf{44,2\,dB} en tiempo y \textbf{43,0\,dB} en frecuencia, sobre un mínimo de 40\,dB.
+        \item En tiempo el único error es cuantizar $h$; en frecuencia se suman $W$, $H$ y los redondeos internos.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Verificación \presenta{Andrés}}
+  \begin{itemize}
+    \item Los modelos de punto fijo generan vectores con la entrada y la salida esperada de cada rama: impulso, ceros, extremos, bordes de trama y QPSK de 2048 muestras.
+    \item Un banco de pruebas común verifica las cuatro variantes con los mismos vectores, en tres corridas: ideal, con pausas aleatorias en la entrada y la salida, y con reset en medio de una trama.
+    \item La comparación es palabra por palabra y por índice de resultado, no por ciclo: vale para cualquier latencia.
+    \item \texttt{make smoke} corre modelos, pruebas y simulación de cada variante registrada, igual en una máquina local y en GitHub Actions.
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------- Julián
+\begin{frame}{Tiempo serie \presenta{Julián}}
+  \begin{itemize}
+    \item Un sumador por componente recorre los 8 coeficientes: $y[n] = \sum_{k=0}^{7} h[k]\,x[n-k]$.
+    \item Como $x \in \{-1, 0, +1\}$, cada producto es elegir $h_q[k]$, $-h_q[k]$ o 0: \textbf{sin multiplicador}, acumulación exacta en 9 bits.
+    \item $II = 10$ ciclos por muestra (1 de aceptación, 8 de acumulación, 1 de entrega) y $L = 9$.
+    \item 1\,Mmuestras/s a 10\,MHz.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Tiempo paralela: arreglo sistólico transpuesto \presenta{Julián}}
+  \centering
+  \begin{tikzpicture}[>=Stealth, node distance=4mm and 7mm, font=\small,
+      reg/.style={draw, minimum width=8mm, minimum height=6mm},
+      sel/.style={draw, rounded corners, minimum width=9mm, minimum height=5mm, font=\scriptsize},
+      sum/.style={draw, circle, inner sep=1pt}]
+    \node (x) {$x[n]$};
+    \node[sel, right=8mm of x, yshift=10mm] (h7) {$\pm h_7$};
+    \node[reg, below=4mm of h7] (s7) {$s_7$};
+    \node[sum, right=8mm of s7] (a6) {$+$};
+    \node[sel, above=4mm of a6] (h6) {$\pm h_6$};
+    \node[reg, right=5mm of a6] (s6) {$s_6$};
+    \node[right=5mm of s6] (dots) {$\cdots$};
+    \node[sum, right=5mm of dots] (a1) {$+$};
+    \node[sel, above=4mm of a1] (h1) {$\pm h_1$};
+    \node[reg, right=5mm of a1] (s1) {$s_1$};
+    \node[sum, right=8mm of s1] (a0) {$+$};
+    \node[sel, above=4mm of a0] (h0) {$\pm h_0$};
+    \node[reg, right=5mm of a0] (y) {$y$};
+    \draw[->] (h7) -- (s7);
+    \draw[->] (s7) -- (a6); \draw[->] (h6) -- (a6); \draw[->] (a6) -- (s6);
+    \draw[->] (s6) -- (dots); \draw[->] (dots) -- (a1);
+    \draw[->] (h1) -- (a1); \draw[->] (a1) -- (s1);
+    \draw[->] (s1) -- (a0); \draw[->] (h0) -- (a0); \draw[->] (a0) -- (y);
+    \draw[->] (y) -- ++(8mm,0) node[right] {$y[n]$};
+    % x llega a todas las selecciones a la vez.
+    \draw (x) |- ($(h7.north)+(0,4mm)$) -| (h0.north);
+    \foreach \h in {h7,h6,h1} \draw[->] (\h.north |- {$(h7.north)+(0,4mm)$}) -- (\h.north);
+    \draw[->] ($(h0.north)+(0,4mm)$) -- (h0.north);
+  \end{tikzpicture}
+
+  \bigskip
+  \begin{itemize}
+    \item Se guardan sumas parciales: $y[n] = h_0\,x[n] + s_1$, \; $s_k \leftarrow h_k\,x[n] + s_{k+1}$.
+    \item Camino crítico: una selección y una suma de 9 bits, sin importar la cantidad de coeficientes.
+    \item $II = 1$, $L = 1$; sin máquina de estados ni contador. 132 flip-flops (63 en la serie).
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------- Enzo
+\begin{frame}{Frecuencia serie: overlap-save con un multiplicador \presenta{Enzo}}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Ventana de 16 muestras: 8 anteriores y 8 nuevas.
+        \item FFT de 16 puntos, producto por $H[k]$, IFFT y salida de las posiciones 8 a 15.
+        \item Un único multiplicador real compartido por FFT, producto espectral e IFFT.
+        \item $L = 559$ ciclos; 0,139\,Mmuestras/s a 10\,MHz.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \small
+      \begin{tabular}{lr}
+        \toprule
+        Fase & Ciclos \\
+        \midrule
+        Copia y captura & 16 \\
+        FFT (32 mariposas × 7) & 224 \\
+        Producto espectral (16 × 6) & 96 \\
+        Reordenamiento & 6 \\
+        IFFT (32 mariposas × 7) & 224 \\
+        Emisión y control & 9 \\
+        \midrule
+        Total por bloque de 8 & 575 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Frecuencia paralela \presenta{Enzo}}
+  \begin{itemize}
+    \item FFT e IFFT en núcleos separados de 4 etapas con 8 mariposas cada una; 16 posiciones espectrales simultáneas, cada una con su $H[k]$ fijo.
+    \item Cada producto multiplica siempre por la misma constante: se implementa con sumas y restas de desplazamientos (CSD), por ejemplo $181\,a = 2^8 a - 2^6 a - 2^4 a + 2^2 a + a$. Son 110 productos reales y ningún multiplicador.
+    \item Pipeline: espectro listo en el ciclo 6, producto en el 9, IFFT en el 16, salida en el 17. $L = 26$ ciclos.
+    \item Dos copias de cada almacenamiento solapan captura, cálculo y emisión: un bloque de 8 cada 8 ciclos, \textbf{una muestra por ciclo}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Grado de paralelización \presenta{Enzo}}
+  \begin{itemize}
+    \item A igual reloj, el throughput sube $\times 10$ en tiempo y $\times 71{,}875$ en frecuencia: el trabajo de cada muestra pasa de hacerse en secuencia a hacerse en paralelo.
+    \item En frecuencia, el producto espectral de un bloque tarda 2 de los 8 ciclos disponibles: con 4 posiciones en 4 tandas se llegaba al mismo throughput.
+    \item Se desplegaron las 16 porque la consigna pide la máxima paralelización de la etapa FFT y para fijar cada $H[k]$ en su posición, a costa de área.
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------- Andrés
+\begin{frame}{Cómo medimos PPA \presenta{Andrés}}
+  \begin{itemize}
+    \item Flujo ASIC común: OpenLane~2 con SKY130 HD (130\,nm), de la síntesis al ruteo y la extracción de parásitos.
+    \item Timing por análisis estático en 9 corners: proceso típico, lento y rápido, por tres extracciones de parásitos.
+    \item Una variante cumple su reloj si setup y hold pasan en los 9 corners. Las restricciones eléctricas (transición, carga, fanout) se informan aparte.
+    \item Potencia con OpenSTA y la actividad de la netlist final simulada con el benchmark QPSK de 2048 muestras.
+    \item Las corridas en Vivado sobre Artix-7 quedan como referencia FPGA.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Resultados en SKY130 \presenta{Andrés}}
+  \centering
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    & \multicolumn{2}{c}{Tiempo} & \multicolumn{2}{c}{Frecuencia} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    & Serie & Paralela & Serie & Paralela \\
+    \midrule
+    Reloj (MHz) & 10 & 100 & 10 & 100 \\
+    Área de celdas (µm²) & 4748 & 8413 & 57\,365 & 541\,302 \\
+    Setup y hold en 9 corners & cumple & cumple & cumple & \textcolor{serie2}{no cumple} \\
+    Peor slack de setup (ns) & $+57{,}96$ & $+2{,}27$ & $+56{,}13$ & $-3{,}28$ \\
+    Throughput (Mmuestras/s) & 1 & 99,95 & 0,139 & 98,75\textsuperscript{*} \\
+    Potencia total (mW) & 0,087 & 2,23 & 0,658 & 63,5 \\
+    Energía a 10\,MHz (nJ/muestra) & 0,087 & 0,022 & 4,73 & 0,643 \\
+    \bottomrule
+  \end{tabular}
+
+  \medskip
+  \footnotesize\textsuperscript{*}Condicionado: la frecuencia paralela no cumple 100\,MHz en los corners lentos (SS).
+\end{frame}
+
+\begin{frame}{Conclusiones \presenta{Andrés}}
+  \begin{itemize}
+    \item \textbf{Serie frente a paralela:} la paralela da una muestra por ciclo en las dos ramas y gasta menos energía por muestra (74\,\% menos en tiempo, 86\,\% en frecuencia), a costa de área.
+    \item \textbf{Tiempo frente a frecuencia:} para este filtro gana la rama en tiempo en todo lo medido. Entre las paralelas, la de frecuencia ocupa 64 veces el área y consume 29 veces más energía por muestra.
+    \item Con 8 coeficientes la FFT no se amortiza, y con entrada en $\{-1, 0, +1\}$ el FIR en tiempo no necesita multiplicadores.
+    \item Pendiente: la frecuencia paralela no cierra 100\,MHz en los corners lentos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Planificación y aporte de cada uno \presenta{Andrés}}
+  \centering
+  % TODO(G01): la figura muestra el avance al 20/10; se actualiza con el registro de G01.
+  \resizebox{!}{0.82\textheight}{\input{../informe/figuras/gantt}}
+\end{frame}
+
+\begin{frame}{Aprendizajes}
+  \begin{itemize}
+    \item \textbf{Andrés:} \textcolor{gray}{pendiente}
+    \item \textbf{Julián:} \textcolor{gray}{pendiente}
+    \item \textbf{Enzo:} \textcolor{gray}{pendiente}
+  \end{itemize}
+\end{frame}
+
+\end{document}
