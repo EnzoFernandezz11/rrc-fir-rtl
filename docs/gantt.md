@@ -1,6 +1,6 @@
 # Gantt del proyecto
 
-**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Avance real:** 2026-10-07, 2026-10-12, 2026-10-14, 2026-10-17 y 2026-10-20. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
+**Versión inicial:** 2026-10-02. **Revisión con dependencias:** 2026-10-03. **Ajuste a la fecha límite:** 2026-10-05. **Avance real:** 2026-10-07, 2026-10-12, 2026-10-14, 2026-10-17, 2026-10-20 y 2026-10-27. **Responsables:** @andres332271 = modelos/precisión, @moreyrajulian = tiempo, @EnzoFernandezz11 = frecuencia. Las fechas son una estimación para organizar el trabajo en días corridos (incluye fines de semana); todo debe estar terminado antes del **30/10**, fecha límite de la presentación. Los IDs y dependencias corresponden al [backlog](backlog.md).
 
 ## Plan
 
@@ -49,13 +49,14 @@ G01, I02 e I03 terminan el 29/10, el día anterior a la presentación. Para entr
 
 Esta tabla registra lo que efectivamente pasó y quién lo hizo, que es lo exigido para explicar el reparto real. Las fechas planificadas están solo en el diagrama: anotar aquí inicio y fin reales cuando ocurran, sin tocar el plan salvo para replanificar.
 
-**Al 20/10:** 21 de 23 tareas iniciadas (todas salvo I01 e I03), 16 integradas (E00–E03, A01–A06, B01–B03 y C01–C03) y 2 verificadas (B02 y C02: vector matching A05 en el banco común de A06). La tabla de A07 también está integrada, pero la tarea sigue abierta hasta importar B04 y C04. Según el plan deberían haber empezado 22: falta I03 (plan 20/10). No hay PR en revisión; I02 (#48) sigue en borrador. Las fechas son locales; GitHub muestra UTC, y un PR abierto o integrado de noche puede figurar con el día siguiente.
+**Al 27/10:** 23 de 23 tareas iniciadas, 16 integradas (las mismas del 20/10) y 2 verificadas en `main` (B02 y C02). B04 y C04 pasan el vector matching y el banco común en sus PR (#58 y #56), que todavía no están integrados. Según el plan, B04 debía terminar el 24/10. Hay tres PR en revisión (#56, #57 y #58); I02 (#48) sigue en borrador. Las fechas son locales; GitHub muestra UTC, y un PR abierto o integrado de noche puede figurar con el día siguiente.
 
-Riesgos al 20/10:
+Riesgos al 27/10:
 
-- **Rama temporal:** B04 empezó el 19/10, 3 días después del plan, y todavía no tiene rama publicada. Sus 9 días terminan el 27/10 y la holgura hasta I01 (29/10) baja de 4 días a 1.
-- **Rama en frecuencia:** C04 empezó el 19/10, un día antes del plan; si mantiene los 9 días termina el 27/10, después del corte del 26/10. La rama ya pasa el vector matching A05 y el banco común en local, así que el corte se cumpliría si se integra antes. La síntesis Yosys XC7 da 7493 LUT (≈ 36 % del xc7a35t), muy por debajo del ≈ 77 % estimado en C03. Falta la evidencia de Vivado a 10 ns, que es el riesgo principal; Enzo la prevé para el 23/10.
-- **Modelos e integración:** A06 y A07 se integraron el 20/10; B04 y C04 se suman a la tabla PPA con el mismo flujo de Vivado. I03 no empezó (plan 20/10) aunque sus dependencias cerraron el 15/10.
+- **Plataforma PPA:** el 26/10 el equipo acordó medir las cuatro variantes con OpenLane 2 y SKY130 HD (D05/D06, registrado en #56). Las corridas Vivado quedan como referencia FPGA (#57). La tabla de A07 en SKY130 ya está armada con las cuatro variantes y se publica cuando se integren #56 y #58.
+- **Rama en frecuencia:** C04 cumplió el corte del 26/10: #56 pasa el vector matching y el banco común, y fue aprobado el 27/10. A 100 MHz cumple setup y hold en el corner típico pero no en el lento (peor slack de setup −3,28 ns); es la única de las cuatro variantes que no cumple su reloj.
+- **Rama temporal:** B04 se publicó con #58 el 26/10, dos días después del fin planificado. Cumple 100 MHz en los nueve corners. Enzo pidió cambios en la publicación de la evidencia, no en el RTL.
+- **Integración:** I01, I02 e I03 necesitan #56 y #58 en `main` antes del 29/10. La comparación de las cuatro variantes ya está redactada en el informe y las filminas tienen un primer borrador; faltan los aprendizajes de cada uno.
 
 | ID | Responsable real | Inicio real | Fin real | Estado/notas |
 |---|---|---|---|---|
@@ -63,7 +64,7 @@ Riesgos al 20/10:
 | [E01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/2) | @EnzoFernandezz11 | 05/10 | 08/10 | #28 integrado. Plan: fin 06/10 (+2 días). |
 | [E02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/3) | @andres332271 | 07/10 | 08/10 | #33 integrado; D02/D03 siguen propuestos hasta la revisión conjunta. Plan: fin 07/10 (+1). |
 | [E03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/4) | @moreyrajulian | 09/10 | 09/10 | #38 integrado; D03, D05 y D06 siguen propuestos. Plan: fin 10/10 (−1). |
-| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27, #34, #43, #46, #54 y este registro. Actualizar semanalmente. |
+| [G01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/5) | @andres332271 | 03/10 | — | #24, #27, #34, #43, #46, #54, #55 y este registro. Actualizar semanalmente. |
 | [A01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/6) | @andres332271 | 07/10 | 08/10 | #32 integrado. Plan: fin 06/10 (+2). |
 | [A02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/7) | @andres332271 | 07/10 | 09/10 | #35 integrado. Plan: fin 08/10 (+1). |
 | [A03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/8) | @andres332271 | 12/10 | 12/10 | #40 integrado; error máx. entre modelos flotantes < 2e-14. Plan: fin 11/10 (+1). |
@@ -75,13 +76,13 @@ Riesgos al 20/10:
 | [C02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/14) | @EnzoFernandezz11 | 12/10 | 15/10 | #47 integrado: vector matching A05, `L = 559`, 575 ciclos por bloque, `run.tcl` parametrizado. Plan: fin 19/10 (−4). |
 | [A06](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/15) | @andres332271 | 14/10 | 20/10 | #53 integrado: `make regresion` pasa con B02 y C02 (vector matching, reset en trama de un solo flanco y pausas). Plan: inicio 15/10 (−1), fin 19/10 (+1). |
 | [B03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/16) | @moreyrajulian | 15/10 | 16/10 | #49 integrado: sistólica en forma transpuesta, `II = 1`, `L = 1`, 100 MHz; D08 temporal propuesto. Plan: inicio 11/10, fin 13/10 (+3). |
-| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | @moreyrajulian | 19/10 | — | Inicio confirmado en #55; sin rama publicada al 20/10, prevista para el 21/10. Plan: inicio 16/10 (+3), fin 24/10. |
+| [B04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/17) | @moreyrajulian | 19/10 | — | Primer commit el 20/10; #58 abierto el 26/10: sistólica transpuesta con vector matching, `L = 1` e `II = 1`; en SKY130 cumple 100 MHz en los nueve corners. Enzo pidió cambios en la publicación de la evidencia (26/10). Plan: inicio 16/10 (+3), fin 24/10. |
 | [C03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/18) | @EnzoFernandezz11 | 15/10 | 18/10 | #50 integrado: FFT/IFFT desplegadas, 16 productos espectrales con H fijo y redes CSD, 100 MHz; D08 registrado en 373c76f. Plan: inicio 12/10, fin 13/10 (+5). |
-| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | @EnzoFernandezz11 | 19/10 | — | Rama `e/c04-rtl-optimized` sin PR (primer commit 19/10): vector matching A05 y banco común pasan en local, `L = 26`, `II = 8` por bloque. Inicio confirmado en #55; falta Vivado a 10 ns, prevista para el 23/10. Plan: inicio 20/10 (−1), fin 28/10. |
-| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | @andres332271 | 14/10 | — | #52 integrado el 20/10: tabla PPA desde Vivado con B02 y C02 a 10 y 100 MHz y banco PPA temporal, con la corrección de #51 (18/10). Queda abierta hasta importar B04 y C04 con `--import`. Plan: inicio 11/10 (+3), fin 28/10. |
-| [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | — | — | — | — |
-| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | @andres332271 | 15/10 | — | #48 en borrador: secciones 1–6 y PPA serial redactadas; faltan 7–9 (Julián y Enzo), Gantt y conclusiones. Plan: inicio 14/10 (+1). |
-| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | — | — | — | Sin inicio al 20/10. Plan: inicio 20/10 (B02 y C02 integradas desde el 15/10). Presentación 30/10. |
+| [C04](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/19) | @EnzoFernandezz11 | 19/10 | — | #56 abierto el 26/10 y aprobado por @andres332271 el 27/10: vector matching A05 y banco común, `L = 26`, `II = 8` por bloque. En SKY130 a 100 MHz cumple setup y hold en el corner típico y falla en el lento. Corrida Vivado como referencia FPGA en #57 (26/10). Plan: inicio 20/10 (−1), fin 28/10. |
+| [A07](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/20) | @andres332271 | 14/10 | — | #52 integrado el 20/10: tabla PPA desde Vivado con B02 y C02. Tras el acuerdo del 26/10, la tabla lee la evidencia SKY130 de las cuatro variantes y deja Vivado como anexo; está armada en local desde el 27/10 y se publica cuando se integren #56 y #58. Plan: inicio 11/10 (+3), fin 28/10. |
+| [I01](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/21) | @andres332271 | 27/10 | — | Comparación de las cuatro variantes redactada en las secciones 10 y 12 del informe (#48) con las cifras SKY130. Plan: inicio 29/10 (−2). |
+| [I02](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/22) | @andres332271 | 15/10 | — | #48 en borrador: todas las secciones y los anexos redactados, con PPA en SKY130 y la revisión de redacción aplicada (27/10). Plan: inicio 14/10 (+1), fin 29/10. |
+| [I03](https://github.com/EnzoFernandezz11/rrc-fir-rtl/issues/23) | @andres332271 | 27/10 | — | Rama `a/i03-filminas`: 15 filminas en Beamer en tres bloques, con las figuras del informe; faltan los aprendizajes de cada uno. Plan: inicio 20/10 (+7). Presentación 30/10. |
 
 ## Corte del viernes 16/10
 
