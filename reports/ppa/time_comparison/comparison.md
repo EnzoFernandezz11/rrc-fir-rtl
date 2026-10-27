@@ -1,6 +1,6 @@
 ## Comparación B02 / B04
 
-Corridas: [B02](time_serial/sky130/manifest.json) / [B04](time_optimized/sky130/manifest.json). Benchmark: QPSK 2×, semilla 1, 2048 muestras exactas.
+Corridas: [B02](../time_serial/sky130/manifest.json) / [B04](../time_optimized/sky130/manifest.json). Benchmark: QPSK 2×, semilla 1, 2048 muestras exactas.
 
 Las diferencias porcentuales son (B04/B02 − 1) × 100; un signo positivo no siempre significa mejora.
 
@@ -70,7 +70,7 @@ radar-beta
     showLegend true
 ```
 
-[Fuente Mermaid](time_comparison/radar-arquitectura.mmd)
+[Fuente Mermaid](radar-arquitectura.mmd)
 
 ### Barras: objetivos propios
 
@@ -84,7 +84,7 @@ xychart-beta
     bar [9.000000000000, 1.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/latency_cycles.mmd)
+[Fuente Mermaid](latency_cycles.mmd)
 
 | ciclos | B02 | B04 |
 |---|---:|---:|
@@ -98,7 +98,7 @@ xychart-beta
     bar [10.000000000000, 1.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/block_cycles.mmd)
+[Fuente Mermaid](block_cycles.mmd)
 
 | ciclos | B02 | B04 |
 |---|---:|---:|
@@ -112,7 +112,7 @@ xychart-beta
     bar [20480.000000000000, 2049.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/active_cycles.mmd)
+[Fuente Mermaid](active_cycles.mmd)
 
 | ciclos | B02 | B04 |
 |---|---:|---:|
@@ -126,7 +126,7 @@ xychart-beta
     bar [900.000000000000, 10.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/latency_ns.mmd)
+[Fuente Mermaid](latency_ns.mmd)
 
 | ns | B02 | B04 |
 |---|---:|---:|
@@ -140,7 +140,7 @@ xychart-beta
     bar [1000000.000000000000, 100000000.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/sustained_sps.mmd)
+[Fuente Mermaid](sustained_sps.mmd)
 
 | muestras/s | B02 | B04 |
 |---|---:|---:|
@@ -154,7 +154,7 @@ xychart-beta
     bar [1000000.000000000000, 99951195.705222055316]
 ```
 
-[Fuente Mermaid](time_comparison/effective_sps.mmd)
+[Fuente Mermaid](effective_sps.mmd)
 
 | muestras/s | B02 | B04 |
 |---|---:|---:|
@@ -168,7 +168,7 @@ xychart-beta
     bar [396.000000000000, 779.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/cells.mmd)
+[Fuente Mermaid](cells.mmd)
 
 | celdas | B02 | B04 |
 |---|---:|---:|
@@ -182,7 +182,7 @@ xychart-beta
     bar [63.000000000000, 132.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/flip_flops.mmd)
+[Fuente Mermaid](flip_flops.mmd)
 
 | FF | B02 | B04 |
 |---|---:|---:|
@@ -196,7 +196,7 @@ xychart-beta
     bar [333.000000000000, 647.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/combinational_cells.mmd)
+[Fuente Mermaid](combinational_cells.mmd)
 
 | celdas | B02 | B04 |
 |---|---:|---:|
@@ -210,7 +210,7 @@ xychart-beta
     bar [3298.163200000000, 6459.945600000000]
 ```
 
-[Fuente Mermaid](time_comparison/cell_area_um2.mmd)
+[Fuente Mermaid](cell_area_um2.mmd)
 
 | µm² | B02 | B04 |
 |---|---:|---:|
@@ -224,7 +224,7 @@ xychart-beta
     bar [4748.300000000000, 8413.070000000000]
 ```
 
-[Fuente Mermaid](time_comparison/final_cell_area_um2.mmd)
+[Fuente Mermaid](final_cell_area_um2.mmd)
 
 | µm² | B02 | B04 |
 |---|---:|---:|
@@ -238,7 +238,7 @@ xychart-beta
     bar [11272.060800000001, 19526.227199999998]
 ```
 
-[Fuente Mermaid](time_comparison/core_area_um2.mmd)
+[Fuente Mermaid](core_area_um2.mmd)
 
 | µm² | B02 | B04 |
 |---|---:|---:|
@@ -252,7 +252,7 @@ xychart-beta
     bar [15064.621425000001, 24749.178500000002]
 ```
 
-[Fuente Mermaid](time_comparison/die_area_um2.mmd)
+[Fuente Mermaid](die_area_um2.mmd)
 
 | µm² | B02 | B04 |
 |---|---:|---:|
@@ -266,7 +266,7 @@ xychart-beta
     bar [0.058734922504, 1.546755837553]
 ```
 
-[Fuente Mermaid](time_comparison/internal_w.mmd)
+[Fuente Mermaid](internal_w.mmd)
 
 | W | B02 | B04 |
 |---|---:|---:|
@@ -280,7 +280,7 @@ xychart-beta
     bar [0.028083177540, 0.686460857346]
 ```
 
-[Fuente Mermaid](time_comparison/switching_w.mmd)
+[Fuente Mermaid](switching_w.mmd)
 
 | W | B02 | B04 |
 |---|---:|---:|
@@ -294,7 +294,7 @@ xychart-beta
     bar [0.086818100044, 2.233216694899]
 ```
 
-[Fuente Mermaid](time_comparison/dynamic_w.mmd)
+[Fuente Mermaid](dynamic_w.mmd)
 
 | W | B02 | B04 |
 |---|---:|---:|
@@ -308,7 +308,7 @@ xychart-beta
     bar [0.000003453680, 0.000005233528]
 ```
 
-[Fuente Mermaid](time_comparison/leakage_w.mmd)
+[Fuente Mermaid](leakage_w.mmd)
 
 | W | B02 | B04 |
 |---|---:|---:|
@@ -322,7 +322,7 @@ xychart-beta
     bar [0.086821553396, 2.233221907311]
 ```
 
-[Fuente Mermaid](time_comparison/total_w.mmd)
+[Fuente Mermaid](total_w.mmd)
 
 | W | B02 | B04 |
 |---|---:|---:|
@@ -336,7 +336,7 @@ xychart-beta
     bar [0.086818100044, 0.022343071327]
 ```
 
-[Fuente Mermaid](time_comparison/dynamic_energy_j.mmd)
+[Fuente Mermaid](dynamic_energy_j.mmd)
 
 | J/muestra | B02 | B04 |
 |---|---:|---:|
@@ -350,7 +350,7 @@ xychart-beta
     bar [0.086821553396, 0.022343123477]
 ```
 
-[Fuente Mermaid](time_comparison/total_energy_j.mmd)
+[Fuente Mermaid](total_energy_j.mmd)
 
 | J/muestra | B02 | B04 |
 |---|---:|---:|
@@ -364,7 +364,7 @@ xychart-beta
     bar [100.000000000000, 100.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/activity_coverage_pct.mmd)
+[Fuente Mermaid](activity_coverage_pct.mmd)
 
 | % | B02 | B04 |
 |---|---:|---:|
@@ -551,7 +551,7 @@ xychart-beta
     line [5.061287532339, 2.326305436352, 5.292224142045, 5.068772212094, 2.390373300290, 5.297113120294, 5.052205907741, 2.266872975716, 5.286173870478]
 ```
 
-[Fuente Mermaid](time_comparison/target-setup_ws_ns.mmd)
+[Fuente Mermaid](target-setup_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -568,7 +568,7 @@ xychart-beta
     line [0.338198645328, 0.946097338362, 0.112667267593, 0.334616066549, 0.939589987964, 0.110247425420, 0.341338356130, 0.953092520771, 0.114878831921]
 ```
 
-[Fuente Mermaid](time_comparison/target-hold_ws_ns.mmd)
+[Fuente Mermaid](target-hold_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -585,7 +585,7 @@ xychart-beta
     line [0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/target-setup_tns_ns.mmd)
+[Fuente Mermaid](target-setup_tns_ns.mmd)
 
 ```mermaid
 ---
@@ -602,7 +602,7 @@ xychart-beta
     line [0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/target-hold_tns_ns.mmd)
+[Fuente Mermaid](target-hold_tns_ns.mmd)
 
 ```mermaid
 ---
@@ -619,7 +619,7 @@ xychart-beta
     line [322.220000000000, 173.470000000000, 469.390000000000, 329.750000000000, 175.080000000000, 479.910000000000, 315.540000000000, 170.240000000000, 460.220000000000]
 ```
 
-[Fuente Mermaid](time_comparison/target-fmax_estimate_mhz.mmd)
+[Fuente Mermaid](target-fmax_estimate_mhz.mmd)
 
 Escenario common: B02 setup/hold **PASS**, eléctrico/restricciones **FAIL**, global **FAIL**; B04 setup/hold **PASS**, eléctrico/restricciones **FAIL**, global **FAIL**.
 
@@ -784,7 +784,7 @@ xychart-beta
     line [59.061287310295, 58.458491257937, 59.292220811375, 59.068769325514, 58.468517016222, 59.297109345536, 59.052203021161, 58.442596416489, 59.286170539809]
 ```
 
-[Fuente Mermaid](time_comparison/common-setup_ws_ns.mmd)
+[Fuente Mermaid](common-setup_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -801,7 +801,7 @@ xychart-beta
     line [0.338198645328, 0.946097338362, 0.112667267593, 0.334616066549, 0.939589987964, 0.110247425420, 0.341338356130, 0.953092520771, 0.114878831921]
 ```
 
-[Fuente Mermaid](time_comparison/common-hold_ws_ns.mmd)
+[Fuente Mermaid](common-hold_ws_ns.mmd)
 
 ```mermaid
 ---
@@ -818,7 +818,7 @@ xychart-beta
     line [0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/common-setup_tns_ns.mmd)
+[Fuente Mermaid](common-setup_tns_ns.mmd)
 
 ```mermaid
 ---
@@ -835,7 +835,7 @@ xychart-beta
     line [0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000]
 ```
 
-[Fuente Mermaid](time_comparison/common-hold_tns_ns.mmd)
+[Fuente Mermaid](common-hold_tns_ns.mmd)
 
 ```mermaid
 ---
@@ -852,4 +852,4 @@ xychart-beta
     line [322.220000000000, 173.470000000000, 469.390000000000, 329.750000000000, 175.080000000000, 479.910000000000, 315.540000000000, 170.240000000000, 460.220000000000]
 ```
 
-[Fuente Mermaid](time_comparison/common-fmax_estimate_mhz.mmd)
+[Fuente Mermaid](common-fmax_estimate_mhz.mmd)

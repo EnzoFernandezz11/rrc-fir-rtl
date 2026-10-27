@@ -1,0 +1,2560 @@
+--- segment 1/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.382056745e-04 7.584984996e-05 1.026946306e-09 7.140565431e-04  31.5%
+Combinational        5.998354172e-04 4.431047419e-04 2.357158024e-09 1.042942517e-03  46.0%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.6%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.562885125e-03 7.060087519e-04 5.242773327e-09 2.268899232e-03 100.0%
+                               68.9%           31.1%            0.0%
+PPA_POWER 0.0015628851251676679 0.0007060087518766522 5.242773326585848e-9 0.002268899232149124
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 2/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.314470666e-04 7.263843872e-05 1.025961316e-09 7.040865603e-04  31.9%
+Combinational        5.760224303e-04 4.136173520e-04 2.365130758e-09 9.896421107e-04  44.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.2%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.532314462e-03 6.733098417e-04 5.249765955e-09 2.205629600e-03 100.0%
+                               69.5%           30.5%            0.0%
+PPA_POWER 0.0015323144616559148 0.00067330984165892 5.249765955284147e-9 0.002205629600211978
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 3/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.336345105e-04 7.326498599e-05 1.026033258e-09 7.069005514e-04  31.4%
+Combinational        5.942913704e-04 4.353090771e-04 2.339597627e-09 1.029602718e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.552771544e-03 6.956282887e-04 5.224304989e-09 2.248405013e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.001552771544083953 0.000695628288667649 5.224304988615813e-9 0.0022484050132334232
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 4/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.367398892e-04 7.505623216e-05 1.026856711e-09 7.117971545e-04  31.5%
+Combinational        5.996862892e-04 4.352791875e-04 2.336403515e-09 1.034967834e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.561271725e-03 6.973900017e-04 5.221927335e-09 2.258666791e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015612717252224684 0.000697390001732856 5.221927334986276e-9 0.002258666791021824
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 5/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.367313326e-04 7.506534166e-05 1.026540075e-09 7.117977366e-04  31.5%
+Combinational        5.990630598e-04 4.389394599e-04 2.334135996e-09 1.038004877e-03  45.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.6%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.560640289e-03 7.010594127e-04 5.219343624e-09 2.261704765e-03 100.0%
+                               69.0%           31.0%            0.0%
+PPA_POWER 0.001560640288516879 0.000701059412676841 5.219343623963368e-9 0.0022617047652602196
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 6/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.330949254e-04 7.345146878e-05 1.026022489e-09 7.065474638e-04  31.8%
+Combinational        5.836877972e-04 4.199945834e-04 2.357709139e-09 1.003684709e-03  45.2%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.541626872e-03 6.804995937e-04 5.242397627e-09 2.222131705e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015416268724948168 0.0006804995937272906 5.242397627114315e-9 0.0022221317049115896
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 7/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.364604342e-04 7.515701873e-05 1.026722485e-09 7.116185152e-04  31.7%
+Combinational        5.944256554e-04 4.289737844e-04 2.351139949e-09 1.023401739e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.555731753e-03 6.911843666e-04 5.236532985e-09 2.246921184e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015557317528873682 0.0006911843665875494 5.236532985009035e-9 0.002246921183541417
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 8/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.335010403e-04 7.367462240e-05 1.025911245e-09 7.071766886e-04  31.9%
+Combinational        5.821099039e-04 4.184537684e-04 2.364315632e-09 1.000565942e-03  45.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.540456084e-03 6.791825872e-04 5.248901314e-09 2.219644142e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015404560836032033 0.0006791825871914625 5.248901313592569e-9 0.0022196441423147917
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 9/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.330843898e-04 7.280700811e-05 1.026705165e-09 7.058924530e-04  31.7%
+Combinational        5.854062620e-04 4.245019227e-04 2.346713712e-09 1.009910484e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.543335849e-03 6.843631272e-04 5.232089872e-09 2.227704041e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015433358494192362 0.000684363127220422 5.232089872464485e-9 0.0022277040407061577
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 10/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.356039667e-04 7.425475633e-05 1.025741825e-09 7.098597707e-04  31.5%
+Combinational        5.977682304e-04 4.368149675e-04 2.330348581e-09 1.034585526e-03  45.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.558217569e-03 6.981235347e-04 5.214763288e-09 2.256346168e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015582175692543387 0.0006981235346756876 5.214763287852975e-9 0.0022563461679965258
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 11/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.357767852e-04 7.414024731e-05 1.026181029e-09 7.099180948e-04  31.4%
+Combinational        6.013498059e-04 4.393367271e-04 2.328023330e-09 1.040688832e-03  46.0%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.6%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.561972080e-03 7.005313528e-04 5.212877685e-09 2.262508497e-03 100.0%
+                               69.0%           31.0%            0.0%
+PPA_POWER 0.0015619720797985792 0.000700531352777034 5.2128776850679515e-9 0.0022625084966421127
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 12/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.322977715e-04 7.315045514e-05 1.026143392e-09 7.054492598e-04  31.8%
+Combinational        5.802939995e-04 4.199128307e-04 2.353708561e-09 1.000209129e-03  45.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.537437900e-03 6.801174022e-04 5.238517176e-09 2.217560541e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015374378999695182 0.0006801174022257328 5.238517175598645e-9 0.002217560540884733
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 13/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.327957381e-04 7.328713400e-05 1.025777463e-09 7.060838980e-04  32.0%
+Combinational        5.773112061e-04 4.132672620e-04 2.365634799e-09 9.905807674e-04  44.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.2%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.534952316e-03 6.736080395e-04 5.250079926e-09 2.208565595e-03 100.0%
+                               69.5%           30.5%            0.0%
+PPA_POWER 0.0015349523164331913 0.0006736080395057797 5.250079926355511e-9 0.0022085655946284533
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 14/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.370292976e-04 7.520979852e-05 1.026816854e-09 7.122401148e-04  31.4%
+Combinational        6.033686805e-04 4.426537780e-04 2.334931359e-09 1.046024729e-03  46.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.5%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.565242885e-03 7.049177075e-04 5.220412991e-09 2.270165831e-03 100.0%
+                               68.9%           31.1%            0.0%
+PPA_POWER 0.0015652428846806288 0.0007049177074804902 5.220412990780687e-9 0.002270165830850601
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 15/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.334475474e-04 7.331257802e-05 1.026716157e-09 7.067611441e-04  31.7%
+Combinational        5.849759327e-04 4.229320039e-04 2.345875938e-09 1.007910236e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.543268561e-03 6.832982763e-04 5.231267863e-09 2.226572018e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015432685613632202 0.0006832982762716711 5.231267863337052e-9 0.0022265720181167126
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 16/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.339105312e-04 7.409691898e-05 1.025731278e-09 7.080084761e-04  31.9%
+Combinational        5.817350466e-04 4.177533556e-04 2.362849916e-09 9.994907305e-04  45.0%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.540490659e-03 6.789040635e-04 5.247250190e-09 2.219400136e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.001540490658953786 0.0006789040635339916 5.247250189910346e-9 0.0022194001358002424
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 17/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.274087937e-04 7.063751400e-05 1.024804241e-09 6.980473408e-04  32.1%
+Combinational        5.631680833e-04 4.014650185e-04 2.382506858e-09 9.646354592e-04  44.4%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.5%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.515422249e-03 6.591567653e-04 5.265982761e-09 2.174584428e-03 100.0%
+                               69.7%           30.3%            0.0%
+PPA_POWER 0.001515422249212861 0.0006591567653231323 5.265982760960242e-9 0.0021745844278484583
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 18/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.339832908e-04 7.345607446e-05 1.026662533e-09 7.074404275e-04  31.6%
+Combinational        5.895268405e-04 4.288117343e-04 2.348613526e-09 1.018340932e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.548355911e-03 6.893220125e-04 5.233948386e-09 2.237683162e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015483559109270573 0.0006893220124766231 5.233948385807707e-9 0.0022376831620931625
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 19/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.363693392e-04 7.512081356e-05 1.026789098e-09 7.114912150e-04  31.6%
+Combinational        5.946028396e-04 4.302500747e-04 2.344162198e-09 1.024855301e-03  45.6%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.555818599e-03 6.924247136e-04 5.229625621e-09 2.248248551e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.001555818598717451 0.0006924247136339545 5.229625621439027e-9 0.002248248551040888
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 20/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.360960542e-04 7.506395923e-05 1.026870367e-09 7.111610612e-04  31.7%
+Combinational        5.916248192e-04 4.287051852e-04 2.344030525e-09 1.020332333e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.552565722e-03 6.908232463e-04 5.229574107e-09 2.243394032e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015525657217949629 0.0006908232462592423 5.229574107090684e-9 0.0022433940321207047
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 21/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.274296902e-04 7.128877041e-05 1.023354290e-09 6.987195229e-04  32.2%
+Combinational        5.593739916e-04 3.968467936e-04 2.393532705e-09 9.562231717e-04  44.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.6%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.511649345e-03 6.551892147e-04 5.275555104e-09 2.166843973e-03 100.0%
+                               69.8%           30.2%            0.0%
+PPA_POWER 0.001511649345047772 0.0006551892147399485 5.27555510387856e-9 0.0021668439731001854
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 22/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.351925549e-04 7.458003529e-05 1.026326246e-09 7.097736234e-04  31.7%
+Combinational        5.922996788e-04 4.283847811e-04 2.357665396e-09 1.020686817e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.552337897e-03 6.900185836e-04 5.242664525e-09 2.242361894e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015523378970101476 0.0006900185835547745 5.2426645247294346e-9 0.002242361893877387
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 23/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.337981322e-04 7.388481026e-05 1.025927454e-09 7.076839684e-04  32.0%
+Combinational        5.793909077e-04 4.158673692e-04 2.367081864e-09 9.952606633e-04  44.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.538034878e-03 6.768059102e-04 5.251679092e-09 2.214846201e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015380348777398467 0.0006768059101887047 5.251679091600181e-9 0.0022148462012410164
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 24/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.345923757e-04 7.417312008e-05 1.026445484e-09 7.087665144e-04  31.6%
+Combinational        5.920351832e-04 4.294569080e-04 2.353289785e-09 1.021494390e-03  45.6%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.551472698e-03 6.906839553e-04 5.238403045e-09 2.242161892e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015514726983383298 0.0006906839553266764 5.238403044671713e-9 0.0022421618923544884
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 25/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.337875966e-04 7.412349805e-05 1.025496132e-09 7.079121424e-04  31.9%
+Combinational        5.827248096e-04 4.169217718e-04 2.360836859e-09 9.996489389e-04  45.0%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.541357953e-03 6.780991680e-04 5.245002210e-09 2.219462534e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015413579531013966 0.0006780991679988801 5.245002210330085e-9 0.0022194625344127417
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 26/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.350705517e-04 7.423025818e-05 1.026161156e-09 7.093018503e-04  31.5%
+Combinational        5.948821199e-04 4.323299800e-04 2.342799510e-09 1.027214457e-03  45.7%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.554797636e-03 6.936140708e-04 5.227633881e-09 2.248416888e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015547976363450289 0.0006936140707693994 5.227633881332849e-9 0.0022484168875962496
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 27/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.333536003e-04 7.389171515e-05 1.026293051e-09 7.072463632e-04  31.8%
+Combinational        5.840501981e-04 4.199888208e-04 2.356467688e-09 1.004041405e-03  45.2%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.542248414e-03 6.809342303e-04 5.241425072e-09 2.223188058e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015422484138980508 0.0006809342303313315 5.241425071744743e-9 0.0022231880575418472
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 28/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.335506914e-04 7.362462929e-05 1.026147722e-09 7.071763976e-04  31.7%
+Combinational        5.849410663e-04 4.245191521e-04 2.357416040e-09 1.009462518e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.543337246e-03 6.851975340e-04 5.242237755e-09 2.228540136e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.001543337246403098 0.0006851975340396166 5.242237754998769e-9 0.0022285401355475187
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 29/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.337249652e-04 7.402638585e-05 1.026451812e-09 7.077524206e-04  31.8%
+Combinational        5.830788286e-04 4.197077942e-04 2.355864615e-09 1.002789009e-03  45.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.541649108e-03 6.807881873e-04 5.240986756e-09 2.222442767e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015416491078212857 0.0006807881873100996 5.240986755694621e-9 0.002222442766651511
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 30/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.352057098e-04 7.386500511e-05 1.026133400e-09 7.090717554e-04  31.5%
+Combinational        5.963032600e-04 4.351624812e-04 2.325957649e-09 1.031468040e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.556353178e-03 6.960814935e-04 5.210764709e-09 2.252439735e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015563531778752804 0.0006960814935155213 5.210764708607485e-9 0.002252439735457301
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 31/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.344504654e-04 7.392826228e-05 1.026248087e-09 7.083797827e-04  31.6%
+Combinational        5.909395404e-04 4.273347731e-04 2.350581285e-09 1.018276671e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.550235087e-03 6.883165915e-04 5.235502254e-09 2.238556743e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015502350870519876 0.0006883165915496647 5.235502253952973e-9 0.002238556742668152
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 32/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.328152958e-04 7.301408914e-05 1.025932672e-09 7.058304036e-04  31.8%
+Combinational        5.841937382e-04 4.200858239e-04 2.349711758e-09 1.004281919e-03  45.2%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.541854232e-03 6.801536074e-04 5.234314759e-09 2.222012961e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015418542316183448 0.000680153607390821 5.234314759405834e-9 0.002222012961283326
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 33/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.317521911e-04 7.318143616e-05 1.025422636e-09 7.049347041e-04  31.9%
+Combinational        5.767790717e-04 4.148733860e-04 2.370936558e-09 9.916548152e-04  44.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.2%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.533375937e-03 6.751092733e-04 5.255031965e-09 2.208490623e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015333759365603328 0.000675109273288399 5.255031965134549e-9 0.0022084906231611967
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 34/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.356385420e-04 7.412308332e-05 1.026564722e-09 7.097626803e-04  31.4%
+Combinational        5.989294150e-04 4.378049343e-04 2.329114457e-09 1.036736649e-03  45.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.559413271e-03 6.989811664e-04 5.214353394e-09 2.258399501e-03 100.0%
+                               69.0%           31.0%            0.0%
+PPA_POWER 0.0015594132710248232 0.0006989811663515866 5.214353393512283e-9 0.0022583995014429092
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 35/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.346105947e-04 7.410087710e-05 1.026694618e-09 7.087124977e-04  31.8%
+Combinational        5.870357854e-04 4.232617794e-04 2.342350092e-09 1.010299893e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.546491869e-03 6.844164454e-04 5.227715150e-09 2.230913378e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015464918687939644 0.0006844164454378188 5.227715149658252e-9 0.0022309133782982826
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 36/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.334819482e-04 7.328138599e-05 1.026371543e-09 7.067644037e-04  31.6%
+Combinational        5.894901697e-04 4.265854368e-04 2.355320383e-09 1.016077935e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.547816792e-03 6.869202480e-04 5.240364143e-09 2.234742278e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015478167915716767 0.0006869202479720116 5.240364142622411e-9 0.0022347422782331705
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 37/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.377870450e-04 7.564385305e-05 1.026206564e-09 7.134319749e-04  31.6%
+Combinational        5.999048008e-04 4.354300327e-04 2.336175697e-09 1.035337104e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.6%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.562537742e-03 6.981276092e-04 5.221051591e-09 2.260670532e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015625377418473363 0.0006981276092119515 5.221051591064452e-9 0.002260670531541109
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 38/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.334042409e-04 7.382852345e-05 1.024891838e-09 7.072337903e-04  31.9%
+Combinational        5.800487706e-04 4.159388482e-04 2.373110153e-09 9.959898889e-04  45.0%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.538299024e-03 6.768215098e-04 5.256664881e-09 2.215125831e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.001538299024105072 0.0006768215098418295 5.256664881159168e-9 0.0022151258308440447
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 39/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.326035946e-04 7.313189417e-05 1.026181251e-09 7.057365146e-04  31.7%
+Combinational        5.852427566e-04 4.218945978e-04 2.338960581e-09 1.007139683e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.542691374e-03 6.820805720e-04 5.223812494e-09 2.224777127e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015426913741976023 0.0006820805720053613 5.2238124936820896e-9 0.002224777126684785
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 40/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.372124190e-04 7.504726818e-05 1.026582264e-09 7.122607203e-04  31.5%
+Combinational        6.003885064e-04 4.350105592e-04 2.343548688e-09 1.035401365e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.562446356e-03 6.971120019e-04 5.228804056e-09 2.259563422e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015624463558197021 0.0006971120019443333 5.228804056400804e-9 0.002259563421830535
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 41/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.308009615e-04 7.247091708e-05 1.026070340e-09 7.032729336e-04  31.9%
+Combinational        5.728613469e-04 4.132813483e-04 2.365065477e-09 9.861449944e-04  44.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.3%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.528507564e-03 6.728060544e-04 5.249807700e-09 2.201318974e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015285075642168522 0.000672806054353714 5.249807699669873e-9 0.00220131897367537
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 42/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.342543056e-04 7.337952411e-05 1.026228991e-09 7.076348993e-04  31.4%
+Combinational        5.965551827e-04 4.352211836e-04 2.326709048e-09 1.031778753e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.555654337e-03 6.956550060e-04 5.211610254e-09 2.251314465e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015556543366983533 0.0006956550059840083 5.211610254463039e-9 0.002251314464956522
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 43/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.340023829e-04 7.369853847e-05 1.026694285e-09 7.077019545e-04  31.6%
+Combinational        5.904866266e-04 4.288619966e-04 2.340357241e-09 1.019350952e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.549334498e-03 6.896147970e-04 5.225718525e-09 2.238954417e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015493344981223345 0.0006896147970110178 5.225718524570766e-9 0.0022389544174075127
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 44/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.355813821e-04 7.414166612e-05 1.025907026e-09 7.097240887e-04  31.5%
+Combinational        5.970615894e-04 4.358621954e-04 2.330478477e-09 1.032926142e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.557488227e-03 6.970578688e-04 5.215057719e-09 2.254551277e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.001557488227263093 0.0006970578688196838 5.2150577189991054e-9 0.002254551276564598
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 45/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.337091327e-04 7.357361028e-05 1.025498353e-09 7.072837907e-04  31.8%
+Combinational        5.853269831e-04 4.217329843e-04 2.353880202e-09 1.007062267e-03  45.2%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.543881139e-03 6.823606673e-04 5.238047773e-09 2.226246987e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015438811387866735 0.0006823606672696769 5.238047773303833e-9 0.0022262469865381718
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 46/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.358519313e-04 7.415567234e-05 1.026095209e-09 7.100086659e-04  31.5%
+Combinational        5.988564808e-04 4.331256205e-04 2.334161975e-09 1.031984459e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.559554948e-03 6.943350309e-04 5.218931953e-09 2.253895160e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015595549484714866 0.0006943350308574736 5.218931953265837e-9 0.0022538951598107815
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 47/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.340146065e-04 7.306738553e-05 1.026476570e-09 7.070830325e-04  31.4%
+Combinational        5.970258499e-04 4.355724668e-04 2.331126847e-09 1.032600645e-03  45.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.555885538e-03 6.956939469e-04 5.216274079e-09 2.251584549e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015558855375275016 0.0006956939469091594 5.216274079344885e-9 0.0022515845485031605
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 48/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.311191246e-04 7.288169581e-05 1.024578644e-09 7.040018681e-04  31.9%
+Combinational        5.763323861e-04 4.119757796e-04 2.370043939e-09 9.883104358e-04  44.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.2%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.532296883e-03 6.719110534e-04 5.253293800e-09 2.204213291e-03 100.0%
+                               69.5%           30.5%            0.0%
+PPA_POWER 0.001532296882942319 0.0006719110533595085 5.253293799967196e-9 0.0022042132914066315
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 49/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.395945093e-04 7.675702363e-05 1.026493446e-09 7.163526025e-04  31.5%
+Combinational        6.072407705e-04 4.404938663e-04 2.347537720e-09 1.047736965e-03  46.0%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.5%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.571680885e-03 7.043048390e-04 5.232702271e-09 2.275990788e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.001571680884808302 0.0007043048390187323 5.232702271484868e-9 0.0022759907878935337
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 50/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.324410788e-04 7.306322368e-05 1.026001950e-09 7.055053720e-04  31.8%
+Combinational        5.822122912e-04 4.195714137e-04 2.358031992e-09 1.001785975e-03  45.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.1%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.539498568e-03 6.796889356e-04 5.242711154e-09 2.219192917e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015394985675811768 0.0006796889356337488 5.242711154096469e-9 0.0022191929165273905
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 51/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.343104760e-04 7.396044384e-05 1.026939200e-09 7.082719821e-04  31.7%
+Combinational        5.883287522e-04 4.261163413e-04 2.344427763e-09 1.014447422e-03  45.4%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.547484775e-03 6.871310761e-04 5.230039068e-09 2.234620973e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015474847750738263 0.0006871310761198401 5.230039068493397e-9 0.002234620973467827
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 52/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.354693323e-04 7.420864858e-05 1.026886576e-09 7.096790359e-04  31.5%
+Combinational        5.961499992e-04 4.345748748e-04 2.339291649e-09 1.030727173e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.556464937e-03 6.958371960e-04 5.224845445e-09 2.252307255e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015564649365842342 0.0006958371959626675 5.224845445184201e-9 0.002252307254821062
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 53/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.307005533e-04 7.189862663e-05 1.026683405e-09 7.026002277e-04  31.9%
+Combinational        5.754903541e-04 4.143751285e-04 2.344603844e-09 9.898678400e-04  44.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.2%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.531036454e-03 6.733277696e-04 5.229958244e-09 2.204369288e-03 100.0%
+                               69.5%           30.5%            0.0%
+PPA_POWER 0.0015310364542528987 0.0006733277696184814 5.2299582442572046e-9 0.0022043692879378796
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 54/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.293260958e-04 7.140861999e-05 1.024111018e-09 7.007357781e-04  32.1%
+Combinational        5.671207909e-04 4.050809366e-04 2.378089059e-09 9.722040850e-04  44.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.4%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.521292026e-03 6.635438185e-04 5.260867741e-09 2.184841083e-03 100.0%
+                               69.6%           30.4%            0.0%
+PPA_POWER 0.001521292026154697 0.0006635438185185194 5.260867741441189e-9 0.0021848410833626986
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 55/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.336412625e-04 7.332743553e-05 1.026320140e-09 7.069697604e-04  31.6%
+Combinational        5.901696277e-04 4.291030054e-04 2.336112859e-09 1.019274932e-03  45.5%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.9%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.548656612e-03 6.894839462e-04 5.221106214e-09 2.238145564e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015486566117033362 0.0006894839461892843 5.221106214037263e-9 0.002238145563751459
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 56/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.324021961e-04 7.200896653e-05 1.024350715e-09 7.044122322e-04  31.3%
+Combinational        5.947335740e-04 4.384720523e-04 2.304009872e-09 1.033207984e-03  45.9%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.551981200e-03 6.975351134e-04 5.187029473e-09 2.249521436e-03 100.0%
+                               69.0%           31.0%            0.0%
+PPA_POWER 0.0015519812004640698 0.0006975351134315133 5.1870294726086286e-9 0.0022495214361697435
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 57/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.354518118e-04 7.438625471e-05 1.026175922e-09 7.098391070e-04  31.6%
+Combinational        5.930541083e-04 4.293559468e-04 2.334704208e-09 1.022412442e-03  45.6%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.553351409e-03 6.907961215e-04 5.219554566e-09 2.244152594e-03 100.0%
+                               69.2%           30.8%            0.0%
+PPA_POWER 0.0015533514088019729 0.0006907961214892566 5.219554566338047e-9 0.002244152594357729
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 58/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.334190839e-04 7.362656470e-05 1.026155161e-09 7.070467109e-04  31.7%
+Combinational        5.866854917e-04 4.226955352e-04 2.355390549e-09 1.009383355e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.544949948e-03 6.833756343e-04 5.240215817e-09 2.228331054e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015449499478563666 0.0006833756342530251 5.240215816826321e-9 0.0022283310536295176
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 59/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.356163067e-04 7.419852773e-05 1.026215668e-09 7.098158821e-04  31.5%
+Combinational        5.965988385e-04 4.363679327e-04 2.331141058e-09 1.032969099e-03  45.8%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.7%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.557060517e-03 6.976207951e-04 5.216025389e-09 2.254686318e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015570605173707008 0.0006976207951083779 5.216025389387369e-9 0.0022546863183379173
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 60/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.341859698e-04 7.332765381e-05 1.025010077e-09 7.075147005e-04  31.5%
+Combinational        5.940641859e-04 4.337681748e-04 2.314770597e-09 1.027834718e-03  45.7%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  22.8%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.553096110e-03 6.941495230e-04 5.198451447e-09 2.247250639e-03 100.0%
+                               69.1%           30.9%            0.0%
+PPA_POWER 0.0015530961100012064 0.0006941495230421424 5.198451447085972e-9 0.0022472506389021873
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 61/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.345345173e-04 7.465319504e-05 1.025490137e-09 7.091887528e-04  31.9%
+Combinational        5.850296584e-04 4.200586700e-04 2.364648033e-09 1.005090657e-03  45.1%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.544410014e-03 6.817658432e-04 5.248809831e-09 2.226181095e-03 100.0%
+                               69.4%           30.6%            0.0%
+PPA_POWER 0.0015444100135937333 0.0006817658431828022 5.24880983121534e-9 0.0022261810954660177
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 62/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.335784565e-04 7.408719830e-05 1.026078666e-09 7.076666807e-04  31.7%
+Combinational        5.866009742e-04 4.232659994e-04 2.354628492e-09 1.009869273e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.545025269e-03 6.844065501e-04 5.239383150e-09 2.229437232e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015450252685695887 0.0006844065501354635 5.2393831495578524e-9 0.002229437232017517
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 63/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.327106385e-04 7.281513535e-05 1.026653984e-09 7.055267924e-04  31.7%
+Combinational        5.845666165e-04 4.238983965e-04 2.343449435e-09 1.008467283e-03  45.3%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.0%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.542123035e-03 6.837671972e-04 5.228771638e-09 2.225895412e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.0015421230345964432 0.00068376719718799 5.228771637888485e-9 0.0022258954122662544
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244
+--- segment 64/64 ---
+OpenSTA 2.6.0 GITDIR-NOT Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 3310, module sky130_fd_sc_hd__tapvpwrvgnd_1 not found. Creating black box for TAP_TAPCELL_ROW_0_102.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4045, module sky130_ef_sc_hd__decap_12 not found. Creating black box for FILLER_0_3.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4047, module sky130_fd_sc_hd__fill_1 not found. Creating black box for FILLER_0_27.
+Warning: /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_optimized/20261026T232043947866Z-56822367/runs/target/51-openroad-fillinsertion/fir_time_systolic.nl.v line 4048, module sky130_fd_sc_hd__fill_2 not found. Creating black box for FILLER_0_29.
+Found 12 unannotated drivers.
+ clkload0/X
+ clkload1/Y
+ clkload10/Y
+ clkload11/X
+ clkload2/Y
+ clkload3/Y
+ clkload4/X
+ clkload5/Y
+ clkload6/Y
+ clkload7/Y
+ clkload8/Y
+ clkload9/X
+Found 0 partially unannotated drivers.
+Annotated 2861 pin activities.
+Group                       Internal       Switching         Leakage           Total
+                               Power           Power           Power           Power (Watts)
+------------------------------------------------------------------------------------
+Sequential           6.298458320e-04 7.232280041e-05 1.025707963e-09 7.021696656e-04  32.0%
+Combinational        5.642070901e-04 4.129995359e-04 2.365211804e-09 9.772089543e-04  44.6%
+Clock                3.248454595e-04 1.870542474e-04 1.858677101e-09 5.119015696e-04  23.4%
+Macro                0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+Pad                  0.000000000e+00 0.000000000e+00 0.000000000e+00 0.000000000e+00   0.0%
+------------------------------------------------------------------------------------
+Total                1.518898644e-03 6.723763654e-04 5.249598978e-09 2.191280248e-03 100.0%
+                               69.3%           30.7%            0.0%
+PPA_POWER 0.001518898643553257 0.0006723763654008508 5.249598977741243e-9 0.00219128024764359
+PPA_COVERAGE 2861 0
+PPA_INTERNAL_EXCLUDED 244

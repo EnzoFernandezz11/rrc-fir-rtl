@@ -1,14 +1,16 @@
 """Flujo SKY130 temporal: targets, throughput por muestra y publicación de corridas."""
 
 import json
+import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
 
 from scripts.ppa_time import (LIBRARY, REPORT, ROOT, evidence_dir, evidence_links, publish_evidence,
                               record_run, sha256, sustained_sps, target_settings)
-from scripts.ppa_time_compare import comparison_document, load_run
+from scripts.ppa_time_compare import comparison_document, load_run, rebase_links
 from scripts.ppa_time_physical import split_vcd, write_power_sdc
 
 
@@ -82,6 +84,34 @@ class PpaTimeTest(unittest.TestCase):
             links = evidence_links(published, report.parent, (("Manifiesto", "manifest.json"),
                                                               ("Netlist", "mapped.v")))
             self.assertEqual(links, "- [Manifiesto](time_optimized/sky130/manifest.json).\n")
+            # Una corrida incompleta no toca la última copia válida.
+            (run_dir / "manifest.json").unlink()
+            with self.assertRaisesRegex(ValueError, "sin manifiesto"):
+                publish_evidence(run_dir, "time_optimized", report)
+            self.assertEqual(json.loads((published / "evidence.json").read_text()), copied)
+            self.assertEqual([p.name for p in published.parent.iterdir()], ["sky130"])
+
+    def test_published_evidence_is_versioned(self):
+        # Todo lo que indexa evidence.json tiene que estar en el repo, no excluido por .gitignore.
+        for target in ("time_serial", "time_optimized"):
+            directory = evidence_dir(target)
+            files = json.loads((directory / "evidence.json").read_text())["sha256"]
+            for name, digest in files.items():
+                self.assertEqual(sha256(directory / name), digest, name)
+            ignored = subprocess.run(["git", "check-ignore", "--no-index", *files], cwd=directory,
+                                     capture_output=True, text=True).stdout.split()
+            self.assertEqual(ignored, [], target)
+
+    def test_report_links_resolve_from_each_copy(self):
+        self.assertEqual(rebase_links("[a](x/y.json) [b](https://h) [c](#s)", Path("r"), Path("r/c")),
+                         "[a](../x/y.json) [b](https://h) [c](#s)")
+        for document in (REPORT, REPORT.parent / "time_comparison/comparison.md"):
+            text = document.read_text(encoding="utf-8")
+            links = [l for l in re.findall(r"\]\(([^)\s#]+)", text) if not re.match(r"[a-z]+:", l)]
+            self.assertTrue(links, document)
+            broken = [l for l in links if not (document.parent / l).exists()]
+            self.assertEqual(broken, [], document)
+            self.assertFalse([l for l in links if "build/" in os.path.normpath(document.parent / l)])
 
     def test_power_sdc_only_changes_clock_period(self):
         # La potencia del escenario común reutiliza el SDC del layout objetivo.
