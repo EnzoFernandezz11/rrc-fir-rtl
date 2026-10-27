@@ -58,10 +58,10 @@ La latencia es $L = 9$ ciclos, de la aceptación de $x[n]$ al primer ciclo con $
 
 \subsection{Recursos}
 
-El diseño previó 56 registros: 32 de historial (dos de $8 \times 2$ bits), 18 de acumuladores, 3 del contador, 2 de estado y 1 para la marca de fin de trama guardada; ningún multiplicador, bloque DSP ni memoria de bloque (BRAM). La síntesis en SKY130 usa 63 flip-flops (tabla~\ref{tab:ppa}); la implementación en FPGA, 57 registros y 88 tablas de búsqueda (LUT) (anexo~\ref{app:fpga}).
+El diseño previó 56 registros: 32 de historial (dos de $8 \times 2$ bits), 18 de acumuladores, 3 del contador, 2 de estado y 1 para la marca de fin de trama guardada; ningún multiplicador, bloque de multiplicación dedicado (DSP) ni memoria de bloque (BRAM). La síntesis en SKY130 usa 63 flip-flops (tabla~\ref{tab:ppa}); la implementación en FPGA, 57 registros y 88 tablas de búsqueda (LUT) (anexo~\ref{app:fpga}).
 
 \subsection{Verificación}
 
 El banco de pruebas propio de la variante corre cada archivo de vectores dos veces, en condiciones ideales y con pausas pseudoaleatorias en la entrada y la salida, y compara cada resultado aceptado con la columna temporal del vector, por índice. También aplica un reset en medio de una trama, durante la acumulación y con un resultado pendiente, y comprueba que el resultado se cancela y el historial queda en cero. Todas las corridas coinciden palabra por palabra y miden $L = 9$ e $II = 10$, los mismos valores que el banco común (tabla~\ref{tab:banco}).
 
-Esta base no aprovecha la simetría $h[k] = h[7-k]$, los ceros del sobremuestreo ni el solapamiento de la entrega de $y[n]$ con la aceptación de $x[n+1]$; esas mejoras quedan para la variante optimizada.
+Esta base no aprovecha la simetría $h[k] = h[7-k]$, los ceros del sobremuestreo ni el solapamiento de la entrega de $y[n]$ con la aceptación de $x[n+1]$. La variante paralela (sección~\ref{sec:paralelas}) reduce el intervalo con otra estructura y tampoco usa la simetría ni los ceros del sobremuestreo.

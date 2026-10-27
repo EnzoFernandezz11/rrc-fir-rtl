@@ -1,6 +1,6 @@
 \section{Implementaciones paralelas}\label{sec:paralelas}
 
-La consigna pide, después de cada versión serie, una implementación paralela que mejore el desempeño. Las dos ramas eligen el mismo eje PPA: throughput, a costa de área. Las dos variantes paralelas apuntan a 100\,MHz y conservan la interfaz, los formatos y la coincidencia palabra por palabra con el modelo de punto fijo de su rama (decisión D08).
+La consigna pide, después de cada versión serie, una implementación paralela que mejore el desempeño. Las dos ramas eligen el mismo eje PPA: throughput, a costa de área. Las dos variantes paralelas apuntan a 100\,MHz y conservan la interfaz, los formatos y la coincidencia palabra por palabra con el modelo de punto fijo de su rama.
 
 \subsection{Tiempo: arreglo sistólico en forma transpuesta}
 
@@ -61,8 +61,8 @@ En la variante serie, las dos transformadas ocupan el 78\,\% de los 575 ciclos d
 
 \paragraph{Control.} Cada bloque reserva su destino antes de arrancar y libera su origen cuando el consumidor lo captura. Con dos copias de cada almacenamiento, la captura de un bloque, el cálculo del anterior y la emisión del previo se solapan. Si el receptor detiene la salida, se frenan primero los arranques y después la entrada, sin perder ni mezclar bloques. Los bloques parciales al final de una trama se completan con ceros, como en la serie.
 
-La variante pasa el banco de pruebas común y su banco propio, que corre 837 tramas: las tramas extendidas de A04 con y sin pausas, los vectores de A05, una trama de 4096 muestras, backpressure prolongado y reset en cada etapa del pipeline. Todas coinciden palabra por palabra con el modelo de punto fijo. En régimen acepta y entrega una muestra por ciclo, con $II_\text{bloque} = 8$.
+La variante pasa el banco de pruebas común y su banco propio, que corre 837 tramas: 369 tramas de longitudes de 0 a 40 muestras, impulsos, extremos y semillas QPSK, cada una con y sin pausas; los casos de la tabla~\ref{tab:vectores}; una trama de 4096 muestras; pausas prolongadas en la salida (\emph{backpressure}), y reset en cada etapa del pipeline. Todas coinciden palabra por palabra con el modelo de punto fijo. En régimen acepta y entrega una muestra por ciclo, con $II_\text{bloque} = 8$.
 
 \subsection{Grado de paralelización}
 
-En las dos ramas el throughput a igual reloj pasa a una muestra por ciclo: $\times 10$ en tiempo y $\times 71{,}875$ en frecuencia. En frecuencia el paralelismo interno supera lo que la entrada puede aprovechar. Con 16 posiciones espectrales simultáneas, el producto espectral de un bloque tarda dos ciclos de los ocho disponibles; cuatro posiciones reutilizadas en cuatro tandas también alcanzarían $II_\text{bloque} = 8$. Se eligió desplegar las 16 para aplicar el mismo criterio de especialización por constante en los tres bloques, como pide la consigna, a costa de área. El costo en área, timing y energía de las dos variantes está en la sección~\ref{sec:ppa}.
+En las dos ramas el throughput a igual reloj pasa a una muestra por ciclo: $\times 10$ en tiempo y $\times 71{,}875$ en frecuencia. En frecuencia el paralelismo interno supera lo que la entrada puede aprovechar. Con 16 posiciones espectrales simultáneas, el producto espectral de un bloque tarda dos ciclos de los ocho disponibles; cuatro posiciones reutilizadas en cuatro tandas también alcanzarían $II_\text{bloque} = 8$. La consigna pide la máxima paralelización de la etapa basada en FFT; se desplegaron las 16 posiciones para cumplirla y para especializar cada una con su $H[k]$, a costa de área. El costo en área, timing y energía de las dos variantes está en la sección~\ref{sec:ppa}.

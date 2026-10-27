@@ -1,6 +1,6 @@
 \section{Referencia FPGA}\label{app:fpga}
 
-Antes de acordar el flujo SKY130, las variantes serie y la paralela en frecuencia se midieron en una FPGA con Vivado 2024.2: Artix-7 \texttt{xc7a35tcpg236-1}, síntesis e implementación \emph{out of context} con las estrategias por defecto. La paralela en tiempo no se midió con este flujo. El estímulo es el mismo de la sección~\ref{sec:ppa}. Después del ruteo se simula la netlist, se comparan las 2048 salidas con el modelo de punto fijo y se genera la actividad SAIF para la estimación de potencia. La tabla~\ref{tab:fpga} reúne las cinco corridas; todas cumplen setup y hold. Estas cifras sirven para contrastar tendencias y no se convierten a área ni potencia ASIC.
+Antes de acordar el flujo SKY130, las variantes serie y la paralela en frecuencia se midieron en una FPGA con Vivado 2024.2: Artix-7 \texttt{xc7a35tcpg236-1}, síntesis e implementación \emph{out of context} con las estrategias por defecto. La paralela en tiempo no se midió con este flujo. El estímulo es el mismo de la sección~\ref{sec:ppa}. Después del ruteo se simula la netlist, se comparan las 2048 salidas con el modelo de punto fijo y se genera el registro de actividad de conmutación (SAIF) para la estimación de potencia. La tabla~\ref{tab:fpga} reúne las cinco corridas; todas cumplen setup y hold. Estas cifras sirven para contrastar tendencias y no se convierten a área ni potencia ASIC.
 
 \begin{table}[h]
   \centering
@@ -16,7 +16,7 @@ Antes de acordar el flujo SKY130, las variantes serie y la paralela en frecuenci
     FF & 57 & 57 & 569 & 569 & 4898 \\
     DSP & 0 & 0 & 3 & 3 & 0 \\
     BRAM & 0 & 0 & 0 & 0 & 0 \\
-    WNS (ns) & 93,883 & 4,136 & 82,675 & 0,901 & 0,533 \\
+    Peor slack de setup (ns) & 93,883 & 4,136 & 82,675 & 0,901 & 0,533 \\
     Fmax estimada (MHz) & 163,5 & 170,5 & 57,7 & 109,9 & 105,6 \\
     $L$ (ciclos) & 9 & 9 & 559 & 559 & 26 \\
     $II$ (ciclos por muestra) & 10 & 10 & 71,875 & 71,875 & 1 \\
@@ -27,7 +27,7 @@ Antes de acordar el flujo SKY130, las variantes serie y la paralela en frecuenci
   \end{tabular}
 \end{table}
 
-La potencia estática es la del dispositivo completo, 68 a 69\,mW en todas las corridas, y no se incluye en la energía por muestra. La Fmax se estima como $1000/(T - \text{WNS})$\,MHz.
+La potencia estática es la del dispositivo completo, 68 a 69\,mW en todas las corridas, y no se incluye en la energía por muestra. La Fmax se estima como $1000/(T - \text{slack})$\,MHz.
 
 \paragraph{Límites de la medición.}
 \begin{itemize}

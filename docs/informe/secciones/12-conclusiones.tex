@@ -1,6 +1,6 @@
 \section{Conclusiones y límites}\label{sec:conclusiones}
 
-\paragraph{Precisión.} En punto flotante las dos ramas calculan el mismo filtro: difieren en menos de $2\times10^{-14}$, el orden del error de redondeo de doble precisión. En punto fijo, con el formato elegido, ambas ramas superan los 40\,dB de SQNR en todos los conjuntos de datos con señal, con un error de a lo sumo 2,5\,LSB. El menor margen aparece con entradas de peor caso que el sobremuestreo 2× no produce (40,6\,dB); con QPSK el margen es de 3 a 4\,dB. Las cuatro variantes RTL coinciden palabra por palabra con el modelo de punto fijo de su rama, así que heredan esa SQNR.
+\paragraph{Precisión.} En punto flotante las dos ramas calculan el mismo filtro: difieren en menos de $2\times10^{-14}$, el orden del error de redondeo de doble precisión. En punto fijo, con el formato elegido, ambas ramas superan los 40\,dB de SQNR en todos los conjuntos de datos con señal, con un error de a lo sumo 2,5\,LSB. El menor margen aparece con entradas de peor caso que el sobremuestreo 2× no produce (40,6\,dB); con QPSK el margen es de 3 a 4\,dB. Las cuatro variantes RTL coinciden palabra por palabra con el modelo de punto fijo de su rama, por lo que heredan esa SQNR.
 
 \paragraph{Serie frente a paralela.} En las dos ramas la variante paralela multiplica el throughput y baja la energía por muestra, a costa de área (tablas~\ref{tab:ppa} y~\ref{tab:ppa-10mhz}):
 \begin{itemize}
@@ -12,7 +12,7 @@
 \paragraph{Tiempo frente a frecuencia.} Para este filtro, la rama en tiempo es mejor en todas las métricas medidas. Entre las dos variantes paralelas, la de frecuencia ocupa 64 veces el área de celdas de la de tiempo, consume 29 veces más energía por muestra, tiene una latencia de 26 ciclos frente a 1 y es la única que no cumple 100\,MHz en todos los corners. Entre las serie, la de frecuencia ocupa 12 veces el área y consume 54 veces más energía por muestra, con un throughput 7 veces menor. Dos características del problema explican la diferencia:
 \begin{itemize}
   \item Con 8 coeficientes, el FIR directo hace 8 productos por muestra. El overlap-save con FFT de 16 puntos, en cambio, hace por cada bloque de 8 muestras dos transformadas de 32 mariposas y 16 productos espectrales complejos. La FFT reduce el costo por muestra solo cuando el filtro es largo, y este no lo es.
-  \item La entrada QPSK toma valores en $\{-1, 0, +1\}$, así que en tiempo cada producto es una selección de signo y no hace falta ningún multiplicador. En frecuencia los operandos de la FFT ya no tienen esa forma, y los productos por constante requieren redes de sumas sobre operandos de 12 y 13 bits.
+  \item La entrada QPSK toma valores en $\{-1, 0, +1\}$, por lo que en tiempo cada producto es una selección de signo y no hace falta ningún multiplicador. En frecuencia los operandos de la FFT ya no tienen esa forma, y los productos por constante requieren redes de sumas sobre operandos de 12 y 13 bits.
 \end{itemize}
 
 \paragraph{Límites.}
