@@ -1,5 +1,24 @@
 \section{Conclusiones y límites}\label{sec:conclusiones}
 
-\paragraph{Precisión.} En punto flotante las dos ramas calculan el mismo filtro: difieren en menos de $2\times10^{-14}$, el orden del error de redondeo de doble precisión. En punto fijo, con el formato elegido, ambas ramas superan los 40\,dB de SQNR en todos los conjuntos de datos con señal, con un error de a lo sumo 2,5\,LSB. El menor margen aparece con entradas de peor caso que el sobremuestreo 2× no produce (40,6\,dB); con QPSK el margen es de 3 a 4\,dB.
+\paragraph{Precisión.} En punto flotante las dos ramas calculan el mismo filtro: difieren en menos de $2\times10^{-14}$, el orden del error de redondeo de doble precisión. En punto fijo, con el formato elegido, ambas ramas superan los 40\,dB de SQNR en todos los conjuntos de datos con señal, con un error de a lo sumo 2,5\,LSB. El menor margen aparece con entradas de peor caso que el sobremuestreo 2× no produce (40,6\,dB); con QPSK el margen es de 3 a 4\,dB. Las cuatro variantes RTL coinciden palabra por palabra con el modelo de punto fijo de su rama, así que heredan esa SQNR.
 
-\pendiente{Los tres}{Conclusiones de la comparación tiempo/frecuencia y serie/paralelo; límites del trabajo (8 coeficientes a 2×, mediciones no realizadas); aprendizajes.}
+\paragraph{Serie frente a paralela.} En las dos ramas la variante paralela multiplica el throughput y baja la energía por muestra, a costa de área (tablas~\ref{tab:ppa} y~\ref{tab:ppa-10mhz}):
+\begin{itemize}
+  \item En tiempo, el arreglo sistólico pasa de 1 a casi 100\,Mmuestras/s: un factor 10 por el intervalo ($II$ de 10 a 1) y otro 10 por el reloj. Cuesta un 77\,\% más de área de celdas y cumple 100\,MHz en los nueve corners.
+  \item En frecuencia, la variante paralela pasa de 0,139 a 98,75\,Mmuestras/s, un factor 71,875 por el intervalo y otro 10 por el reloj. Cuesta 9,4 veces el área de celdas de la serie y no cumple 100\,MHz en los corners SS: el throughput a 100\,MHz queda condicionado a cerrar ese timing.
+  \item A igual reloj (10\,MHz), la energía por muestra baja un 74\,\% en tiempo y un 86\,\% en frecuencia. En las cuatro variantes la potencia interna de las celdas, que incluye la carga del reloj en los registros, es entre el 68 y el 71\,\% del total. Esto es consistente con que las variantes serie paguen esa potencia durante los varios ciclos que dedican a cada muestra, mientras que las paralelas producen una muestra por ciclo.
+\end{itemize}
+
+\paragraph{Tiempo frente a frecuencia.} Para este filtro, la rama en tiempo es mejor en todas las métricas medidas. Entre las dos variantes paralelas, la de frecuencia ocupa 64 veces el área de celdas de la de tiempo, consume 29 veces más energía por muestra, tiene una latencia de 26 ciclos frente a 1 y es la única que no cumple 100\,MHz en todos los corners. Entre las serie, la de frecuencia ocupa 12 veces el área y consume 54 veces más energía por muestra, con un throughput 7 veces menor. Dos características del problema explican la diferencia:
+\begin{itemize}
+  \item Con 8 coeficientes, el FIR directo hace 8 productos por muestra. El overlap-save con FFT de 16 puntos, en cambio, hace por cada bloque de 8 muestras dos transformadas de 32 mariposas y 16 productos espectrales complejos. La FFT reduce el costo por muestra solo cuando el filtro es largo, y este no lo es.
+  \item La entrada QPSK toma valores en $\{-1, 0, +1\}$, así que en tiempo cada producto es una selección de signo y no hace falta ningún multiplicador. En frecuencia los operandos de la FFT ya no tienen esa forma, y los productos por constante requieren redes de sumas sobre operandos de 12 y 13 bits.
+\end{itemize}
+
+\paragraph{Límites.}
+\begin{itemize}
+  \item El filtro tiene 8 coeficientes a 2× y la entrada es QPSK. Las conclusiones sobre tiempo frente a frecuencia dependen de esa longitud y de ese alfabeto; no se midió un filtro largo, donde la FFT podría compensar.
+  \item La variante paralela en frecuencia no cierra setup ni hold a 100\,MHz en los corners SS ($-3{,}28$ y $-0{,}50$\,ns en el peor caso). Las cuatro variantes tienen violaciones eléctricas, desde un buffer del árbol de reloj en las de tiempo hasta cientos de violaciones de tiempo de transición en la paralela en frecuencia.
+  \item La potencia se estima con actividad sin retardos y solo en TT con parásitos nominales; no incluye \emph{glitches}. Los resultados no son una validación para fabricación (\emph{signoff}).
+  \item En SKY130, setup y hold se verifican por STA; la simulación de la netlist con retardos SDF quedó como comprobación opcional.
+\end{itemize}
