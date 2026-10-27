@@ -1,11 +1,11 @@
-"""A07: la tabla PPA lee summary.tsv del flujo Vivado y marca lo no medido."""
+"""A07: tabla PPA SKY130 desde la evidencia versionada y anexo Vivado desde summary.tsv."""
 
 import json
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.ppa_table import COLUMNS, import_run, table
+from scripts.ppa_table import COLUMNS, SKY130_COLUMNS, import_run, sky130_table, table
 
 SUMMARY = """metric\tvalue
 part\txc7a35tcpg236-1
@@ -28,7 +28,71 @@ saif_review\t2696 / 4391 filas de redes con fuente SAIF (S); revisar
 """
 
 
+CORNERS = [f"{rc}_{pvt}" for rc in ("nom", "min", "max")
+           for pvt in ("tt_025C_1v80", "ss_100C_1v60", "ff_n40C_1v95")]
+
+
+def write_sky130(root: Path, name: str, period: float, ss_setup: float, fmax: float | None) -> None:
+    run = root / name / "sky130"
+    run.mkdir(parents=True)
+    timing = {c: {"setup_ws_ns": ss_setup if "ss" in c else 3.0, "hold_ws_ns": 0.1,
+                  "setup_violations": int(ss_setup < 0 and "ss" in c), "hold_violations": 0,
+                  "max_slew_violations": 0, "max_cap_violations": 0,
+                  "max_fanout_violations": 2 if c == "max_ss_100C_1v60" else 0,
+                  "fmax_estimate_mhz": fmax and (fmax if "ss" in c else 2 * fmax)} for c in CORNERS}
+    power = {"total_w": 0.0634, "total_energy_j": 6.43e-10}
+    scenario = {"clock_period_ns": period, "timing": timing, "power": power}
+    (run / "physical_metrics.json").write_text(json.dumps({
+        "areas": {"final_cell_area_um2": 541302, "core_area_um2": 1432473.9},
+        "scenarios": {"target": scenario, "common": {
+            **scenario, "clock_period_ns": 100,
+            "timing": {c: {**t, "setup_ws_ns": 50.0, "setup_violations": 0} for c, t in timing.items()}}}}))
+    (run / "local_metrics.json").write_text(json.dumps(
+        {"clock_period_ns": period, "latency_cycles": 26, "throughput_samples_per_second": 98746383.8}))
+    (run / "manifest.json").write_text(json.dumps({"commit": "22dd3d09" + "0" * 32}))
+    (run / "evidence.json").write_text(json.dumps({"scenario_directories": {"target": "target", "common": "target"}}))
+    for c in CORNERS:
+        (run / "sta/target" / c).mkdir(parents=True)
+        (run / "sta/target" / c / "clock.rpt").write_text(
+            f"clk period_min = 17.11 fmax = {58.45 if 'ss' in c else 99.0}\n")
+
+
 class PpaTableTest(unittest.TestCase):
+    def test_sky130_verdicts_from_nine_corners(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_sky130(root, "frequency_optimized", 10, -3.28, 75.3)
+            write_sky130(root, "frequency_serial", 100, 56.1, None)  # Fmax solo en clock.rpt
+            lines = sky130_table({"time": 44.25, "frequency": 42.96}, {"frequency_optimized"}, root).splitlines()
+
+        self.assertEqual(lines[0], "| " + " | ".join(SKY130_COLUMNS) + " |")
+        rows = {line.split(" | ")[0].lstrip("| "): line for line in lines[2:]}
+        fast, common = rows["frequency_optimized @ 100 MHz"], rows["frequency_optimized @ 10 MHz"]
+        for expected in ("43.0 dB", "541 302 / 1 432 474 µm²", "FAIL: setup -3.28 ns (nom_ss_100C_1v60)",
+                         "hold +0.10 ns", "FAIL: slew 0 / cap 0 / fanout 2", "75.3 MHz (nom_ss_100C_1v60)",
+                         "26 ciclos (260 ns)", "98.75 Mmuestras/s (condicionado: setup/hold FAIL)",
+                         "63.4 mW / 0.643 nJ/muestra", "`22dd3d09`",
+                         "(frequency_optimized/sky130/evidence.json)"):
+            self.assertIn(expected, fast)
+        self.assertIn("26 ciclos (2600 ns)", common)
+        self.assertIn("9.875 Mmuestras/s |", common)
+        serial = rows["frequency_serial @ 10 MHz"]
+        self.assertIn("PASS: setup +3.00 ns (nom_tt_025C_1v80)", serial)
+        self.assertIn("58.5 MHz", serial)
+        self.assertIn("| — |", serial)  # sin RTL registrado no hay SQNR
+        self.assertEqual(rows["time_serial @ objetivo"].count("no medida"), 7)
+
+    def test_sky130_rejects_inconsistent_verdict(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_sky130(root, "time_serial", 100, 50.0, 124.5)
+            path = root / "time_serial/sky130/physical_metrics.json"
+            data = json.loads(path.read_text())
+            data["scenarios"]["target"]["setup_hold_pass"] = False
+            path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError, "setup_hold_pass"):
+                sky130_table({"time": 44.25, "frequency": 42.96}, set(), root)
+
     def test_measured_and_missing_variants(self):
         with TemporaryDirectory() as directory:
             run = Path(directory) / "frequency_serial" / "10mhz"
