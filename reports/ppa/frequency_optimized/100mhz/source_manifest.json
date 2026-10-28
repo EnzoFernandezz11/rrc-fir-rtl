@@ -33,16 +33,16 @@
   "status": "local_pass",
   "library": {
     "name": "sky130_fd_sc_hd__tt_025C_1v80",
-    "path": "/home/andres/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "path": "<PDK_ROOT>/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
     "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135"
   },
   "library_models": {
     "primitives.v": {
-      "path": "/home/andres/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v",
+      "path": "<PDK_ROOT>/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v",
       "sha256": "7d4b1441d06b0f2b9662befa675a0484d77149e04eb42a5f1fa2d4cfded7b2ce"
     },
     "sky130_fd_sc_hd.v": {
-      "path": "/home/andres/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v",
+      "path": "<PDK_ROOT>/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v",
       "sha256": "fbf3b406a2ee7b47e4d28ab3f2ebf80e2a755a316fe8fb1f4b1873f71b563f3b"
     }
   },
