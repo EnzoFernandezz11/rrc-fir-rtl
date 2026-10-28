@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A07: tabla PPA de las cuatro variantes, trazable a las corridas Vivado.
+"""A07: tabla PPA de referencia FPGA (Vivado / Artix-7), trazable a las corridas.
 
 Cada corrida medida tiene su carpeta `reports/ppa/<variante>/<reloj>mhz/` con los
 reportes chicos que deja el flujo Vivado de C02 (`scripts/ppa/vivado/run.tcl`).
@@ -108,7 +108,9 @@ def main() -> int:
     out = PPA_DIR / "tabla.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
-        "# Tabla PPA\n\n"
+        "# Tabla PPA: referencia FPGA (Vivado / Artix-7)\n\n"
+        "La comparación PPA principal del informe se hace con SKY130 (decisión del 26/10, #56). "
+        "Esta tabla queda como referencia FPGA para contrastar tendencias. "
         "Generada con `python3 -m scripts.ppa_table`; no editar a mano. Cada fila sale de "
         "`reports/ppa/<variante>/<reloj>mhz/summary.tsv` (flujo Vivado de C02). El reloj oficial es "
         "10 MHz para las seriales y 100 MHz para las optimizadas; las seriales a 100 MHz son un dato "
@@ -117,7 +119,10 @@ def main() -> int:
         "`config/rtl_targets.json` (coinciden palabra por palabra con ese modelo). La potencia estática es del dispositivo "
         "completo. Vivado informa la dinámica con resolución de 1 mW, así que la energía por muestra "
         "de corridas con pocos mW de dinámica no distingue diferencias menores a ±0,5 mW; además, "
-        "la cobertura SAIF es parcial (redes anotadas / total).\n\n"
+        "la cobertura SAIF es parcial (redes anotadas / total). frequency_optimized se midió además con "
+        "`set_input_delay` T/2 y `set_output_delay` 0 (ver su `clock.xdc`) y su SAIF sale de la netlist "
+        "implementada sin SDF, porque la simulación SDF da salidas obsoletas en CARRY4 (#56); esa actividad "
+        "no tiene glitches, así que su potencia dinámica puede estar algo subestimada.\n\n"
         + table(sqnr, {t["name"] for t in load_targets()}),
         encoding="utf-8",
     )
