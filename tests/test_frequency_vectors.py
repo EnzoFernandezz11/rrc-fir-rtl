@@ -10,6 +10,7 @@ from scripts.validate_project import ROOT
 
 
 class FrequencyVectorChecks(unittest.TestCase):
+    target_name = "frequency_serial"
     @classmethod
     def setUpClass(cls):
         directory = tempfile.TemporaryDirectory()
@@ -17,7 +18,7 @@ class FrequencyVectorChecks(unittest.TestCase):
         cls.directory = Path(directory.name)
         cls.executable = cls.directory / "frequency.out"
         targets = json.loads((ROOT / "config/rtl_targets.json").read_text())["targets"]
-        target = next(t for t in targets if t["name"] == "frequency_serial")
+        target = next(t for t in targets if t["name"] == cls.target_name)
         compiled = subprocess.run(
             ["iverilog", "-g2012", "-s", target["testbench_top"], "-o", str(cls.executable),
              *target["sources"], target["testbench"]],

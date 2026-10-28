@@ -1,5 +1,9 @@
 # Vivado en Windows
 
+Para un ZIP de C04, usar primero la invocación específica del README en la raíz
+del paquete: selecciona top, banco, período de 10 ns y ciclos medidos. Ejecutar
+sin opciones selecciona la base serial de 100 ns descrita a continuación.
+
 Extraer el ZIP completo y abrir una consola con Vivado en `PATH` (por ejemplo,
 ejecutando `settings64.bat` de su instalacion). Desde la raiz del paquete:
 
@@ -64,8 +68,9 @@ incluir `output_samples`, `clock_period_ns`, `active_cycles`, `latency_cycles`,
 XDC generado como a la simulacion; SAIF, SDF, Fmax y resumen usan la variante
 elegida. Los limites de espera escalan con el periodo y los ciclos activos
 esperados. `configuration.txt` registra estos ajustes y `summary.tsv` conserva
-sus mismas filas para A07. El ZIP actual contiene la base de frecuencia; para
-otra variante deben incluirse tambien su RTL, banco y vectores.
+sus mismas filas para A07. `python3 scripts/ppa.py package --target frequency_optimized` empaqueta C04 con
+su RTL, banco, vectores e invocación específica; sin `--target` empaqueta la base
+serial.
 
 No requiere Python. El lanzador usa PowerShell incluido en Windows para crear
 la carpeta antes de iniciar Vivado y guardar `vivado.log` y `vivado.jou` completos.
@@ -74,9 +79,10 @@ Requiere Vivado con soporte de Artix-7 y sus herramientas
 guarda en `build/ppa/frequency_serial/<UTC>-<commit>-vivado/`. Nunca sobrescribe
 una corrida existente. Para leer los resultados, abrir **`summary.md`** de esa
 carpeta: contiene las metricas finales y la referencia local anterior. Tras
-revisarlo, incorporar los resultados a la corrida correspondiente del registro
-`reports/ppa/frequency.md` en el repositorio, conservando el historial serial y
-la seccion de la variante optimizada.
+revisarlo, incorporar la última medición FPGA identificando su corrida de origen
+en `reports/ppa/frequency.md`, separada de las mediciones ASIC SKY130. Respetar
+la regla del informe: última corrida por variante y tecnología, sin acumular
+resúmenes; conservar la referencia histórica Vivado C02 expresamente indicada.
 
 El resumen tambien incluye el diagnostico para elegir C03/C04: desglose de
 ciclos del serial, peor camino interno de setup (`timing_critical.rpt`) y

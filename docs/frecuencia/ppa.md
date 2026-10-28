@@ -1,114 +1,243 @@
-# PPA del núcleo serial de frecuencia
+# PPA de los núcleos de frecuencia
 
-El flujo mide `fir_frequency_serial` completo. En la PC local se verifican las salidas, se miden ciclos y se obtiene un mapeo lógico para Artix-7. El paquete para Windows completa implementación, simulación temporal y estimación de potencia en Vivado.
+## Implementación física OpenLane 2
 
-Esta primera medición establece la **base serial para decidir C03/C04**. El
-registro incluye el [análisis de la base serial](../../reports/ppa/frequency.md#análisis-base-serial): distribución
-de ciclos, preguntas para localizar el costo y criterios para elegir la próxima
-optimización. El resumen de Vivado incorpora además el peor camino interno de
-setup y los recursos por jerarquía. La comparación con la variante optimizada se
-hará después, contra esta base y declarando las condiciones de ambas corridas.
+Metodología acordada por el equipo el 26/10/2026 para B02/B04/C02/C04:
+OpenLane 2 mediante Nix. Esta guía detalla los comandos de frecuencia, siguiendo los
+módulos 7–10 y la guía de instalación del curso. El checkout debe estar limpio
+y fijado en a7b0e6d (2.3.10-1); PDK Volare
+0fe599b2afb6708d281543108caf8310912f54af, sky130A, sky130_fd_sc_hd.
+Los ejemplos con flow.tcl son de OpenLane 1 y no se copian literalmente.
 
-## Configuración de esta corrida
+Correspondencia con el curso: M8 cubre síntesis y extracción SPEF; M9 cubre
+corners y checks de setup/hold, además de explicar retiming. En esta medición el
+retiming de ABC está deshabilitado, como indica la configuración del flujo. M10
+cubre potencia con actividad VCD.
 
-| Parámetro | Valor |
-|---|---|
-| FPGA | Basys3, Artix-7 `xc7a35tcpg236-1` |
-| Reloj | 10 MHz, período de 100 ns |
-| Implementación | Núcleo **out-of-context**, sin pines de placa; estrategias por defecto |
-| Constraints | [`clk_10mhz.xdc`](../../constraints/clk_10mhz.xdc), solo reloj |
-| Formatos A04 | Entrada 2 bits/F=0; trabajo 12/F=5; coeficientes 10/F=8; salida 9/F=7 |
-| Estímulo | QPSK con sobremuestreo 2×, semilla 1, 1024 símbolos: 2048 muestras |
-| Interfaz | Entrada disponible y salida siempre lista |
-| Reset | Síncrono activo alto, diez ciclos iniciales |
-| Referencia | Modelo fijo A04, comparación exacta de I y Q por índice de salida |
+El perfil Nix del repositorio reutiliza los mismos motores del checkout fijado,
+excluyendo las dependencias directas KLayout/Magic/Netgen y sus pruebas de
+paquete, que no se ejecutan hasta STA. El perfil también elimina KLayout de
+los requisitos del wheel Python; conserva el chequeo de las demás dependencias.
+No cambia los motores de síntesis,
+ruteo ni STA. Evita compilar dos variantes de KLayout al preparar este análisis.
+Se valida con SPM y las regresiones del proyecto; el hash del perfil queda
+registrado en cada medición. El entorno completo del curso también es válido,
+pero requiere más dependencias y espacio de instalación en /nix.
 
-Estos son los ajustes de este flujo local. A05 está integrado y C02 compara sus archivos oficiales en `make smoke`. El testbench PPA dedicado conserva su formato local A04; su adopción del formato A05 y la aprobación conjunta del [contrato PPA](../contratos/verificacion-y-ppa.md) siguen pendientes. Las corridas históricas conservan su procedencia y no cambian el estado de ese contrato.
+Usar el caché firmado FOSSi para evitar compilar los motores en el disco raíz.
+En instalaciones Determinate, añadir el contenido revisable de
+scripts/ppa/openlane/nix-cache.conf a /etc/nix/nix.custom.conf y reiniciar
+nix-daemon con privilegios administrativos. La clave pública completa está en
+la [guía oficial Nix-EDA](https://github.com/fossi-foundation/nix-eda/blob/main/docs/installation.md);
+la copia PDF del curso la muestra truncada. No desactivar la verificación de firmas.
 
-## Ejecutar en la PC local
+Desde la raíz, conservando el Python que tiene las dependencias del proyecto:
 
-Desde la raíz del repositorio, con Python y las dependencias del modelo, Icarus Verilog y Yosys disponibles:
+~~~sh
+sh scripts/ppa/openlane/run.sh --target frequency_serial
+sh scripts/ppa/openlane/run.sh --target frequency_optimized
+~~~
+
+OPENLANE_ROOT permite indicar el checkout y PPA_PYTHON el intérprete local.
+Si ya se está dentro del entorno fijado:
+
+~~~sh
+python3 scripts/ppa.py physical --target frequency_serial
+python3 scripts/ppa.py physical --target frequency_optimized
+~~~
+
+Ejecutar una sola corrida EDA a la vez. Los procesos instrumentados usan
+`build/tmp` como `TMPDIR`. GNU time conserva un archivo
+`*.resource.txt` por ejecución (incluye máximo RSS); el monitor añade
+`*.monitor.jsonl` con muestras cada cinco segundos de memoria disponible, swap,
+espacio libre y tamaño de los VCD observados. Se exige al menos 1 GiB de memoria
+disponible antes de iniciar cada proceso instrumentado. Si queda menos de 512 MiB
+durante dos muestras consecutivas, se detiene solo el grupo de procesos de esa ejecución. Los logs,
+archivos de consumo y tamaños observados quedan en la corrida para diagnóstico.
+
+El comando valida primero el ejemplo SPM en build/ppa/openlane-preflight/.
+Luego ejecuta la regresión/benchmark local sin publicar todavía y ejecuta
+OpenLane Classic hasta OpenROAD.STAPostPNR: síntesis, floorplan, placement,
+CTS, ruteo y extracción RC. Se usan utilización 35 %, densidad 45 %,
+estrategia AREA 0, dos hilos y sin retiming de ABC. No agrega clock gating.
+No se ejecuta el signoff completo de fabricación (GDS/DRC Magic/LVS); no se
+presenta este resultado como chip listo para fabricar.
+
+Los objetivos son 100 ns para C02 y 10 ns para C04. El SDC base de esta versión
+incluye E/S y reset síncrono, cargas, incertidumbre y transición; el SDC resuelto
+queda en los artefactos. STA cubre las nueve combinaciones de TT/SS/FF y
+RC nom/min/max, con reloj propagado y SPEF. Se registran slacks positivos y WNS
+(limitado a cero), TNS, violaciones, advertencias de restricciones y redes
+ruteadas sin parasíticos. El informe separa setup/hold, restricciones eléctricas
+(slew, capacitancia y fanout) y PASS global. PASS global exige setup/hold sin
+violaciones, cero violaciones eléctricas en todos los corners, restricciones
+completas y parasíticos de todas las redes ruteadas.
+Fmax es una estimación registro a registro: no es un barrido de frecuencia ni
+demuestra por sí sola timing de E/S.
+
+Cada corrida verifica la netlist final con las mismas 2048 muestras. El nuevo
+argumento +POWER_VCD=archivo guarda la actividad completa; +VCD=archivo
+conserva el volcado corto habitual. Se recorta/rebasa la ventana activa en
+streaming porque el OpenSTA fijado no soporta los selectores de tiempo de
+versiones recientes. Reset y guarda final quedan fuera del análisis.
+
+Potencia usa netlist final, Liberty TT/25 °C/1,8 V, SDC resuelto, SPEF nominal y
+read_vcd con scope del DUT. El proyecto usa un benchmark de 2048 muestras y
+divide la ventana activa en hasta 64 segmentos alineados al reloj, analizados
+por procesos OpenSTA secuenciales. El SDC de potencia conserva las restricciones
+resueltas y ajusta localmente el período al reloj simulado; se valida y conserva
+como `power.sdc`. El volcado incluye los pines de las celdas. Las potencias se
+promedian por duración y las energías se suman. Así se conserva
+el benchmark completo con menor pico de memoria. Los VCD temporales se borran
+al acabar cada segmento. Las ventanas se ponderan por duración y su inicio
+acumulado queda registrado. Se exige actividad de origen VCD, reloj o constante
+en todos los pines y se registra el conteo real importado por OpenSTA; no es
+cobertura funcional. Se cubren pines
+externos de celdas y puertos del top: los estados internos Liberty IQ/IQ_N
+no son puertos Verilog y se cuentan aparte, fuera del denominador.
+Se informa la actividad **funcional
+sin retardos**, que no reproduce todos los glitches temporales.
+Se distinguen interna, switching, dinámica (= interna + switching), leakage y
+total. Energía = potencia × duración activa / 2048.
+
+El escenario target usa el objetivo propio. common repite STA y actividad a
+10 MHz sobre el mismo layout, sin repetir P&R. Las métricas físicas están en
+physical_metrics.json; los estados OpenLane enlazan netlist, ODB, DEF, SDC,
+SPEF y SDF. El SDF se exporta; su simulación es adicional al flujo PPA y se
+ejecuta cuando la verificación definida por el contrato local la requiere.
+Una corrida completa puede informar timing FAIL; una falla de herramienta o
+evidencia incompleta conserva la última medición publicada.
+
+## Evidencia pública de las corridas
+
+`physical` publica automáticamente un subconjunto de la corrida completa en
+`reports/ppa/<target>/sky130/`. Para publicar una corrida existente sin volver
+a ejecutar síntesis, P&R ni simulación:
 
 ```sh
-make ppa-local
+python3 scripts/ppa.py publish-evidence --run-dir build/ppa/frequency_serial/CORRIDA
+python3 scripts/ppa.py publish-evidence --run-dir build/ppa/frequency_optimized/CORRIDA
 ```
 
-El comando ejecuta la regresión `smoke`, genera los vectores y corre un testbench dedicado que usa solamente los puertos del núcleo para comprobar sus resultados. Después sintetiza con `synth_xilinx -family xc7 -flatten -noiopad -noclkbuf`. Es el mismo enfoque de los ejercicios del curso: Icarus para comprobar comportamiento y ciclos, GTKWave para inspección, y Yosys para contar recursos mapeados.
+Se copian el manifiesto original, métricas, configuraciones OpenLane, SDC de
+potencia y SDC usado por STA, logs de potencia, resultados del benchmark y
+reportes STA pequeños de los nueve corners. Los encabezados de STA y el entorno
+Tcl conservan las restricciones efectivas; `resolved.sdc` es el SDC del estado
+físico y puede diferir del `base.sdc` usado por STA. En C02, common comparte la
+evidencia target a 10 MHz. C04 conserva además la procedencia del layout reutilizado.
 
-Cada ejecución crea `build/ppa/frequency_serial/<fecha-commit>/` y muestra su ruta. Los archivos principales son:
+`evidence.json` identifica la corrida, cada archivo publicado con su SHA256,
+sus orígenes y los extractos generados. Si la ruta de Nix del SDC dejó de existir,
+se recupera `base.sdc` de la revisión Git de OpenLane registrada en el manifiesto
+(`--openlane-root` permite indicar el checkout); esa recuperación queda declarada
+en el índice y se verifica contra el hash previo cuando existe.
 
-| Archivo | Contenido |
-|---|---|
-| `manifest.json` | Configuración, revisión, herramientas, hashes y tamaños de artefactos |
-| `local_metrics.json` | Contadores y medidas del benchmark |
-| `resources.json` | Conteos agrupados de primitivas Xilinx |
-| `cells.json` | Estadísticas originales de Yosys |
-| `first_blocks.vcd` / `first_blocks.gtkw` | Ondas limitadas a los primeros cuatro bloques y selección de señales |
-| `logs/` | Comandos y diagnósticos de las herramientas |
-| `summary.md` | Copia del resumen de la corrida; el informe de consulta está en `reports/ppa/frequency.md` |
+Los VCD, netlists, SPEF/SDF/ODB, bibliotecas y logs completos de caminos STA quedan
+en `build/ppa/`. La evidencia publicada permite auditar resultados y restricciones;
+para repetir las herramientas se necesita el entorno y los artefactos completos.
+La publicación reemplaza la copia anterior solo después de reunir los archivos;
+una corrida con timing FAIL conserva sus veredictos. Se preservan los reportes
+Vivado como referencia FPGA. `compare` también publica la evidencia de su pareja.
 
-Para inspeccionar las ondas, reemplazar `<fecha-commit>` por la corrida indicada:
+## Comparación reproducible y gráficos Mermaid
+
+Después de obtener las dos corridas, indicar sus directorios explícitos:
+
+~~~sh
+python3 scripts/ppa.py compare --c02 build/ppa/frequency_serial/CORRIDA --c04 build/ppa/frequency_optimized/CORRIDA --render
+~~~
+
+Sin --render se generan los bloques Mermaid y fuentes .mmd sin necesitar
+Node. --render exporta SVG con @mermaid-js/mermaid-cli@11.6.0 y Chromium
+mediante npm; requiere red la primera vez. Node/npm sólo son necesarios para
+exportar/verificar SVG. La configuración Puppeteer desactiva su sandbox para
+este render local controlado. Los radares requieren Mermaid ≥11.6.0; el informe
+enlaza SVG como alternativa a visores incompatibles.
+
+Se leen los JSON/manifiestos, nunca los números del Markdown. Se exige la misma
+etapa, biblioteca, herramientas, benchmark y método físico. Las corridas deben
+ser las publicadas; una actualización invalida la comparación anterior.
+La comparación y sus fuentes Mermaid/SVG se escriben en
+`reports/ppa/comparisons/`, con identidad de sus entradas, para que los enlaces
+del informe sean accesibles desde GitHub.
+
+La tabla enumera todas las métricas, unidades, cambios y procedencia; los
+valores sin evidencia dicen “No medida”. Barras individuales evitan mezclar
+unidades y separan relojes propios de 10 MHz común. Timing conserva sus signos
+y corners. No se comparan cifras ASIC con Vivado.
+
+El radar arquitectónico agrupa área Liberty, FF, latencia e intervalo por bloque.
+El radar físico agrupa área final, latencia temporal, throughput efectivo y
+energía total a 10 MHz, sólo si ambas implementaciones pasan STA en ese escenario.
+100 significa el mejor valor de la pareja por eje: beneficios =
+100 × valor/máximo; costos = 100 × mínimo/valor. Empates en cero reciben 100;
+costo cero frente a positivo recibe 100 frente a 0. No hay nota global ni se
+interpreta la superficie como “ganador”. Datos faltantes eliminan el eje en
+ambas curvas; menos de tres ejes omite el radar.
+
+## Medición lógica local
+
+El flujo local mide `frequency_serial` (C02) y `frequency_optimized` (C04) con
+la biblioteca **SKY130 HD, 130 nm, TT 25 °C, 1,8 V**. Desde la raíz:
 
 ```sh
-gtkwave build/ppa/frequency_serial/<fecha-commit>/first_blocks.gtkw
+python3 scripts/ppa.py local --target frequency_serial
+python3 scripts/ppa.py local --target frequency_optimized
+python3 scripts/ppa.py package --target frequency_serial
+python3 scripts/ppa.py package --target frequency_optimized
 ```
 
-Se exige recibir exactamente las 2048 salidas correctas, sin pérdidas ni duplicados, y comprobar el presupuesto ideal de **559 ciclos de latencia** y **575 ciclos por bloque de ocho muestras**. El throughput se calcula con los contadores efectivos del benchmark y el período de 100 ns. Las ondas permiten revisar los primeros bloques sin guardar toda la actividad de la prueba.
+`local` ejecuta `smoke`, el benchmark de puertos y síntesis lógica SKY130.
+`package` repite esa misma medición ASIC y además crea un ZIP para la posterior
+referencia FPGA con Vivado en Windows; no reemplaza ni convierte la medición
+ASIC en PPA FPGA. No se corre un target combinado: cada variante se selecciona
+por separado. El resumen consultable es
+[`reports/ppa/frequency.md`](../../reports/ppa/frequency.md); las instrucciones
+del ZIP están en [`scripts/ppa/vivado/README.md`](../../scripts/ppa/vivado/README.md).
 
-Los conteos de LUT, FF, DSP, BRAM, CARRY y multiplexores dedicados de Yosys son **mapeo lógico preliminar**. Se conservan las categorías por separado. Todavía faltan ubicación y ruteo para informar timing físico y potencia.
+Después de sintetizar, el flujo simula `mapped.v` con Icarus y los modelos
+funcionales de SKY130 (`FUNCTIONAL`, `UNIT_DELAY` vacío). Usa el mismo
+benchmark de 2048 salidas y compara las salidas y métricas con la ejecución RTL.
+Para resolver los modelos, deben estar junto al directorio `lib` de la
+biblioteca seleccionada: `verilog/primitives.v` y
+`verilog/sky130_fd_sc_hd.v`. La corrida copia ambos a `library_models/` y
+registra sus hashes en el manifiesto. `gate_metrics.json` contiene las métricas
+de esa simulación; `logs/gate_compile.log` y `logs/gate_benchmark.log` conservan
+la compilación y ejecución.
 
-## Preparar el envío a Windows
+La biblioteca se puede indicar con `--liberty PATH`; también se admite la
+variable `SKY130_LIB`. Tienen prioridad el argumento y luego la variable. Si
+ninguno se indica, el flujo busca versiones instaladas por Volare en
+`~/.volare/volare/sky130/versions/*/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib`.
+Si encuentra exactamente una, la usa; si no encuentra ninguna o hay varias,
+indica el problema y requiere seleccionar la ruta con `--liberty`.
 
-```sh
-make ppa-package
-```
+El benchmark RTL comprueba las salidas exactas y reporta ciclos, latencia y
+throughput de simulación; la simulación funcional de `mapped.v` permite
+contrastar ese comportamiento y esas métricas después del mapeo. Al ser zero-delay,
+no modela retardos de celdas ni interconexión y no es simulación temporal con
+SDF. La síntesis informa conteos de celdas, FF y área de celdas en µm² según la
+biblioteca elegida. Estas medidas no incluyen STA,
+ubicación y ruteo, ni potencia; por tanto no demuestran frecuencia física ni
+cumplimiento de timing. Los períodos del testbench —100 ns para C02 y 10 ns
+para C04— son parámetros de simulación y **no están validados físicamente**.
 
-Este comando vuelve a ejecutar la validación local y genera `frequency_serial_vivado.zip` dentro de la nueva corrida, para que los vectores, fuentes y resultados correspondan entre sí. El ZIP contiene RTL, testbench, vectores ya calculados, XDC, scripts Tcl, lanzador Windows e instrucciones. La PC de Vivado no necesita Python. Ondas, checkpoints y cachés locales quedan fuera del paquete.
+Cada corrida queda bajo `build/ppa/<target>/<corrida>/`, con su manifiesto,
+métricas, celdas y logs. `frequency.md` mantiene para cada variante solo la
+**última corrida local exitosa**: una corrida exitosa nueva reemplaza la entrada
+previa aunque sus resultados sean equivalentes. Las ejecuciones fallidas no
+desplazan la última exitosa; las evidencias anteriores permanecen en `build/`
+o en la ubicación donde se hayan archivado.
 
-Tu compañero debe extraer el ZIP y, desde su carpeta raíz, ejecutar el lanzador en una consola de Windows que tenga `vivado` disponible:
+## Referencia FPGA con Vivado
 
-```bat
-scripts\ppa\vivado\run.bat
-```
+El ZIP de `package` conserva los fuentes, vectores, restricciones y scripts
+necesarios para completar el flujo FPGA externo descrito en la guía Vivado.
+Es un resultado aparte: timing, utilización y potencia FPGA requieren correr
+Vivado y revisar sus evidencias. La sección histórica Vivado de C02 en
+[`frequency.md`](../../reports/ppa/frequency.md) conserva sus condiciones y
+procedencia; la nueva regla de última corrida local aplica a las mediciones
+locales automatizadas, no reescribe esa historia.
 
-Puede indicar una carpeta de resultados como argumento, entre comillas si tiene espacios. La versión realmente utilizada se registra en `tool_versions.txt`.
-
-El flujo Vivado acepta top, banco, período y ciclos esperados por argumentos para
-que A07 pueda reutilizarlo. Las [opciones y el contrato del banco PPA](../../scripts/ppa/vivado/README.md)
-detallan cómo incorporar otra variante; los valores por defecto conservan esta
-base serial de frecuencia y el formato de `summary.tsv`.
-
-El flujo de Vivado realiza:
-
-1. Síntesis e implementación out-of-context para `xc7a35tcpg236-1` a 100 ns.
-2. Reportes de utilización, timing, caminos críticos y restricciones faltantes.
-3. Exportación del diseño implementado, netlist temporal y SDF.
-4. Simulación temporal con xsim del mismo vector y comprobación de todas las salidas.
-5. Captura de SAIF durante el procesamiento, excluyendo reset e incluyendo captura, copia de historial, cálculo y emisión.
-6. Importación de SAIF y `report_power`, registrando cobertura de anotación y señales sin correspondencia.
-
-La estimación de potencia usa actividad del diseño implementado, como describe el [flujo SAIF de AMD](https://docs.amd.com/r/2022.2-English/ug997-vivado-power-analysis-optimization-tutorial/Step-3-Running-Report-Power-with-Vivado-Simulator-SAIF-Data). Una anotación incompleta debe revisarse antes de usar la cifra como resultado comparable. Se conservan las condiciones de operación y temperatura utilizadas por Vivado.
-
-## Leer y conservar los resultados
-
-| Métrica | Lectura |
-|---|---|
-| Área final | LUT, FF, DSP48 y BRAM del diseño implementado en Vivado |
-| Cumplimiento del reloj | WNS ≥ 0 a 100 ns; revisar además hold y caminos sin constraints |
-| Fmax estimada | `1000 / (100 − WNS_ns)` MHz, usando caminos internos de setup del reloj |
-| Latencia | Ciclos entre aceptación de entrada y salida correspondiente, según los contadores de la prueba |
-| Throughput | Muestras procesadas / duración medida en segundos |
-| Potencia | Dinámica y estática por separado, en W, con procedencia y cobertura del SAIF |
-| Energía por muestra | `P_dinámica_W / throughput_muestras_por_segundo`, en J/muestra |
-
-La Fmax es una aproximación a partir de una implementación a 10 MHz; este flujo no hace un barrido de frecuencias. Los caminos externos no tienen presupuestos de entrada/salida porque el alcance acordado es medir el núcleo out-of-context con constraint de reloj.
-
-**Para revisar los resultados, abrir un solo archivo: `reports/ppa/frequency.md`.** Contiene la configuración, las medidas locales y las secciones de Vivado; estas últimas quedan pendientes hasta recibir los resultados de Windows. Cada ejecución local registra las nuevas medidas en el historial serial sin duplicar ejecuciones equivalentes y conserva su copia original en `build/ppa/frequency_serial/<fecha-commit>/summary.md`.
-
-Cuando tu compañero termine, su carpeta de resultados contendrá un `summary.md` con los resultados de Vivado primero y las medidas locales del paquete como referencia. Después de revisarlo, incorporar sus medidas y conclusiones a la entrada local correspondiente en `reports/ppa/frequency.md`, o agregar una entrada Vivado identificando la corrida local de origen. Conservar las entradas anteriores y la ruta donde se archivaron las evidencias. Los enlaces internos del resumen recibido se deben ajustar a esa ubicación antes de incorporarlos.
-
-Los archivos `utilization.rpt`, `timing_metrics.json`, `power.rpt`, `run_status.txt` y `read_saif.rpt`/`unmatched_saif.rpt` permiten auditar las cifras, el resultado de simulación y la cobertura SAIF. El registro común contiene el análisis base, las corridas seriales y una sección para las futuras corridas optimizadas.
-
-Los archivos pesados permanecen en `build/ppa/frequency_serial/` o en una copia externa identificada. El manifiesto permite consultar tamaños reales antes de compartir artefactos.
-
-La ejecución local deja timing y potencia como pendientes de Vivado. Los scripts de Windows requieren validación en la PC de tu compañero; que el paquete se genere correctamente no equivale a haber ejecutado Vivado.
+Para la definición funcional y las limitaciones de C04, ver el
+[contrato de implementación](c04-implementacion.md).

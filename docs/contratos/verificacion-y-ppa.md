@@ -36,25 +36,58 @@ El mínimo exigido es **SQNR ≥ 40 dB**, confirmado por Enzo el 7/10/2026 como 
 
 ## PPA
 
-**Propuesta E03 (D05, D06):** todas las variantes se miden con **Vivado** sobre la misma FPGA Xilinx, con el mismo flujo y las mismas constraints. La CI no tiene Vivado: el `full` de Yosys sigue sirviendo para comprobar que el RTL es sintetizable, pero las cifras PPA salen de las corridas Vivado registradas en `reports/`.
+**Acuerdo del equipo (26/10/2026, D05/D06):** @EnzoFernandezz11,
+@andres332271 y @moreyrajulian adoptan OpenLane 2 fijado mediante Nix y
+**SKY130 HD de 130 nm** para B02, B04, C02 y C04. El flujo cubre síntesis,
+floorplan, placement, CTS, ruteo, extracción SPEF y STA post-ruteo en las nueve
+combinaciones TT/SS/FF × RC nom/min/max. El procedimiento y las versiones están
+en la [guía PPA](../frecuencia/ppa.md). El área final de celdas, core y die se
+informa por separado del área Liberty de síntesis.
 
-| Condición común | Valor propuesto |
-|---|---|
-| Herramienta | Vivado, versión anotada en cada reporte. |
-| Dispositivo | Artix-7 `xc7a35tcpg236-1` (placa Basys3). |
-| Flujo | Síntesis e implementación (place & route) **out-of-context** del núcleo: sin pines de E/S ni drivers del testbench, para medir solo el filtro. Estrategias por defecto. |
-| Constraints | Solo el reloj: `constraints/clk_100mhz.xdc` (período 10 ns) para variantes rápidas y `constraints/clk_10mhz.xdc` (100 ns) para lentas. |
-| Corner y temperatura | Los que Vivado usa por defecto para el dispositivo (grado de velocidad −1, condiciones típicas de `report_power`). |
+Los objetivos son **10 MHz en seriales y 100 MHz en optimizadas**. Para informar
+cumplimiento de setup/hold se exige slack no negativo y cero violaciones de ambos
+chequeos en **los nueve corners**. La tabla muestra el peor slack de setup y el
+peor slack de hold, cada uno con su corner; TT nominal puede mostrarse como dato
+adicional. Fmax es una estimación registro a registro y no sustituye esta condición.
+Las restricciones eléctricas (**slew, capacitancia y fanout**) tienen un veredicto
+separado, incluidos los buffers insertados por CTS. **PASS global** requiere
+setup/hold y eléctrico PASS, restricciones completas y parasíticos anotados.
+Un FAIL se declara sin reclasificar la variante ni reducir su objetivo.
 
-| Métrica | Definición y herramienta |
-|---|---|
-| Área | `report_utilization` después de implementar: LUT, FF, DSP48 y BRAM. Se reportan las cuatro cifras, sin convertirlas a un único número. |
-| Performance | `report_timing_summary` después de implementar, al reloj objetivo de la variante: debe cumplir WNS ≥ 0. Fmax = 1 / (T − WNS). Latencia `L`, `II` y throughput `f_clk / II` según el [contrato de interfaz](interfaz-rtl.md#latencia-y-throughput), medidos en simulación. |
-| Potencia | `report_power` después de implementar, con actividad **SAIF** de una simulación del diseño implementado en xsim con el mismo vector QPSK (semilla y longitud de A05), al reloj objetivo de la variante. Se reportan la potencia dinámica y la estática por separado, y la **energía por muestra** = P_dinámica / throughput, que permite comparar variantes con relojes distintos. |
+La netlist final se simula funcionalmente con comparación exacta A04/A05. El
+período del banco no demuestra cierre temporal; setup/hold se evalúan mediante
+STA con SPEF. La simulación SDF queda como comprobación adicional.
 
-El reloj mínimo es 100 MHz para variantes rápidas y 10 MHz para lentas, confirmado por Enzo el 7/10/2026; verificar timing a la frecuencia de operación elegida. Una estimación sin SAIF (actividad por defecto o *vectorless*) se puede anotar como referencia, pero no es potencia comparable.
+La potencia se estima con **OpenSTA**, Liberty TT/25 °C/1,8 V, **SPEF nominal**,
+SDC declarado y **VCD de la netlist final**. Las cuatro variantes usan QPSK 2×,
+semilla 1 y 2048 muestras. Se procesa la ventana activa completa en segmentos,
+se pondera la potencia por duración y se calcula energía por muestra como
+potencia × duración activa / 2048. Se informa interna, switching, dinámica,
+leakage y total, junto con la cobertura de actividad por pin. La actividad
+funcional sin retardos no captura todos los glitches temporales. Cada escenario
+publica las restricciones usadas por STA y potencia, incluidas sus diferencias.
 
-La tabla final tendrá columnas `variante`, `commit`, `configuración`, `SQNR`, `área`, `Fmax`, `latencia`, `throughput`, `potencia`, `herramienta/log`. Si una métrica no se puede medir con las herramientas disponibles, dejarla como «no medida» y explicar la limitación. No presentar el mapeo lógico de Yosys como Fmax medido ni una estimación sin actividad como potencia comparable.
+C02/C04 ya tienen corridas físicas en [el reporte de frecuencia](../../reports/ppa/frequency.md).
+Julián informó las mediciones B02/B04 con el mismo flujo en su revisión de #56;
+su integración y la tabla conjunta se completan con B04 y A07. Tener una corrida
+completa no implica cierre: C04 pasa setup/hold en TT a 100 MHz, falla en SS y
+mantiene violaciones eléctricas. Las comparaciones físicas a reloj común deben
+explicitar ambos veredictos; los gráficos que presuponen cumplimiento quedan
+condicionados a PASS global de las variantes comparadas.
+
+**Referencia FPGA:** se conservan `scripts/ppa/vivado/` y los reportes de
+`reports/ppa/time_serial/` y `reports/ppa/frequency_serial/`. La corrida C04 de
+#57 se destina al anexo FPGA. Sus métricas Artix-7 no se convierten a área ni
+potencia ASIC; la tabla principal A07 utilizará SKY130 para las cuatro variantes.
+
+**Evidencia y mantenimiento:** se publica el subconjunto pequeño de la última
+corrida completa en `reports/ppa/<target>/sky130/`: manifiesto, métricas JSON,
+configuraciones OpenLane, SDC, logs de potencia y resúmenes STA por corner.
+`evidence.json` identifica la corrida de origen y los SHA256 de los archivos.
+Los VCD, netlists, SPEF, SDF, ODB y bibliotecas permanecen en `build/ppa/`.
+Una corrida completa con timing FAIL se publica con ese resultado; una falla de
+herramienta o evidencia incompleta no reemplaza la medición válida anterior.
+Las referencias FPGA se conservan junto a la evidencia ASIC.
 
 ## Condiciones para aprobar
 
