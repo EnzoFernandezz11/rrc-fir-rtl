@@ -1,5 +1,29 @@
 # Experimentos de cierre temporal C04 en SS
 
+## Estado entregado en la rama C04 (28/10/2026)
+
+Se integra en `e/c04-rtl-optimized` la variante one-hot de selección de salida
+con rama dedicada de reset (`rtl/frequency_optimized/`). Es el mejor resultado
+de setup medido y se entrega como preliminar para permitir que avance la PR;
+no cierra timing. STA post-ruteo con SPEF: peor setup −1,600220 ns y peor hold
+−0,285578 ns en `max_ss`; en `min_ss`, −1,056727/−0,033118 ns. Los otros seis
+corners pasan setup y hold. El ruteador informa 0 DRC y 0 pines desconectados,
+pero quedan 99 violaciones de antena en redes y 110 en pines.
+
+La corrida necesitó reconectar manualmente el clock de `_96007_/CLK` en una
+copia del ODB. Por eso estos datos no se reproducen con el flujo estándar sin
+esa intervención. No se simuló la netlist final ni se estimó potencia. El
+registro compacto de corners, hashes RTL y top paths está en
+`reports/ppa/frequency_optimized/sky130/c04-preliminar-100mhz/`; los logs y
+artefactos físicos completos solo están en `build/`, que no se versiona.
+La regresión del RTL migrado pasó 837 tramas, incluidos casos A04/A05, pausas
+y reset, con latencia 26 e intervalo de bloque 8. Su log local es
+`build/ppa/experiments/c04-port-validation/validation.log`.
+
+Este resultado es preliminar y no sustituye el PPA publicado. Se intentará
+cerrar timing el jueves; no declarar PASS hasta resolver setup, hold y las
+violaciones eléctricas y físicas en el flujo completo.
+
 El 27/10/2026 se investigó el cierre a 100 MHz manteniendo la interfaz, la
 latencia de 26 ciclos y el intervalo de ocho ciclos por bloque. La referencia
 es la corrida publicada en `reports/ppa/frequency.md`: setup −3,281 ns y hold
@@ -100,7 +124,7 @@ Fuentes: `build/ppa/experiments/C04-max-ss-delay0/runs/`
 `55-openroad-stapostpnr/max_ss_100C_1v60/{max,min}.rpt`. Estos valores
 describen la referencia existente; no son una nueva corrida ni demuestran cierre.
 
-## Experimentos en curso
+## Historial de experimentos y diagnósticos
 
 Se inició una corrida aislada desde el placement de la variante one-hot,
 reduciendo el tamaño máximo del cluster de CTS de 25 a 12 sinks y su diámetro
