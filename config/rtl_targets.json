@@ -44,6 +44,7 @@
         "rtl/frequency_optimized/frequency_fft16.sv",
         "rtl/frequency_optimized/frequency_spectral16.sv",
         "rtl/frequency_optimized/frequency_output_scale.sv",
+        "rtl/frequency_optimized/frequency_output_select_onehot.sv",
         "rtl/frequency_optimized/fir_frequency_optimized_control.sv",
         "rtl/frequency_optimized/fir_frequency_optimized.sv"
       ],

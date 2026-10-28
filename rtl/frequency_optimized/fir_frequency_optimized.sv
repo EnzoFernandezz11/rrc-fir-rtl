@@ -13,6 +13,7 @@ module fir_frequency_optimized (
 );
     logic capture_en, capture_bank, history_clear;
     logic [2:0] capture_index, emit_index;
+    logic [7:0] emit_select;
     logic fft_in_valid, fft_source, fft_out_valid, fft_capture, fft_dest;
     logic spectral_in_valid, spectral_source, spectral_out_valid, spectral_capture, spectral_dest;
     logic ifft_in_valid, ifft_source, ifft_out_valid, useful_capture;
@@ -26,7 +27,6 @@ module fir_frequency_optimized (
     logic [191:0] spectral_result_i, spectral_result_q, ifft_result_i, ifft_result_q;
     logic [95:0] useful_i, useful_q;
     logic [71:0] scaled_i, scaled_q;
-    wire [6:0] emit_offset = {1'b0, emit_index, 3'b0} + {4'b0, emit_index};
 
     fir_frequency_optimized_control u_control (
         .clk(clk), .rst(rst),
@@ -42,7 +42,7 @@ module fir_frequency_optimized (
         .ifft_in_valid(ifft_in_valid), .ifft_source(ifft_source), .ifft_out_valid(ifft_out_valid),
         .useful_capture(useful_capture), .output_capture(output_capture), .output_dest(output_dest),
         .output_count(output_count),
-        .emit_bank(emit_bank), .emit_index(emit_index)
+        .emit_bank(emit_bank), .emit_index(emit_index), .emit_select(emit_select)
     );
 
     genvar n;
@@ -74,8 +74,11 @@ module fir_frequency_optimized (
         .in_i(useful_i), .in_q(useful_q), .out_i(scaled_i), .out_q(scaled_q)
     );
 
-    assign out_i = out_valid ? output_i[emit_bank][emit_offset +: 9] : 9'sd0;
-    assign out_q = out_valid ? output_q[emit_bank][emit_offset +: 9] : 9'sd0;
+    frequency_output_select_onehot u_output_select (
+        .valid(out_valid), .bank(emit_bank), .select(emit_select),
+        .i0(output_i[0]), .i1(output_i[1]), .q0(output_q[0]), .q1(output_q[1]),
+        .out_i(out_i), .out_q(out_q)
+    );
 
     integer k;
     always_ff @(posedge clk) begin
@@ -130,6 +133,8 @@ module fir_frequency_optimized (
     integer check_i, check_q;
     always @(posedge clk) begin
         if (!rst) begin
+            if (emit_select !== (8'b1 << emit_index))
+                $fatal(1, "One-hot output selector lost sync with emit_index");
             if (capture_en &&
                 (((in_i !== -2'sd1) && (in_i !== 2'sd0) && (in_i !== 2'sd1)) ||
                  ((in_q !== -2'sd1) && (in_q !== 2'sd0) && (in_q !== 2'sd1))))

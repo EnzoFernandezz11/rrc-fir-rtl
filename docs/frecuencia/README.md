@@ -7,4 +7,4 @@
 - [C03: estrategia de optimización y justificación](c03-optimizacion.md).
 - [C04: contrato de implementación y aceptación](c04-implementacion.md).
 
-La [arquitectura serial](arquitectura-rtl-frecuencia-serial.md) documenta las interfaces, formatos y presupuesto de ciclos. C04 registra el top optimizado integrado, su validación funcional y las mediciones físicas pendientes.
+La [arquitectura serial](arquitectura-rtl-frecuencia-serial.md) documenta las interfaces, formatos y presupuesto de ciclos. C04 registra el top optimizado integrado, su validación funcional y las mediciones físicas con sus PASS/FAIL por escenario.

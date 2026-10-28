@@ -2,7 +2,8 @@
 
 ## Implementación física OpenLane 2
 
-Metodología adoptada para C02/C04: OpenLane 2 mediante Nix, siguiendo los
+Metodología acordada por el equipo el 26/10/2026 para B02/B04/C02/C04:
+OpenLane 2 mediante Nix. Esta guía detalla los comandos de frecuencia, siguiendo los
 módulos 7–10 y la guía de instalación del curso. El checkout debe estar limpio
 y fijado en a7b0e6d (2.3.10-1); PDK Volare
 0fe599b2afb6708d281543108caf8310912f54af, sky130A, sky130_fd_sc_hd.
@@ -107,6 +108,37 @@ ejecuta cuando la verificación definida por el contrato local la requiere.
 Una corrida completa puede informar timing FAIL; una falla de herramienta o
 evidencia incompleta conserva la última medición publicada.
 
+## Evidencia pública de las corridas
+
+`physical` publica automáticamente un subconjunto de la corrida completa en
+`reports/ppa/<target>/sky130/`. Para publicar una corrida existente sin volver
+a ejecutar síntesis, P&R ni simulación:
+
+```sh
+python3 scripts/ppa.py publish-evidence --run-dir build/ppa/frequency_serial/CORRIDA
+python3 scripts/ppa.py publish-evidence --run-dir build/ppa/frequency_optimized/CORRIDA
+```
+
+Se copian el manifiesto original, métricas, configuraciones OpenLane, SDC de
+potencia y SDC usado por STA, logs de potencia, resultados del benchmark y
+reportes STA pequeños de los nueve corners. Los encabezados de STA y el entorno
+Tcl conservan las restricciones efectivas; `resolved.sdc` es el SDC del estado
+físico y puede diferir del `base.sdc` usado por STA. En C02, common comparte la
+evidencia target a 10 MHz. C04 conserva además la procedencia del layout reutilizado.
+
+`evidence.json` identifica la corrida, cada archivo publicado con su SHA256,
+sus orígenes y los extractos generados. Si la ruta de Nix del SDC dejó de existir,
+se recupera `base.sdc` de la revisión Git de OpenLane registrada en el manifiesto
+(`--openlane-root` permite indicar el checkout); esa recuperación queda declarada
+en el índice y se verifica contra el hash previo cuando existe.
+
+Los VCD, netlists, SPEF/SDF/ODB, bibliotecas y logs completos de caminos STA quedan
+en `build/ppa/`. La evidencia publicada permite auditar resultados y restricciones;
+para repetir las herramientas se necesita el entorno y los artefactos completos.
+La publicación reemplaza la copia anterior solo después de reunir los archivos;
+una corrida con timing FAIL conserva sus veredictos. Se preservan los reportes
+Vivado como referencia FPGA. `compare` también publica la evidencia de su pareja.
+
 ## Comparación reproducible y gráficos Mermaid
 
 Después de obtener las dos corridas, indicar sus directorios explícitos:
@@ -125,7 +157,9 @@ enlaza SVG como alternativa a visores incompatibles.
 Se leen los JSON/manifiestos, nunca los números del Markdown. Se exige la misma
 etapa, biblioteca, herramientas, benchmark y método físico. Las corridas deben
 ser las publicadas; una actualización invalida la comparación anterior.
-Los artefactos quedan en build/ppa/comparisons/ con identidad de sus entradas.
+La comparación y sus fuentes Mermaid/SVG se escriben en
+`reports/ppa/comparisons/`, con identidad de sus entradas, para que los enlaces
+del informe sean accesibles desde GitHub.
 
 La tabla enumera todas las métricas, unidades, cambios y procedencia; los
 valores sin evidencia dicen “No medida”. Barras individuales evitan mezclar

@@ -20,7 +20,8 @@ module fir_frequency_optimized_control (
     output logic useful_capture, output_capture, output_dest,
     output logic [3:0] output_count,
     output logic emit_bank,
-    output logic [2:0] emit_index
+    output logic [2:0] emit_index,
+    output logic [7:0] emit_select
 );
     logic [1:0] window_busy, window_complete;
     logic [1:0] x_busy, x_complete, y_busy, y_complete;
@@ -42,10 +43,12 @@ module fir_frequency_optimized_control (
                       ((capture_index != 0) || !window_busy[window_write]);
     assign capture_en = in_valid && in_ready;
     assign capture_bank = window_write;
-    assign out_valid = !rst && output_complete[emit_bank];
+    // Keep output masking on a short, dedicated reset branch; internal state still uses rst.
+    (* keep = "true" *) wire rst_output_n = ~rst;
+    assign out_valid = rst_output_n && output_complete[emit_bank];
     assign emit_finish = out_valid && out_ready &&
                          ({1'b0, emit_index} + 4'd1 == output_p[emit_bank]);
-    assign out_last = out_valid && output_last[emit_bank] &&
+    assign out_last = rst_output_n && output_complete[emit_bank] && output_last[emit_bank] &&
                       ({1'b0, emit_index} + 4'd1 == output_p[emit_bank]);
     assign history_clear = out_valid && out_ready && out_last;
 
@@ -80,6 +83,7 @@ module fir_frequency_optimized_control (
             output_write <= 0;
             emit_bank <= 0;
             emit_index <= 0;
+            emit_select <= 8'b0000_0001;
             capture_index <= 0;
             frame_wait <= 0;
             window_last <= 0;
@@ -184,8 +188,10 @@ module fir_frequency_optimized_control (
                     output_busy[emit_bank] <= 0;
                     emit_bank <= !emit_bank;
                     emit_index <= 0;
+                    emit_select <= 8'b0000_0001;
                 end else begin
                     emit_index <= emit_index + 3'd1;
+                    emit_select <= {emit_select[6:0], emit_select[7]};
                 end
             end
         end

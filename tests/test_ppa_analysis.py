@@ -3,6 +3,8 @@
 import copy
 import json
 from pathlib import Path
+import re
+import shutil
 import signal
 import subprocess
 import tempfile
@@ -15,6 +17,20 @@ from scripts.ppa_compare import check_compatible, compare, comparison_document, 
 from scripts.ppa_physical import (CORNERS, nominal_spef, parse_power, physical_areas,
                                   combine_segment_power, physical_summary, profiled_run,
                                   timing_metrics, split_vcd, write_power_sdc)
+
+
+def has_linux_gnu_time():
+    if not Path("/proc/meminfo").is_file() or not shutil.which("/usr/bin/time"):
+        return False
+    try:
+        result = subprocess.run(["/usr/bin/time", "--version"], capture_output=True,
+                                text=True, timeout=2)
+        return result.returncode == 0 and "GNU" in result.stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+HAS_LINUX_GNU_TIME = has_linux_gnu_time()
 
 
 class PpaAnalysisTest(unittest.TestCase):
@@ -105,6 +121,23 @@ class PpaAnalysisTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "fuera"):
                 load_run(a, "frequency_serial")
 
+    def test_comparison_publishes_chart_sources_with_valid_relative_links(self):
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            a, b = self.evidence_pair(root)
+            report = root / "reports/frequency.md"
+            report.parent.mkdir()
+            report.write_text("<!-- serial-runs:start -->c02<!-- serial-runs:end -->\n"
+                              "<!-- optimized-runs:start -->c04<!-- optimized-runs:end -->\n"
+                              "## Referencia histórica preservada\n")
+            output = compare(a, b, report=report)
+            self.assertTrue(output.is_relative_to(report.parent))
+            for document in (report, output / "comparison.md"):
+                links = re.findall(r"\]\(([^)]+)\)", document.read_text())
+                self.assertTrue(links)
+                for link in links:
+                    self.assertTrue((document.parent / link).exists(), (document, link))
+
     def test_activity_split_rebases_preserves_initial_state_and_rejects_truncation(self):
         header = ("$timescale 1ns $end\n$scope module tb $end\n$scope module dut $end\n"
                   "$var wire 1 ! clk $end\n$var wire 2 \" data [1:0] $end\n"
@@ -160,6 +193,7 @@ class PpaAnalysisTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Error: cannot read VCD"):
             parse_power("Error: cannot read VCD", {}, {})
 
+    @unittest.skipUnless(HAS_LINUX_GNU_TIME, "Requiere Linux y GNU time en /usr/bin/time")
     def test_profiled_run_keeps_resource_report(self):
         with tempfile.TemporaryDirectory() as raw:
             log = Path(raw) / "benchmark.log"
@@ -175,6 +209,7 @@ class PpaAnalysisTest(unittest.TestCase):
             self.assertIn('"abort_reason": "TimeoutExpired"',
                           (Path(raw) / "benchmark.monitor.jsonl").read_text())
 
+    @unittest.skipUnless(HAS_LINUX_GNU_TIME, "Requiere Linux y GNU time en /usr/bin/time")
     def test_profiled_run_cleans_process_group_on_keyboard_interrupt(self):
         with tempfile.TemporaryDirectory() as raw:
             log = Path(raw) / "interrupt.log"

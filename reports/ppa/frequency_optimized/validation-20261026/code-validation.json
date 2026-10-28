@@ -1,0 +1,43 @@
+{
+  "record_type": "validation_summary",
+  "recorded_at_utc": "2026-10-26T18:32:47Z",
+  "helper": {
+    "path": "scripts/ppa_physical.py",
+    "sha256": "e6dd7d113774f265f658649f7964309bd0fc67398b1ad0be74da456d1f900636"
+  },
+  "checks": [
+    {
+      "command": "python3 -m unittest tests.test_ppa tests.test_ppa_analysis tests.test_ppa_compare_status -v",
+      "exit_code": 0,
+      "result": "25 tests passed",
+      "raw_log": null,
+      "capture_note": "Output was returned by the tool and was not saved as a raw log."
+    },
+    {
+      "command": "make smoke",
+      "exit_code": 0,
+      "result": "3 variants compiled and simulated",
+      "logs": [
+        "build/ci-logs/python-compile.log",
+        "build/ci-logs/python-tests.log",
+        "build/ci-logs/a05-vectors.log",
+        "build/ci-logs/frequency_serial-vectors.log",
+        "build/ci-logs/time_serial-compile.log",
+        "build/ci-logs/time_serial-sim.log",
+        "build/ci-logs/frequency_serial-compile.log",
+        "build/ci-logs/frequency_serial-sim.log",
+        "build/ci-logs/frequency_optimized-compile.log",
+        "build/ci-logs/frequency_optimized-sim.log"
+      ],
+      "python_test_count": 72
+    },
+    {
+      "command": "python3 -m unittest tests.test_ppa_analysis.PpaAnalysisTest.test_physical_summary_handles_legacy_status_and_lists_corner_timing -v; git diff --check -- scripts/ppa_physical.py tests/test_ppa_analysis.py reports/ppa/frequency.md",
+      "exit_code": 0,
+      "result": "targeted summary-link test passed; diff check passed",
+      "raw_log": null,
+      "capture_note": "Output was returned by the tool and was not saved as a raw log."
+    }
+  ],
+  "updated_at_utc": "2026-10-26T18:38:13Z"
+}

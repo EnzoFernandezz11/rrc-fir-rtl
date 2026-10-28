@@ -52,19 +52,6 @@ Después de in_last se detiene entrada hasta aceptar out_last; la trama siguient
 empieza con historial cero. Salida retenida estable. Reset cancela toda reserva,
 validez y trama parcial. No hay transferencias durante reset.
 
-## Entregas pequeñas y responsables
-
-El coordinador fija interfaces, revisa entregas, conecta el top y ejecuta la
-regresión final. Hasta tres trabajadores simultáneos; un único escritor por
-archivo compartido. Cada tarea entrega código y su prueba antes de avanzar.
-
-1. Aritmética: CSD exhaustivo; luego producto complejo y extremos.
-2. Aritmética: mariposa y después FFT/IFFT con checkpoints del modelo.
-3. Aritmética: espectral y conversión, con verificación de latencia.
-4. Control: captura/historial/ventanas; luego reservas y emisión con pipelines.
-5. Verificación: banco integrado A05/A04; después estrés, reset y rendimiento.
-6. Coordinador: integración, registro CI/síntesis y benchmark/paquete PPA.
-
 ## Pruebas y cierre
 
 - Unitarias: todas las constantes/entradas CSD; productos y mariposas con signos,
@@ -117,9 +104,12 @@ python3 scripts/ppa.py package --target frequency_optimized
 
 `package` vuelve a ejecutar smoke y conserva sus logs junto al benchmark y al
 mapeo. Los resultados se registran en [`reports/ppa/frequency.md`](../../reports/ppa/frequency.md).
-La medición local actual usa SKY130 HD; sus áreas son áreas de celdas y no
-incluyen STA, ruteo ni potencia. El período de 10 ns citado por el benchmark es
-solo de simulación. Para el flujo y sus límites, ver la [guía PPA](ppa.md).
+La medición física actual usa OpenLane 2 / SKY130 HD, STA post-ruteo con SPEF
+en nueve corners y potencia OpenSTA con VCD de la netlist final. A 100 MHz
+setup/hold pasa en TT y falla en SS; persisten violaciones eléctricas. La
+simulación funcional verifica las muestras y los ciclos; el cumplimiento físico
+se informa con sus veredictos separados. La evidencia pequeña está versionada
+bajo `reports/ppa/frequency_optimized/sky130/`. Ver la [guía PPA](ppa.md).
 
 ## Evidencia histórica de mapeo XC7 y limitaciones
 
