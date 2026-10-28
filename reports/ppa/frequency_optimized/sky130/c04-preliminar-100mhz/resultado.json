@@ -1,0 +1,112 @@
+{
+  "status": "PRELIMINARY_FAIL",
+  "notice": "Slack negativo: no timing closure ni PASS físico. La corrección CTS manual forma parte de esta corrida; el flujo habitual no la reproduce por sí solo.",
+  "flow": "OpenLane 2.3.10 / SKY130 HD",
+  "physical_config": {
+    "DESIGN_NAME": "fir_frequency_optimized",
+    "VERILOG_FILES": [
+      "rtl/frequency_optimized/frequency_csd_mul.sv",
+      "rtl/frequency_optimized/frequency_complex_const.sv",
+      "rtl/frequency_optimized/frequency_butterfly.sv",
+      "rtl/frequency_optimized/frequency_fft16.sv",
+      "rtl/frequency_optimized/frequency_spectral16.sv",
+      "rtl/frequency_optimized/frequency_output_scale.sv",
+      "rtl/frequency_optimized/fir_frequency_optimized_control.sv",
+      "rtl/frequency_optimized/fir_frequency_optimized.sv",
+      "rtl/frequency_optimized/frequency_output_select_onehot.sv"
+    ],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 10,
+    "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+    "DEFAULT_CORNER": "max_ss_100C_1v60",
+    "STA_CORNERS": [
+      "nom_tt_025C_1v80",
+      "nom_ss_100C_1v60",
+      "nom_ff_n40C_1v95",
+      "min_tt_025C_1v80",
+      "min_ss_100C_1v60",
+      "min_ff_n40C_1v95",
+      "max_tt_025C_1v80",
+      "max_ss_100C_1v60",
+      "max_ff_n40C_1v95"
+    ],
+    "TIMING_VIOLATION_CORNERS": [
+      "*"
+    ],
+    "FP_CORE_UTIL": 35,
+    "PL_TARGET_DENSITY_PCT": 45,
+    "SYNTH_STRATEGY": "DELAY 0",
+    "SYNTH_HIERARCHY_MODE": "flatten",
+    "SYNTH_ABC_DFF": false,
+    "DRT_THREADS": 2,
+    "STA_THREADS": 2,
+    "ERROR_ON_LINTER_WARNINGS": false,
+    "RUN_POST_GRT_RESIZER_TIMING": true,
+    "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.2,
+    "CTS_SINK_CLUSTERING_SIZE": 13,
+    "CTS_SINK_CLUSTERING_MAX_DIAMETER": 30
+  },
+  "rtl_sha256": {
+    "rtl/frequency_optimized/frequency_csd_mul.sv": "dec13a2636b2f2a6e37889eb713871b84f84170684b990a7db5790917474cd21",
+    "rtl/frequency_optimized/frequency_complex_const.sv": "6bcaa1353c02b5d030887049457942667ee6bd5a22a427884e7e5ed77fc0c394",
+    "rtl/frequency_optimized/frequency_butterfly.sv": "0e0b74a71906b170ddecef672b415eb5e174f035f2f7f7cc47764a06ed0a4d42",
+    "rtl/frequency_optimized/frequency_fft16.sv": "098ac66e9e82ea4eb0d6dea5be93a37f9b6d4fe45ca807acd1cf059259a21e93",
+    "rtl/frequency_optimized/frequency_spectral16.sv": "8f186d4c8f58230e88e2e9f5916864802d5c91a183b84b858272d398140778eb",
+    "rtl/frequency_optimized/frequency_output_scale.sv": "c83341bc78c56a59e14f90995cf3d3d42810016779b49562e1d68a10d54c3c7d",
+    "rtl/frequency_optimized/fir_frequency_optimized_control.sv": "0bef9317805b87a7799db3684736073e9e04c4c0dfd109c25917da2037b27763",
+    "rtl/frequency_optimized/fir_frequency_optimized.sv": "4818f44040581dc0c1088828c34873259b0c5f5cbc9a85d32c8a85777b3f1d54",
+    "rtl/frequency_optimized/frequency_output_select_onehot.sv": "651cd9b2ec556d5068b311ca739c6cf421b8d56b31fea95918f8b486fd8a84c4"
+  },
+  "corners": {
+    "max_ff_n40C_1v95": {
+      "setup_ns": 3.0915511026235794,
+      "hold_ns": 0.18268087559739715
+    },
+    "max_ss_100C_1v60": {
+      "setup_ns": -1.6002195577115594,
+      "hold_ns": -0.2855777917197122
+    },
+    "max_tt_025C_1v80": {
+      "setup_ns": 1.716654866845953,
+      "hold_ns": 0.43652371841679083
+    },
+    "min_ff_n40C_1v95": {
+      "setup_ns": 3.27689840093463,
+      "hold_ns": 0.18610558065831564
+    },
+    "min_ss_100C_1v60": {
+      "setup_ns": -1.056727180114484,
+      "hold_ns": -0.033117953761208116
+    },
+    "min_tt_025C_1v80": {
+      "setup_ns": 2.012130519154734,
+      "hold_ns": 0.42339266624396776
+    },
+    "nom_ff_n40C_1v95": {
+      "setup_ns": 3.179685937881466,
+      "hold_ns": 0.19085100706668076
+    },
+    "nom_ss_100C_1v60": {
+      "setup_ns": -1.3532224612779178,
+      "hold_ns": -0.17796031818548697
+    },
+    "nom_tt_025C_1v80": {
+      "setup_ns": 1.8510393741717042,
+      "hold_ns": 0.4300862010487389
+    }
+  },
+  "route_drc": 0,
+  "disconnected_pins": 0,
+  "antenna_net_violations": 99,
+  "antenna_pin_violations": 110,
+  "manual_clock_reconnection": {
+    "instance": "_96007_",
+    "pin": "CLK",
+    "net": "clknet_leaf_1473_clk",
+    "neighbor": "_96006_",
+    "distance_dbu": 10000,
+    "previous_net_iterms": 5
+  },
+  "final_power_netlist_sha256": "c2aa6184d73d73bfe76b5215b78777c457f03f9debcdb49282f8938c8993fdf7",
+  "validation": "RTL: CSD exhaustive and common regression passed. Final netlist simulation and power were not performed."
+}
