@@ -41,7 +41,7 @@ El reloj objetivo es 10\,MHz para las variantes serie y 100\,MHz para las parale
 
 En frecuencia serie el intervalo surge de procesar bloques de 8 muestras cada 575 ciclos ($575/8 = 71{,}875$); la paralela entrega un bloque cada 8 ciclos. El throughput es el cociente entre las 2048 muestras y la ventana activa de la simulación, que incluye el llenado inicial: por eso las paralelas quedan apenas debajo de 100\,Mmuestras/s. La energía por muestra es la potencia total por la duración de esa ventana, dividida por 2048. La Fmax es una estimación registro a registro, $1000/(T - \text{slack})$\,MHz, con $T$ el período restringido en ns; no surge de un barrido de frecuencias.
 
-La variante en frecuencia paralela cumple setup y hold en TT (slack de $+2{,}33$ y $+0{,}30$\,ns) y en FF, pero no en SS: 397 a 488 caminos de setup y 7 a 13 de hold violan según la extracción de parásitos. Las violaciones eléctricas aparecen en todas las variantes. En las dos de tiempo se reducen a un buffer del árbol de reloj con un fanout mayor que el permitido.
+La variante en frecuencia paralela cumple setup y hold en TT (slack de $+2{,}33$ y $+0{,}30$\,ns) y en FF, pero no en SS: 397 a 488 caminos de setup y 7 a 13 de hold violan según la extracción de parásitos. Estas cifras corresponden al RTL de la corrida publicada. Después se integró un selector de salida one-hot que, en una corrida preliminar, reduce el peor slack de SS a $-1{,}60$\,ns en setup y $-0{,}29$\,ns en hold. Esa corrida todavía no cierra timing ni tiene medición de potencia, por lo que no reemplaza la fila de la tabla. Las violaciones eléctricas aparecen en todas las variantes. En las dos de tiempo se reducen a un buffer del árbol de reloj con un fanout mayor que el permitido.
 
 \begin{table}[h]
   \centering

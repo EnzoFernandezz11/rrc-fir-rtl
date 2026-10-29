@@ -27,7 +27,7 @@ El núcleo se divide en tres bloques, cada uno con su máquina de estados en un 
 
 \paragraph{Multiplicador compartido.} \texttt{complex\_mul\_serial} calcula $r = u \cdot v$ acumulando cuatro productos reales en los dos registros de salida: $r_I = u_I v_I - u_Q v_Q$ y $r_Q = u_I v_Q + u_Q v_I$. Una mariposa ocupa 7 ciclos (producto y escritura de $A \pm W B$) y un producto espectral, 6. $H$ y $W$ son constantes Q2.8 generadas desde los coeficientes cuantizados comunes, de modo que ambas ramas parten del mismo filtro; los formatos internos son los de la tabla~\ref{tab:formatos}.
 
-\paragraph{Control.} El bloque superior recorre seis estados: copia del historial al banco, captura de las muestras nuevas, relleno con ceros si la trama terminó antes de ocho, arranque del motor, cálculo y emisión. Durante la copia, el cálculo y la emisión mantiene \texttt{in\_ready} en cero, por lo que no captura el bloque siguiente mientras procesa el actual. Al entregar el último resultado de una trama pone el historial en cero.
+\paragraph{Control.} El bloque superior recorre seis estados: copia del historial al banco, captura de las muestras nuevas, relleno con ceros si la trama terminó antes de ocho, inicio del motor, cálculo y emisión. El inicio del motor es una fase de control de un ciclo que activa \texttt{engine\_start}, no una etapa de cálculo. Durante la copia, el cálculo y la emisión mantiene \texttt{in\_ready} en cero, por lo que no captura el bloque siguiente mientras procesa el actual. Al entregar el último resultado de una trama pone el historial en cero.
 
 \subsection{Presupuesto de ciclos}
 
