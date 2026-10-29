@@ -227,7 +227,12 @@
 
 \begin{frame}{Aprendizajes}
   \begin{itemize}
-    \item \textbf{Andrés:} \textcolor{gray}{pendiente}
+    \item \textbf{Andrés:} definir el contrato numérico antes del RTL ahorra discusiones después.
+    \begin{itemize}\footnotesize
+      \item Fijar formatos (Q1.7 / Q2.7), SQNR y vectores al principio (A04/A05) permitió verificar las cuatro variantes palabra por palabra con un único banco común.
+      \item Una X en la simulación con retardos no siempre es una violación de timing: en Vivado aparecieron por los límites de pulso, las E/S sin restringir y un artefacto de CARRY4. Comparar contra la netlist sin SDF señal por señal llevó a la causa.
+      \item Comparar PPA exige el mismo método para todos: plataforma, corners y criterio de «cumple». Pasar de Vivado a SKY130 a mitad de camino costó, pero dejó evidencia trazable.
+    \end{itemize}
     \item \textbf{Julián:} \textcolor{gray}{pendiente}
     \item \textbf{Enzo:} \textcolor{gray}{pendiente}
   \end{itemize}
