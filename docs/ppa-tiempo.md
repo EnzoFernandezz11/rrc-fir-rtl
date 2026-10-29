@@ -105,21 +105,24 @@ SDF, ODB, SDC resuelto), VCD, logs y archivos de consumo `*.resource.txt` /
 `*.monitor.jsonl`. Pesa del orden de 100–170 MB por corrida.
 
 Para que los enlaces del reporte funcionen para todo el equipo, al publicar una
-corrida se copia un subconjunto liviano (≈ 0,5–0,8 MB) a
+corrida se copia un subconjunto liviano (≈ 0,5–0,9 MB) a
 `reports/ppa/<target>/sky130/`, que sí se versiona, junto a las carpetas Vivado
 `10mhz/` y `100mhz/`:
 
 - `manifest.json`, `physical_metrics.json`, `local_metrics.json`,
   `gate_metrics.json`, `resources.json`, `cells.json`, `synthesis.ys`,
-  `openlane-*.json`, `first_blocks.vcd` y los logs de benchmark.
+  `openlane-*.json` y los logs de benchmark.
 - Por escenario (`target/`, `common/`): `metrics.json`, `power.sdc` y `power.log`.
 - `runs/<escenario>/*-openroad-stapostpnr/`: `summary.rpt` y, por corner, los
   reportes chicos de STA (checks, clock, power, violator_list, ws/wns/tns, skew).
 - `evidence.json`: nombre de la corrida de origen y SHA256 de cada archivo copiado.
 
-Quedan afuera VCD completos, netlists, SPEF, SDF, ODB, la Liberty y los reportes
-de caminos `max.rpt`/`min.rpt`; se regeneran con los comandos de arriba. Cada
-publicación reemplaza la copia anterior de esa variante. La comparación B02/B04
+Quedan afuera los VCD, netlists, SPEF, SDF, ODB, la Liberty y los reportes
+de caminos `max.rpt`/`min.rpt`; se regeneran con los comandos de arriba. Los
+`*.log` de estas carpetas se versionan por una excepción en `.gitignore`, la
+misma que usa la rama en frecuencia. La copia nueva se arma en un directorio
+temporal y recién al final reemplaza a la anterior, así que una publicación
+fallida conserva la última copia válida. La comparación B02/B04
 y sus fuentes Mermaid quedan en `reports/ppa/time_comparison/`.
 
 `reports/ppa/time.md` guarda solo la última corrida exitosa de cada variante y

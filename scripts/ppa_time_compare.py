@@ -203,11 +203,22 @@ def scenario_status(scenario: dict) -> tuple[bool, bool, bool]:
     return setup, electrical, bool(scenario.get("timing_pass", setup and electrical))
 
 
-def comparison_document(a: dict, b: dict, output: Path, render: bool = False) -> tuple[str, dict]:
+def rebase_links(text: str, old_base: Path, new_base: Path) -> str:
+    """Reescribe los enlaces relativos de Markdown para leerlos desde otra carpeta."""
+    def rebase(match: re.Match) -> str:
+        target = match.group(1)
+        if re.match(r"[a-z]+:|#|/", target):
+            return match.group(0)
+        return "](" + Path(os.path.relpath(old_base / target, new_base)).as_posix() + ")"
+    return re.sub(r"\]\(([^)\s]+)\)", rebase, text)
+
+
+def comparison_document(a: dict, b: dict, output: Path, render: bool = False,
+                        link_base: Path = REPORT.parent) -> tuple[str, dict]:
     check_compatible(a, b)
     av, bv = a["values"], b["values"]
     charts = {}
-    link = lambda p: Path(os.path.relpath(p, REPORT.parent)).as_posix()
+    link = lambda p: Path(os.path.relpath(p, link_base)).as_posix()
     text = ("## Comparación B02 / B04\n\n"
             f"Corridas: [B02]({link(a.get('published', a['directory']) / 'manifest.json')}) / "
             f"[B04]({link(b.get('published', b['directory']) / 'manifest.json')}). "
@@ -343,9 +354,10 @@ def compare(b02: Path, b04: Path, render: bool = False, report: Path = REPORT) -
     if output.exists():
         shutil.rmtree(output)
     output.mkdir()
-    result, data = comparison_document(a, b, output, render)
+    result, data = comparison_document(a, b, output, render, link_base=report.parent)
     write_json(output / "comparison.json", {**data, "identity": identity})
-    (output / "comparison.md").write_text(result)
+    # Adaptación: el mismo texto va en time.md y en time_comparison/; cada copia enlaza desde su carpeta.
+    (output / "comparison.md").write_text(rebase_links(result, report.parent, output))
     start, end = "<!-- comparison:start -->", "<!-- comparison:end -->"
     replacement = f"{start}\n\n{result}\n{end}"
     if start in original:

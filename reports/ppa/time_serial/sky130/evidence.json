@@ -7,7 +7,6 @@
     "resources.json": "743bfecf9e53ea3fd403df78bd285de3e1805f672fcf2fe0b44a8cda266de7d0",
     "cells.json": "6d63abf013d9dcca823040481966c884af2192a3060405249016b9089cc65c80",
     "synthesis.ys": "34caf539123cca9825cb0711a198dba876d2260ae525f73b7ced60013dc5ffc7",
-    "first_blocks.vcd": "cf94c078e8e4acf4dafd9756357458a3e8365b97e40dec5e5e691597e95874ad",
     "logs/benchmark.log": "8e4925afc33b361ad6fff4ba9db08a7ccee3a72db79549d543fc9be684d6f1b1",
     "logs/gate_benchmark.log": "bb1fb4d3cbef630be9f2738377a283a97975f475e44c877558335960c6d50802",
     "physical_metrics.json": "c6c8a241113a8a07fb31da763f59a428083649568eb342ef4792e5d42485f071",

@@ -1,0 +1,40 @@
+from openroad import Tech, Design
+from pathlib import Path
+import json
+base = Path('/mnt/datos/marvell/RTL/rrc-fir-rtl/build/ppa/experiments/onehot-reset-output-cts13')
+run = base / 'runs/reset-cts13-check/01-openroad-cts'
+state = json.loads((run / 'state_out.json').read_text())
+tech = Tech()
+design = Design(tech)
+design.readDb(state['odb'])
+block = tech.getDB().getChip().getBlock()
+inst = block.findInst('_96007_')
+pin = inst.findITerm('CLK')
+if pin.getNet() is not None:
+    raise RuntimeError('clock pin already connected')
+x, y = inst.getLocation()
+candidates = []
+for other in block.getInsts():
+    clk = other.findITerm('CLK')
+    if clk is None or clk.getNet() is None:
+        continue
+    net = clk.getNet()
+    if not net.getName().startswith('clknet_leaf_'):
+        continue
+    terms = list(net.getITerms())
+    if len(terms) > 13:
+        continue
+    ox, oy = other.getLocation()
+    candidates.append((abs(x-ox)+abs(y-oy), net.getName(), other.getName(), len(terms)))
+if not candidates:
+    raise RuntimeError('no suitable clock leaf')
+distance, name, neighbor, fanout = min(candidates)
+net = block.findNet(name)
+pin.connect(net)
+design.writeDb(str(base / 'reconnected.odb'))
+design.writeDef(str(base / 'reconnected.def'))
+state['odb'] = str(base / 'reconnected.odb')
+state['def'] = str(base / 'reconnected.def')
+(base / 'reconnected-state.json').write_text(json.dumps(state, indent=2)+'\n')
+(base / 'reconnection.json').write_text(json.dumps({'instance':inst.getName(),'pin':'CLK','net':name,'neighbor':neighbor,'distance_dbu':distance,'previous_net_iterms':fanout},indent=2)+'\n')
+print((base / 'reconnection.json').read_text())

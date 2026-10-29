@@ -20,6 +20,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "reports/ppa/time.md"
@@ -39,7 +40,7 @@ LIBRARY = "sky130_fd_sc_hd__tt_025C_1v80"
 # en reports/ppa/<target>/sky130/. Quedan afuera VCD, netlists, SPEF, ODB, la
 # Liberty y los reportes de caminos completos; se regeneran con el comando.
 EVIDENCE = ("manifest.json", "local_metrics.json", "gate_metrics.json", "resources.json",
-            "cells.json", "synthesis.ys", "first_blocks.vcd", "logs/benchmark.log",
+            "cells.json", "synthesis.ys", "logs/benchmark.log",
             "logs/gate_benchmark.log", "physical_metrics.json", "openlane-target.json",
             "openlane-common.json", "*/metrics.json", "*/power.sdc", "*/power.log",
             "runs/*/*-openroad-stapostpnr/summary.rpt", "runs/*/*-openroad-stapostpnr/*/*.rpt")
@@ -152,20 +153,30 @@ def evidence_dir(target: str, report: Path = REPORT) -> Path:
 def publish_evidence(run_dir: Path, target: str, report: Path = REPORT) -> Path:
     """Copia el subconjunto versionable de la corrida; reemplaza la copia anterior."""
     destination = evidence_dir(target, report)
-    if destination.exists():
-        shutil.rmtree(destination)
-    copied = {}
-    for pattern in EVIDENCE:
-        for source in sorted(run_dir.glob(pattern)):
-            if not source.is_file() or (source.suffix == ".rpt" and source.name not in STA_REPORTS):
-                continue
-            name = source.relative_to(run_dir).as_posix()
-            (destination / name).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, destination / name)
-            copied[name] = sha256(source)
-    if "manifest.json" not in copied:
-        raise ValueError(f"Corrida sin manifiesto: {run_dir}")
-    write_json(destination / "evidence.json", {"run": run_dir.name, "sha256": copied})
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    # La copia nueva se arma aparte y sólo reemplaza a la anterior si quedó completa.
+    with tempfile.TemporaryDirectory(prefix=".sky130-", dir=destination.parent) as raw:
+        staging, previous = Path(raw) / "new", Path(raw) / "previous"
+        copied = {}
+        for pattern in EVIDENCE:
+            for source in sorted(run_dir.glob(pattern)):
+                if not source.is_file() or (source.suffix == ".rpt" and source.name not in STA_REPORTS):
+                    continue
+                name = source.relative_to(run_dir).as_posix()
+                (staging / name).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, staging / name)
+                copied[name] = sha256(source)
+        if "manifest.json" not in copied:
+            raise ValueError(f"Corrida sin manifiesto: {run_dir}")
+        write_json(staging / "evidence.json", {"run": run_dir.name, "sha256": copied})
+        if destination.exists():
+            destination.rename(previous)
+        try:
+            staging.rename(destination)
+        except OSError:
+            if previous.exists():
+                previous.rename(destination)
+            raise
     return destination
 
 
