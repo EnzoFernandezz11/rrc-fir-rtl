@@ -1,0 +1,3 @@
+VCD info: dumpfile /home/moreyrajulian/rrc-fir-rtl/build/ppa/time_serial/20261026T232806297309Z-56822367/first_blocks.vcd opened for output.
+PASS PPA: 2048 muestras, L=9, II=10, 20480 ciclos, 1000000.000 muestras/s
+tb/time/tb_fir_time_ppa.sv:156: $finish called at 2050300000 (1ps)

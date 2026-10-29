@@ -1,0 +1,10 @@
+script scripts/synth/time_serial_sky130.ys
+dffunmap
+dfflibmap -liberty "build/ppa/time_serial/20261026T232806297309Z-56822367/sky130_fd_sc_hd__tt_025C_1v80.lib"
+abc -liberty "build/ppa/time_serial/20261026T232806297309Z-56822367/sky130_fd_sc_hd__tt_025C_1v80.lib"
+opt_clean
+delete t:$scopeinfo
+read_liberty -lib "build/ppa/time_serial/20261026T232806297309Z-56822367/sky130_fd_sc_hd__tt_025C_1v80.lib"
+check -assert -mapped
+write_verilog -noattr -noexpr build/ppa/time_serial/20261026T232806297309Z-56822367/mapped.v
+tee -o build/ppa/time_serial/20261026T232806297309Z-56822367/cells.json stat -json -liberty "build/ppa/time_serial/20261026T232806297309Z-56822367/sky130_fd_sc_hd__tt_025C_1v80.lib"

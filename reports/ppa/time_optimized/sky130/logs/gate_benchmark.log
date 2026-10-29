@@ -1,0 +1,2 @@
+PASS PPA: 2048 muestras, L=1, II=1, 2049 ciclos, 99951195.705 muestras/s
+tb/time/tb_fir_time_systolic_ppa.sv:156: $finish called at 20810000 (1ps)
