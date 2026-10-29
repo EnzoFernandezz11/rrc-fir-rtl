@@ -216,7 +216,7 @@
     \item \textbf{Serie frente a paralela:} la paralela da una muestra por ciclo en las dos ramas y gasta menos energía por muestra (74\,\% menos en tiempo, 86\,\% en frecuencia), a costa de área.
     \item \textbf{Tiempo frente a frecuencia:} para este filtro gana la rama en tiempo en todo lo medido. Entre las paralelas, la de frecuencia ocupa 64 veces el área y consume 29 veces más energía por muestra.
     \item Con 8 coeficientes la FFT no se amortiza, y con entrada en $\{-1, 0, +1\}$ el FIR en tiempo no necesita multiplicadores.
-    \item Pendiente: la frecuencia paralela no cierra 100\,MHz en los corners lentos.
+    \item Pendiente: la frecuencia paralela no cierra 100\,MHz en los corners lentos. Una corrida preliminar con selector de salida one-hot reduce el peor setup a $-1{,}60$\,ns.
   \end{itemize}
 \end{frame}
 
