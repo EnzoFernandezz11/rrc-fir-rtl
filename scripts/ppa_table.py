@@ -197,6 +197,11 @@ def main() -> int:
         "para variantes registradas en `config/rtl_targets.json`. La actividad funcional sin retardos "
         "no captura todos los glitches.\n\n"
         + sky130_table(sqnr, registered)
+        + "\nLa fila de frequency_optimized corresponde al RTL de su commit de origen. El selector de "
+        "salida one-hot integrado después en `main` tiene una corrida preliminar a 100 MHz, todavía sin "
+        "cierre de setup/hold ni potencia, en "
+        "[`c04-preliminar-100mhz/`](frequency_optimized/sky130/c04-preliminar-100mhz/resultado.json); "
+        "no reemplaza esta fila (ver `docs/frecuencia/c04-experimentos-cierre-ss.md`).\n"
         + "\n## Anexo: referencia FPGA (Vivado / Artix-7)\n\n"
         "Corridas medidas antes del acuerdo SKY130; se conservan para contrastar tendencias entre FPGA "
         "y ASIC. Sus LUT, timing y potencia no se convierten a cifras ASIC. Cada fila sale de "
