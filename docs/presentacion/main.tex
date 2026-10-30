@@ -233,8 +233,13 @@
       \item Una X en la simulación con retardos no siempre es una violación de timing: en Vivado aparecieron por los límites de pulso, las E/S sin restringir y un artefacto de CARRY4. Comparar contra la netlist sin SDF señal por señal llevó a la causa.
       \item Comparar PPA exige el mismo método para todos: plataforma, corners y criterio de «cumple». Pasar de Vivado a SKY130 a mitad de camino costó, pero dejó evidencia trazable.
     \end{itemize}
-    \item \textbf{Julián:} \textcolor{gray}{pendiente}
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Aprendizajes \presenta{Julián}}
+  Durante el desarrollo del curso estudiamos circuitos que funcionaban; en este proyecto aprendí que además hay que poder justificar por qué una arquitectura es mejor que otra, y que cada una conlleva un trade-off digno de análisis para que la elección se adapte a los requisitos del diseño.
+  Para la versión paralela comparé varias alternativas con números antes de escribir RTL, y eso me permitió defender la elección del arreglo sistólico. 
+  También comprendí que lo difícil de un diseño rápido no es solamente la aritmética sino el control y la sincronización que necesita el módulo para funcionar correctamente.
 \end{frame}
 
 \begin{frame}{Aprendizajes \presenta{Enzo}}
