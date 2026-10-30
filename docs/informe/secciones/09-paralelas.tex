@@ -61,7 +61,7 @@ En la variante serie, las dos transformadas ocupan el 78\,\% de los 575 ciclos d
 
 \paragraph{Control.} Cada bloque reserva su destino antes de arrancar y libera su origen cuando el consumidor lo captura. Con dos copias de cada almacenamiento, la captura de un bloque, el cálculo del anterior y la emisión del previo se solapan. Si el receptor detiene la salida, se frenan primero los arranques y después la entrada, sin perder ni mezclar bloques. Los bloques parciales al final de una trama se completan con ceros, como en la serie.
 
-La variante pasa el banco de pruebas común y su banco propio, que corre 837 tramas: 369 tramas de longitudes de 0 a 40 muestras, impulsos, extremos y semillas QPSK, cada una con y sin pausas; los casos de la tabla~\ref{tab:vectores}; una trama de 4096 muestras; pausas prolongadas en la salida (\emph{backpressure}), y reset en cada etapa del pipeline. Todas coinciden palabra por palabra con el modelo de punto fijo. En régimen acepta y entrega una muestra por ciclo, con $II_\text{bloque} = 8$.
+La variante pasa el banco de pruebas común y su banco propio, que corre 837 tramas: 369 tramas de longitudes de 0 a 40 muestras, impulsos, extremos y semillas QPSK, cada una con y sin pausas; los casos de la tabla~\ref{tab:vectores}; una trama de 4096 muestras; pausas prolongadas en la salida (\emph{backpressure}), y reset en cada etapa del pipeline. Todas coinciden palabra por palabra con el modelo de punto fijo. En régimen y sin pausas acepta y entrega una muestra por ciclo, con $II_\text{bloque} = 8$. Este desempeño funcional a 100\,MHz está condicionado: la implementación física no cumple timing en el peor corner, como se detalla en la sección~\ref{sec:ppa}.
 
 \subsection{Grado de paralelización}
 

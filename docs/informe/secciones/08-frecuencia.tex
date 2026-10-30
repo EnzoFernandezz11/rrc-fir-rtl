@@ -1,12 +1,30 @@
 \section{Filtro en frecuencia serie}\label{sec:frecuencia}
 
-\pendiente{Enzo revisa}{Borrador redactado por Andrés a partir de \texttt{docs/\allowbreak frecuencia/\allowbreak arquitectura-rtl-frecuencia-serial.md} (C01) y del RTL de C02. Corregir lo que haga falta y quitar este recuadro.}
-
 La variante serie implementa el overlap-save de la sección~\ref{sec:modelos} con un único multiplicador real que comparten la FFT, el producto espectral y la IFFT. Por cada bloque de ocho muestras nuevas arma una ventana de 16 con las ocho anteriores, calcula su FFT de 16 puntos, multiplica por $H[k]$, calcula la IFFT y entrega las posiciones 8 a 15. Si la trama termina con $N_p < 8$ muestras nuevas, completa la ventana con ceros y entrega solo $N_p$ resultados, de modo que mantiene una salida por muestra aceptada y no emite cola.
+
+\begin{figure}[ht]
+  \centering
+  \resizebox{\linewidth}{!}{%
+    \begin{tikzpicture}[node distance=6mm, every node/.style={align=center},
+        bloque/.style={draw, rounded corners, minimum height=12mm, inner sep=3mm}]
+      \node[bloque] (ventana) {Ventana de 16\\8 anteriores + 8 nuevas};
+      \node[bloque, right=of ventana] (fft) {FFT16};
+      \node[bloque, right=of fft] (producto) {Producto\\por $H[k]$};
+      \node[bloque, right=of producto] (ifft) {IFFT16};
+      \node[bloque, right=of ifft] (salida) {Descartar 0--7\\entregar 8--15};
+      \draw[-{Stealth}] (ventana) -- (fft);
+      \draw[-{Stealth}] (fft) -- (producto);
+      \draw[-{Stealth}] (producto) -- (ifft);
+      \draw[-{Stealth}] (ifft) -- (salida);
+    \end{tikzpicture}%
+  }
+  \caption{Recorrido de un bloque en el filtro en frecuencia. En una trama parcial se entregan solo las salidas correspondientes a muestras nuevas.}
+  \label{fig:frec-recorrido}
+\end{figure}
 
 \subsection{Arquitectura}
 
-El núcleo se divide en tres bloques, cada uno con su máquina de estados en un módulo aparte (tabla~\ref{tab:frec-modulos}).
+El núcleo se organiza en los cuatro módulos de la tabla~\ref{tab:frec-modulos}; el control superior, el motor y el multiplicador tienen sus propias máquinas de estados.
 
 \begin{table}[h]
   \centering
@@ -52,7 +70,7 @@ El núcleo se divide en tres bloques, cada uno con su máquina de estados en un 
   \end{tabular}
 \end{table}
 
-Un bloque completo ocupa 575 ciclos (tabla~\ref{tab:frec-ciclos}) y uno parcial de $N_p$ muestras, $567 + N_p$. La latencia es $L = 559$ ciclos para cualquier muestra del bloque, porque las ocho se aceptan en ciclos consecutivos y sus resultados también salen en ciclos consecutivos. Entre bloques el intervalo es de 568 ciclos; en promedio, $575/8 = 71{,}875$ ciclos por muestra, es decir 0,139\,Mmuestras/s a 10\,MHz. La versión inicial del diseño usaba 655 ciclos por bloque; acumular los productos reales en los registros de salida del multiplicador ahorró 80 (12\,\%).
+Con entrada siempre disponible y salida siempre lista, un bloque completo ocupa 575 ciclos (tabla~\ref{tab:frec-ciclos}) y uno parcial de $N_p$ muestras, $567 + N_p$. En esas condiciones, la latencia es $L = 559$ ciclos para cualquier muestra del bloque, porque las muestras se aceptan en ciclos consecutivos y sus resultados también salen en ciclos consecutivos. Entre bloques completos el intervalo es de 568 ciclos; en promedio, $575/8 = 71{,}875$ ciclos por muestra, es decir 0,139\,Mmuestras/s a 10\,MHz. Las pausas de entrada o salida aumentan la latencia y reducen el throughput. La versión inicial del diseño usaba 655 ciclos por bloque; acumular los productos reales en los registros de salida del multiplicador ahorró 80 (12\,\%).
 
 \subsection{Verificación}
 
