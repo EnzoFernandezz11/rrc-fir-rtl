@@ -1,7 +1,5 @@
 \section{Filtro temporal serie}\label{sec:tiempo}
 
-\pendiente{Julián revisa}{Borrador redactado por Andrés a partir de \texttt{docs/\allowbreak arquitectura-rtl-tiempo-serial.md} (B01) y del RTL de B02. Corregir lo que haga falta y quitar este recuadro.}
-
 La variante serie calcula $y[n] = \sum_{k=0}^{7} h_q[k]\,x[n-k]$ recorriendo los ocho coeficientes, uno por ciclo, con un único acumulador por componente. Es la base contra la que se mide la variante paralela (sección~\ref{sec:paralelas}), por lo que prioriza la simplicidad sobre el desempeño. El módulo es \texttt{fir\_time\_serial}.
 
 \subsection{Camino de datos}
