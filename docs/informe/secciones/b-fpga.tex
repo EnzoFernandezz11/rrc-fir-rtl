@@ -1,0 +1,39 @@
+\section{Referencia FPGA}\label{app:fpga}
+
+Antes de acordar el flujo SKY130, las variantes serie y la paralela en frecuencia se midieron en una FPGA con Vivado 2024.2: Artix-7 \texttt{xc7a35tcpg236-1}, síntesis e implementación \emph{out of context} con las estrategias por defecto. La paralela en tiempo no se midió con este flujo. El estímulo es el mismo de la sección~\ref{sec:ppa}. Después del ruteo se simula la netlist, se comparan las 2048 salidas con el modelo de punto fijo y se genera el registro de actividad de conmutación (SAIF) para la estimación de potencia. La tabla~\ref{tab:fpga} reúne las cinco corridas; todas cumplen setup y hold. Estas cifras sirven para contrastar tendencias y no se convierten a área ni potencia ASIC.
+
+\begin{table}[h]
+  \centering
+  \caption{PPA en Artix-7 con Vivado. Las variantes serie se implementaron también a 100\,MHz para separar el efecto de la arquitectura del efecto del reloj.}\label{tab:fpga}
+  \small
+  \begin{tabular}{lrrrrr}
+    \toprule
+    & \multicolumn{2}{c}{Tiempo serie} & \multicolumn{2}{c}{Frecuencia serie} & Frecuencia paralela \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-6}
+    Reloj & 10\,MHz & 100\,MHz & 10\,MHz & 100\,MHz & 100\,MHz \\
+    \midrule
+    LUT & 88 & 88 & 1875 & 1874 & 7650 \\
+    FF & 57 & 57 & 569 & 569 & 4898 \\
+    DSP & 0 & 0 & 3 & 3 & 0 \\
+    BRAM & 0 & 0 & 0 & 0 & 0 \\
+    Peor slack de setup (ns) & 93,883 & 4,136 & 82,675 & 0,901 & 0,533 \\
+    Fmax estimada (MHz) & 163,5 & 170,5 & 57,7 & 109,9 & 105,6 \\
+    $L$ (ciclos) & 9 & 9 & 559 & 559 & 26 \\
+    $II$ (ciclos por muestra) & 10 & 10 & 71,875 & 71,875 & 1 \\
+    Throughput (Mmuestras/s) & 1 & 10 & 0,139 & 1,391 & 98,75 \\
+    Potencia dinámica (mW) & $<0{,}5$ & 2 & 2 & 15 & 50 \\
+    Energía dinámica (nJ/muestra) & $<0{,}5$ & 0,2 & 14,4 & 10,8 & 0,506 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+La potencia estática es la del dispositivo completo, 68 a 69\,mW en todas las corridas, y no se incluye en la energía por muestra. La Fmax se estima como $1000/(T - \text{slack})$\,MHz.
+
+\paragraph{Límites de la medición.}
+\begin{itemize}
+  \item La Fmax depende de la restricción: con 100\,ns Vivado no acorta caminos. La variante en frecuencia serie, estimada en 57,7\,MHz a 10\,MHz, cumple 100\,MHz cuando se la restringe a ese período.
+  \item Vivado informa la potencia dinámica con resolución de 1\,mW. En las cifras de pocos mW ese error domina la energía por muestra: los 2\,mW de la variante en frecuencia serie a 10\,MHz corresponden a entre 10,8 y 18,0\,nJ/muestra. Con 0,000\,W solo se puede acotar la dinámica por debajo de 0,5\,mW.
+  \item La actividad SAIF cubre parte de las redes: 94 de 211 en tiempo serie, 2696 de 4391 en frecuencia serie y 30\,821 de 41\,686 en frecuencia paralela. Para el resto, Vivado estima la actividad por propagación sin vectores.
+  \item El flujo \emph{out of context} no incluye buffers de entrada y salida; las cifras corresponden al núcleo. En la paralela en frecuencia se agregaron retardos de entrada (medio período) y de salida (cero) que describen cómo maneja los puertos el banco de pruebas.
+  \item En esa misma variante, la simulación con retardos SDF da salidas obsoletas en celdas de acarreo \texttt{CARRY4}, aunque el STA no muestra violaciones; es un efecto del simulador. Por eso su actividad sale de la netlist implementada simulada sin retardos, que no tiene \emph{glitches}, y su potencia dinámica puede estar subestimada.
+\end{itemize}

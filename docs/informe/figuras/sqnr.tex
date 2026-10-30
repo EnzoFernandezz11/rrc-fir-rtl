@@ -1,0 +1,21 @@
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.8\linewidth, height=6.5cm,
+        xlabel={Bits fraccionarios del nodo variado}, ylabel={SQNR mínima (dB)},
+        xmin=3.7, xmax=9.3, ymin=28, ymax=60, xtick={4,...,9},
+        ymajorgrids, grid style={gray!20}, axis line style={gray!60}, tick style={gray!60},
+        legend pos=north west, legend cell align=left, legend style={draw=none, font=\small},
+        every axis plot/.append style={line width=1pt, mark size=2.2pt},
+        /pgf/number format/use comma]
+      \addplot[color=serie1, mark=*] coordinates {(5,29.8) (6,42.1) (7,44.3) (8,47.4) (9,57.6)};
+      \addlegendentry{Tiempo: coeficientes y salida}
+      \addplot[color=serie2, mark=square*] coordinates {(4,39.6) (5,43.0) (6,44.2) (7,44.5) (8,44.5) (9,44.5)};
+      \addlegendentry{Frecuencia: \texttt{work}}
+      \addplot[color=serie3, mark=triangle*] coordinates {(4,31.0) (5,33.6) (6,39.2) (7,41.4) (8,43.0) (9,42.9)};
+      \addlegendentry{Frecuencia: $W$}
+      \addplot[color=serie4, mark=diamond*] coordinates {(4,32.2) (5,37.4) (6,39.5) (7,41.0) (8,43.0) (9,42.3)};
+      \addlegendentry{Frecuencia: $H$}
+      \addplot[gray, dashed, line width=0.8pt, mark=none, forget plot] coordinates {(3.7,40) (9.3,40)};
+      \node[gray, font=\small, anchor=north west] at (axis cs:6.6,39.8) {mínimo de 40\,dB};
+    \end{axis}
+  \end{tikzpicture}

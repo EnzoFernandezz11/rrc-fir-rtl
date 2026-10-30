@@ -1,0 +1,44 @@
+\section{Planificación y seguimiento}\label{sec:gantt}
+
+El trabajo se dividió en 23 tareas con dependencias explícitas: cada una arranca recién cuando terminan las que necesita, y una prueba automática falla si el plan rompe alguna dependencia. El plan se armó el 03/10 y se ajustó el 05/10 para terminar el 29/10, un día antes de la presentación. El avance real se registró en \texttt{docs/gantt.md} el 07, 12, 14, 17, 20 y 27/10, con la fecha del primer commit como inicio y la de integración a la rama principal como fin. La tabla~\ref{tab:tareas} lista las tareas y la figura~\ref{fig:gantt} compara el plan con el avance real al 27/10.
+
+\begin{table}[h]
+  \centering
+  \small
+  \caption{Tareas del plan. La letra indica el grupo: E, contrato y planificación; A, modelos y precisión; B, filtro temporal; C, filtro en frecuencia; I, integración y presentación.}\label{tab:tareas}
+  \begin{tabular}{ll@{\hspace{2em}}ll}
+    \toprule
+    ID & Tarea & ID & Tarea \\
+    \midrule
+    E00 & Registrar consigna y requisitos & B01 & Diseño del filtro temporal serie \\
+    E01 & Definir el filtro en frecuencia & B02 & RTL temporal serie \\
+    E02 & Cerrar coeficientes y formato numérico & B03 & Elegir la optimización temporal \\
+    E03 & Cerrar interfaz RTL y medición PPA & B04 & RTL temporal optimizado \\
+    G01 & Mantener el Gantt planificado y real & C01 & Diseño del filtro en frecuencia serie \\
+    A01 & Generar QPSK y coeficientes RRCOS & C02 & RTL en frecuencia serie \\
+    A02 & Modelo flotante temporal & C03 & Elegir la optimización en frecuencia \\
+    A03 & Modelo flotante en frecuencia & C04 & RTL en frecuencia optimizado \\
+    A04 & Anchos de punto fijo & I01 & Comparar las cuatro variantes \\
+    A05 & Vectores de prueba & I02 & Informe técnico \\
+    A06 & Banco de pruebas común & I03 & Filminas y demostración \\
+    A07 & Tabla PPA automatizada & & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \input{figuras/gantt}
+  \caption{Plan (barra gris, arriba) y avance real (barra de color, abajo) al 27/10, por responsable real. Las barras claras siguen abiertas.}\label{fig:gantt}
+\end{figure}
+
+\paragraph{Avance al 27/10.} Las 23 tareas están iniciadas, 16 integradas y 2 verificadas en la rama principal: las dos variantes serie coinciden palabra por palabra con los vectores en el banco de pruebas común. Las dos variantes paralelas también coinciden, pero al 27/10 sus cambios seguían en revisión. En el corte intermedio del 16/10 la meta era 20 iniciadas y se llegó a 19, porque el RTL temporal optimizado (B04) no había empezado.
+
+\paragraph{Desvíos.}
+\begin{itemize}
+  \item \textbf{Contrato:} la definición del filtro en frecuencia (E01) y el cierre de coeficientes y formato numérico (E02) terminaron uno y dos días tarde, lo que retrasó el inicio de los modelos y de los diseños serie.
+  \item \textbf{Modelos:} la generación de QPSK y coeficientes (A01) y el modelo flotante temporal (A02) terminaron uno o dos días tarde; el modelo flotante en frecuencia, los anchos de punto fijo y los vectores (A03 a A05) recuperaron el atraso haciéndose en paralelo el 12 y 13/10. El banco de pruebas común (A06) cerró un día tarde: en la revisión se corrigió la prueba de reset en trama, que usaba un reset de dos ciclos en vez de uno.
+  \item \textbf{Filtro temporal:} el diseño serie (B01) empezó cuatro días después del plan, pero su RTL (B02) se hizo en un día, de modo que la variante serie terminó en fecha. La elección de la optimización (B03) cerró tres días tarde y el RTL optimizado (B04) empezó el 19/10, también tres días tarde. Quedó listo para revisión el 26/10, dos días después del fin planificado.
+  \item \textbf{Filtro en frecuencia:} el diseño serie (C01) cerró dos días tarde, después de separar del diseño la generación de QPSK, pero su RTL (C02) se integró el 15/10, cuatro días antes del plan. La elección de la optimización (C03) cerró cinco días tarde porque la revisión pidió paralelizar el producto espectral y usar multiplicadores por constante para llegar a 100\,MHz. El RTL optimizado (C04) empezó el 19/10, un día antes del plan; era la única tarea en el camino crítico sin holgura. Cumplió el corte del 26/10: ese día quedó lista para revisión, coincidiendo con los vectores.
+  \item \textbf{Medición PPA:} hasta el 26/10 la comparación se hacía en Vivado sobre Artix-7. Ese día el equipo acordó medir las cuatro variantes en SKY130, y las corridas Vivado pasaron a la referencia FPGA del anexo~\ref{app:fpga}. La tabla de las cuatro variantes (A07) quedó lista el 27/10, a dos días de la entrega.
+\end{itemize}

@@ -1,0 +1,68 @@
+\section{Implementaciones paralelas}\label{sec:paralelas}
+
+La consigna pide, después de cada versión serie, una implementación paralela que mejore el desempeño. Las dos ramas eligen el mismo eje PPA: throughput, a costa de área. Las dos variantes paralelas apuntan a 100\,MHz y conservan la interfaz, los formatos y la coincidencia palabra por palabra con el modelo de punto fijo de su rama.
+
+\subsection{Tiempo: arreglo sistólico en forma transpuesta}
+
+La variante serie tarda $II = 10$ ciclos por muestra porque recorre los ocho coeficientes con un solo sumador por componente. Para llegar a $II = 1$ hay que calcular los ocho términos en el mismo ciclo. La tabla~\ref{tab:tiempo-alternativas} resume las alternativas consideradas.
+
+\begin{table}[h]
+  \centering
+  \caption{Alternativas para la variante paralela en tiempo. Los registros y sumadores son estimaciones de diseño para I y Q juntas, con sumas parciales de 9 bits.}\label{tab:tiempo-alternativas}
+  \small
+  \begin{tabular}{lrrlrl}
+    \toprule
+    Alternativa & $II$ & $L$ & Camino crítico & Registros & Resultado \\
+    \midrule
+    Serie (sección~\ref{sec:tiempo}) & 10 & 9 & selección y 1 suma & 56 & referencia \\
+    Plegada por 4 con simetría & 6 & 5 & presuma, selección y 1 suma & 60 & descartada \\
+    Directa sin pipeline & 1 & 1 & selección y 3 sumas & 51 & descartada \\
+    Directa con simetría y pipeline & 1 & 3 & presuma y selección, o 1 suma & 120 & válida \\
+    Sistólica transpuesta & 1 & 1 & selección y 1 suma & 146 & elegida \\
+    Sistólica pura & 1 & 8 & selección y 1 suma & 210 & descartada \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+La forma transpuesta guarda sumas parciales en lugar de muestras pasadas. Con $s_8 = 0$, al aceptar $x[n]$:
+\begin{equation}
+  y[n] = h[0]\,x[n] + s_1, \qquad s_k \leftarrow h[k]\,x[n] + s_{k+1}, \quad k = 1, \dots, 7.
+\end{equation}
+Cada $s_k$ acumula el aporte de las muestras ya aceptadas a una salida futura: $s_1$ contiene $\sum_{k=1}^{7} h[k]\,x[n-k]$, lo que le falta a $h[0]\,x[n]$ para dar $y[n]$. Cada celda tiene un registro y un sumador, y como en la serie el producto $h[k]\,x[n]$ es una selección entre $h[k]$, $-h[k]$ y 0, sin multiplicador. El camino crítico es una selección más una suma de 9 bits, igual que en la serie, y no crece con la cantidad de coeficientes, a diferencia del árbol de sumas de la forma directa.
+
+Todas las sumas parciales caben en 9 bits con signo (Q2.7), porque están acotadas por $\sum |h_q| = 234 < 256$; el cálculo es exacto, sin redondeo ni saturación. El control se reduce a dos registros de un bit, \texttt{out\_valid} y \texttt{out\_last}, sin máquina de estados ni contador. Toda la ruta de datos avanza con una única habilitación, la aceptación de una muestra, de modo que si el receptor no toma $y[n]$ ninguna suma parcial cambia. Con \texttt{in\_last}, las sumas parciales pasan a cero en el mismo flanco y la muestra siguiente empieza una trama nueva.
+
+El diseño prevé 146 registros: siete sumas parciales y la salida, de 9 bits, para I y Q, más los dos de control. La síntesis en SKY130 deja 132 flip-flops, porque elimina los bits constantes de las sumas parciales con cotas chicas. La latencia es $L = 1$ ciclo y el intervalo, $II = 1$. La variante pasa el banco de pruebas común y su propio banco de regresión, y la netlist final reproduce las 2048 muestras del benchmark.
+
+\subsection{Frecuencia: FFT paralela por etapas y producto espectral dedicado}
+
+En la variante serie, las dos transformadas ocupan el 78\,\% de los 575 ciclos de un bloque: 448 ciclos de 32 mariposas cada una, con un multiplicador compartido. La variante paralela despliega los tres bloques del overlap-save y especializa cada operación para su constante (tabla~\ref{tab:frec-paralela}). El objetivo es procesar un bloque de ocho muestras cada ocho ciclos ($II_\text{bloque} = 8$), es decir, una muestra por ciclo, sin pausas.
+
+\begin{table}[h]
+  \centering
+  \caption{Decisiones de la variante paralela en frecuencia.}\label{tab:frec-paralela}
+  \small
+  \begin{tabular}{lp{5.2cm}p{5.2cm}}
+    \toprule
+    Bloque & Serie & Paralela \\
+    \midrule
+    FFT16 e IFFT16 & Una mariposa compartida, 32 operaciones secuenciales por transformada & Dos núcleos separados de cuatro etapas con ocho mariposas cada una \\
+    Factores de giro & Multiplicador general con constantes de una tabla & Cableado para $1$ y $\pm j$; sumas, restas y desplazamientos para los demás \\
+    Producto espectral & 16 productos en serie, de 6 ciclos cada uno & 16 posiciones simultáneas, cada una con su $H[k]$ fijo \\
+    Orden de bits invertido & Seis intercambios antes de la IFFT & Conexiones fijas a la entrada de cada transformada \\
+    Almacenamiento & Un banco de trabajo de 16 posiciones & Dos ventanas, dos bancos de espectro de entrada, dos de salida y dos buffers de salida \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Productos por constante.} En la estructura desplegada, cada posición de las transformadas y del producto espectral multiplica siempre por la misma constante. En lugar de un multiplicador general, cada producto se escribe con la representación de dígitos con signo canónica (CSD), con dígitos $-1$, 0 y $+1$, y se implementa con sumas y restas de versiones desplazadas del operando; por ejemplo, $181\,a = 2^8 a - 2^6 a - 2^4 a + 2^2 a + a$. Los desplazamientos son conexiones y solo las sumas tienen costo. Las constantes cero, reales puras, $\pm j$ y las de componentes iguales se simplifican aparte. Quedan 110 productos reales por constante entre las dos transformadas y el producto espectral, ninguno con multiplicador.
+
+\paragraph{Pipeline.} Las dos primeras etapas de cada transformada ocupan un ciclo y las dos últimas, que tienen los productos, dos ciclos cada una; el producto espectral ocupa dos y la conversión de salida, uno aparte. Desde que arranca la FFT de un bloque, el espectro está completo en el ciclo 6, el producto espectral en el 9, los ocho resultados útiles de la IFFT en el 16 y el buffer de salida en el 17. La latencia medida es $L = 26$ ciclos, desde la aceptación de una muestra hasta su resultado.
+
+\paragraph{Control.} Cada bloque reserva su destino antes de arrancar y libera su origen cuando el consumidor lo captura. Con dos copias de cada almacenamiento, la captura de un bloque, el cálculo del anterior y la emisión del previo se solapan. Si el receptor detiene la salida, se frenan primero los arranques y después la entrada, sin perder ni mezclar bloques. Los bloques parciales al final de una trama se completan con ceros, como en la serie.
+
+La variante pasa el banco de pruebas común y su banco propio, que corre 837 tramas: 369 tramas de longitudes de 0 a 40 muestras, impulsos, extremos y semillas QPSK, cada una con y sin pausas; los casos de la tabla~\ref{tab:vectores}; una trama de 4096 muestras; pausas prolongadas en la salida (\emph{backpressure}), y reset en cada etapa del pipeline. Todas coinciden palabra por palabra con el modelo de punto fijo. En régimen y sin pausas acepta y entrega una muestra por ciclo, con $II_\text{bloque} = 8$. Este desempeño funcional a 100\,MHz está condicionado: la implementación física no cumple timing en el peor corner, como se detalla en la sección~\ref{sec:ppa}.
+
+\subsection{Grado de paralelización}
+
+En las dos ramas el throughput a igual reloj pasa a una muestra por ciclo: $\times 10$ en tiempo y $\times 71{,}875$ en frecuencia. En frecuencia el paralelismo interno supera lo que la entrada puede aprovechar. Con 16 posiciones espectrales simultáneas, el producto espectral de un bloque tarda dos ciclos de los ocho disponibles; cuatro posiciones reutilizadas en cuatro tandas también alcanzarían $II_\text{bloque} = 8$. La consigna pide la máxima paralelización de la etapa basada en FFT; se desplegaron las 16 posiciones para cumplirla y para especializar cada una con su $H[k]$, a costa de área. El costo en área, timing y energía de las dos variantes está en la sección~\ref{sec:ppa}.

@@ -1,0 +1,35 @@
+\section{Sistema e interfaz}\label{sec:sistema}
+
+\begin{figure}[h]
+  \centering
+  \input{figuras/cadena}
+  \caption{Cadena común a ambas ramas. Los núcleos RTL reciben las muestras $x[n]$ desde vectores generados por los modelos (sección~\ref{sec:verificacion}).}\label{fig:cadena}
+\end{figure}
+
+\subsection{Interfaz común}
+
+Las cuatro variantes son núcleos intercambiables: exponen los mismos puertos y las mismas reglas por ciclo, aunque difieran en latencia e intervalo. Lo que ocurre adentro (acumulación serie, arreglo sistólico o FFT por bloques) queda oculto detrás de un enlace de entrada y uno de salida (tabla~\ref{tab:puertos}).
+
+\begin{table}[h]
+  \centering
+  \caption{Puertos comunes a las cuatro variantes.}\label{tab:puertos}
+  \small
+  \begin{tabular}{lll}
+    \toprule
+    Puerto & Dirección & Descripción \\
+    \midrule
+    \texttt{clk} & entrada & Reloj, flanco ascendente \\
+    \texttt{rst} & entrada & Reset síncrono, activo alto \\
+    \texttt{in\_i}, \texttt{in\_q} & entrada & $x[n]$, 2 bits con signo (Q2.0) \\
+    \texttt{in\_valid}, \texttt{in\_last} & entrada & Hay muestra; es la última de la trama \\
+    \texttt{in\_ready} & salida & El núcleo acepta en este flanco \\
+    \texttt{out\_i}, \texttt{out\_q} & salida & $y[n]$, 9 bits con signo (Q2.7) \\
+    \texttt{out\_valid}, \texttt{out\_last} & salida & Hay resultado; es el último de la trama \\
+    \texttt{out\_ready} & entrada & El receptor acepta en este flanco \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Un dato pasa en el flanco en que \texttt{valid} y \texttt{ready} están en alto, con \texttt{rst} en bajo; si \texttt{ready} está en bajo, el emisor sostiene el dato sin cambios. El núcleo no tiene caminos combinacionales de \texttt{in\_valid} a \texttt{in\_ready} ni de \texttt{out\_ready} a \texttt{out\_valid}. Por cada muestra aceptada entrega exactamente un resultado $y[n] = \sum_k h[k]\,x[n-k]$, en orden y sin cola: una trama de $N$ muestras da $N$ resultados. \texttt{out\_last} acompaña al resultado de la muestra que llegó con \texttt{in\_last}, y la muestra siguiente empieza una trama nueva con historial en cero. Durante el reset no hay transferencias y se descartan el historial y los resultados pendientes. Un ciclo sin \texttt{valid} es una burbuja: no es una muestra y no cambia ningún valor, solo alarga el tiempo.
+
+Gracias a estas reglas, un único banco de pruebas verifica las cuatro variantes contra los mismos vectores, por índice (sección~\ref{sec:verificacion}), y cada variante declara su latencia $L$ y su intervalo $II$.

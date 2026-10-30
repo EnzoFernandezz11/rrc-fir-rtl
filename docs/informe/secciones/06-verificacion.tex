@@ -1,0 +1,59 @@
+\section{Verificación}\label{sec:verificacion}
+
+\subsection{Vectores de prueba}
+
+Los modelos de punto fijo generan los vectores con los que se verifica el RTL. Cada archivo de texto tiene una línea por muestra de entrada con ocho enteros: índice, marca de fin de trama, entrada I/Q y las salidas esperadas de la rama temporal y de la rama en frecuencia (Q2.7). Cada trama empieza con historial en cero. Un test falla si algún archivo versionado deja de coincidir con el generador.
+
+\begin{table}[h]
+  \centering
+  \caption{Casos de prueba.}\label{tab:vectores}
+  \begin{tabular}{lrrl}
+    \toprule
+    Archivo & Tramas & Muestras & Qué prueba \\
+    \midrule
+    \texttt{impulso} & 1 & 32 & Respuesta al impulso $1-j$ \\
+    \texttt{ceros} & 1 & 32 & Salida nula \\
+    \texttt{extremos\_tiempo} & 1 & 16 & Salida temporal en $\pm\sum|h_q|$ \\
+    \texttt{extremos\_frecuencia} & 9 & 144 & Máximo de \texttt{work} en cada etapa \\
+    \texttt{bordes} & 19 & 202 & Tramas de 1 a 17, 24 y 25 muestras \\
+    \texttt{qpsk\_s1} & 1 & 2048 & QPSK 2×, semilla 1 (regresión y actividad) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Los cinco primeros (426 muestras) corren en cada integración; \texttt{qpsk\_s1} se genera y se usa en la regresión. Cada RTL se compara palabra por palabra con su columna de salida, por índice de resultado aceptado y no por ciclo, y la marca de fin de trama de la salida debe coincidir con la del vector.
+
+\subsection{Banco de pruebas común}
+
+Además del banco de pruebas propio de cada variante, un único banco común (\texttt{tb/\allowbreak common/\allowbreak tb\_fir\_common.sv}) verifica todas las variantes registradas con los mismos vectores y las mismas pruebas de protocolo. El diseño bajo prueba se elige al compilar; el banco solo conoce la interfaz común y la rama, que decide si compara contra la salida temporal o contra la de frecuencia. Por cada archivo de vectores hace tres corridas:
+
+\begin{enumerate}
+  \item \textbf{Reset en medio de una trama:} retiene la salida para dejar un resultado pendiente y aplica un reset de un ciclo. La corrida siguiente no debe ver ese resultado ni usar el historial anterior.
+  \item \textbf{Ideal:} entrada siempre disponible y salida siempre lista. Además de comparar, mide la latencia $L$ (de la aceptación de una muestra a la salida válida de su resultado) y el intervalo entre aceptaciones de entrada.
+  \item \textbf{Con pausas:} burbujas en la entrada y \texttt{out\_ready} en cero de forma pseudoaleatoria (semilla 1). Un resultado no aceptado debe quedar estable hasta su transferencia.
+\end{enumerate}
+
+En las tres, cada resultado aceptado se compara por índice con el vector, junto con su marca de fin de trama. El banco también falla si aparece un resultado sin muestra aceptada o uno de más después del último. \texttt{make smoke} lo corre con los cinco archivos de la tabla~\ref{tab:vectores}, y \texttt{make regresion} agrega \texttt{qpsk\_s1}. La tabla~\ref{tab:banco} resume la regresión de las dos variantes serie.
+
+\begin{table}[h]
+  \centering
+  \caption{Regresión del banco común con \texttt{qpsk\_s1} (2048 muestras, reloj de simulación de 10\,ns). Las dos variantes pasan las tres corridas en los seis archivos.}\label{tab:banco}
+  \begin{tabular}{lrr}
+    \toprule
+    & Tiempo serie & Frecuencia serie \\
+    \midrule
+    $L$ máxima (ciclos) & 9 & 559 \\
+    Intervalo máximo entre aceptaciones (ciclos) & 10 & 568 \\
+    Ciclos por muestra, corrida ideal & 10,00 & 71,63 \\
+    Ciclos totales, corrida con pausas & 21\,590 & 148\,909 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+En la variante en frecuencia, los ciclos por muestra varían con la longitud de la trama porque el procesamiento es por bloques de ocho muestras: el intervalo de 568 ciclos se da al esperar un bloque, y las muestras siguientes del mismo bloque entran en ciclos consecutivos.
+
+\subsection{Integración continua}
+
+Toda la verificación corre con dos comandos, idénticos en una máquina local y en GitHub Actions. \texttt{make smoke} valida la configuración compartida (\texttt{config/project.json}: requisitos de la consigna y decisiones del equipo), ejecuta las pruebas de Python (modelos flotantes y fijos, correspondencia entre ramas, SQNR y vectores) y, para cada variante RTL registrada en \texttt{config/rtl\_targets.json}, compila su banco de pruebas con Icarus Verilog y lo simula contra los vectores. \texttt{make full} sintetiza cada variante con Yosys y falla si el diseño no es sintetizable o tiene errores estructurales, como lazos combinacionales o señales con más de un driver; no produce cifras de desempeño, que salen del flujo físico SKY130 (sección~\ref{sec:ppa}). Agregar una variante consiste en registrarla en ese archivo con sus fuentes, su banco de pruebas y su script de síntesis, sin tocar la configuración de la integración continua.
+
+El primer comando corre en cada pull request y su resultado es requisito para aprobarlo en la revisión; el segundo, en cada integración a la rama principal. Ante un fallo, la integración continua guarda los registros de cada paso para diagnosticarlo sin reproducirlo localmente.
